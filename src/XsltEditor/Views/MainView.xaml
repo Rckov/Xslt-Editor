@@ -1,0 +1,182 @@
+﻿<ui:FluentWindow  x:Class="XsltEditor.Views.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:XsltEditor.Views"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:bh="clr-namespace:XsltEditor.Behaviors"
+        xmlns:web="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        xmlns:vm="clr-namespace:XsltEditor.ViewModels"
+        mc:Ignorable="d"
+        Title="Xslt Editor" Height="600" Width="1000" WindowStartupLocation="CenterScreen">
+
+   <Window.DataContext>
+      <vm:MainViewModel />
+   </Window.DataContext>
+
+   <Window.InputBindings>
+      <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" CommandParameter="{Binding XSL}" />
+      <KeyBinding Key="F1" Modifiers="Control" Command="{Binding OpenFileCommand}" CommandParameter="{Binding XSL}" />
+      <KeyBinding Key="F2" Modifiers="Control" Command="{Binding OpenFileCommand}" CommandParameter="{Binding XML}" />
+   </Window.InputBindings>
+
+   <Grid>
+      <Grid.RowDefinitions>
+         <RowDefinition Height="Auto" />
+         <RowDefinition />
+      </Grid.RowDefinitions>
+
+      <ui:TitleBar Title="XSLT Editor" DockPanel.Dock="Top" Grid.Row="0" />
+
+      <DockPanel Grid.Row="1" Margin="0 0 0 10">
+         <Menu DockPanel.Dock="Top">
+            <ui:MenuItem Header="&#xE8E5;">
+               <ui:MenuItem Header="Open XSL file"
+                            InputGestureText="CTRL + F1"
+                            FontFamily="Segoe UI"
+                            Command="{Binding OpenFileCommand}" CommandParameter="{Binding XSL}" />
+
+               <ui:MenuItem Header="Open XML file"
+                            InputGestureText="CTRL + F2"
+                            FontFamily="Segoe UI"
+                            Command="{Binding OpenFileCommand}" CommandParameter="{Binding XML}" />
+            </ui:MenuItem>
+
+            <ui:MenuItem Header="&#xE74E;" Command="{Binding SaveCommand}" CommandParameter="{Binding XSL}" />
+
+            <Separator Height="35" />
+
+            <ui:MenuItem Header="&#xE7A7;" Command="ApplicationCommands.Undo" />
+            <ui:MenuItem Header="&#xE7A6;" Command="ApplicationCommands.Redo" />
+
+            <Separator Height="35" />
+
+            <ui:MenuItem Header="&#xE8C8;" Command="ApplicationCommands.Copy" />
+            <ui:MenuItem Header="&#xE8C6;" Command="ApplicationCommands.Cut" />
+            <ui:MenuItem Header="&#xE77F;" Command="ApplicationCommands.Paste" />
+            <ui:MenuItem Header="&#xE74D;" Command="ApplicationCommands.Delete" />
+
+            <Separator Height="35" />
+
+            <ui:MenuItem Header="&#xE713;" IsEnabled="False" />
+         </Menu>
+
+         <Grid>
+            <Grid.ColumnDefinitions>
+               <ColumnDefinition MinWidth="100" />
+               <ColumnDefinition Width="Auto" />
+               <ColumnDefinition MinWidth="100" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0"
+                    BorderThickness="0 0 1 0"
+                    BorderBrush="{StaticResource BorderBrush}">
+
+               <Grid>
+                  <Grid.RowDefinitions>
+                     <RowDefinition />
+                     <RowDefinition Height="Auto" />
+                     <RowDefinition />
+                  </Grid.RowDefinitions>
+
+                  <Grid Grid.Row="0">
+                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                     </Grid.RowDefinitions>
+
+                     <DockPanel Grid.Row="0" Background="#3c3c3c">
+                        <TextBlock Text="XSL"
+                                   Style="{StaticResource HeaderAvalonTextEditor}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Right"
+                                   DockPanel.Dock="Right" />
+
+                        <TextBlock Style="{StaticResource HeaderAvalonTextEditor}"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis">
+
+                           <Hyperlink Foreground="Gray" Command="{Binding OpenFolderCommand}" CommandParameter="{Binding XSL}">
+                              <Run Text="{Binding XSL.FileName}" />
+                           </Hyperlink>
+                        </TextBlock>
+                     </DockPanel>
+
+                     <avalon:TextEditor Grid.Row="1"
+                                        x:Name="XSLEditor"
+                                        Style="{StaticResource AvalonTextEditor}"
+                                        BorderThickness="0 1"
+                                        BorderBrush="{StaticResource BorderBrush}">
+
+                        <i:Interaction.Behaviors>
+                           <bh:TextEditorFoldingHighlightingBehavior />
+                           <bh:TextEditorCompleteBehavior />
+                           <bh:TextEditorTextBehavior Text="{Binding XSL.Text, Mode=TwoWay}" />
+                        </i:Interaction.Behaviors>
+                     </avalon:TextEditor>
+                  </Grid>
+
+                  <GridSplitter Grid.Row="1"
+                                Height="1"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Background="{StaticResource BorderBrush}" />
+
+                  <Grid Grid.Row="2">
+                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                     </Grid.RowDefinitions>
+
+                     <DockPanel Grid.Row="0" Background="#3c3c3c">
+                        <TextBlock Text="XML"
+                                   Style="{StaticResource HeaderAvalonTextEditor}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Right"
+                                   DockPanel.Dock="Right" />
+
+                        <TextBlock Style="{StaticResource HeaderAvalonTextEditor}"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis">
+
+                           <Hyperlink Foreground="Gray" Command="{Binding OpenFolderCommand}" CommandParameter="{Binding XML}">
+                              <Run Text="{Binding XML.FileName}" />
+                           </Hyperlink>
+                        </TextBlock>
+                     </DockPanel>
+
+                     <avalon:TextEditor Grid.Row="1"
+                                        x:Name="XMLEditor"
+                                        Style="{StaticResource AvalonTextEditor}"
+                                        BorderThickness="0 1 0 1"
+                                        BorderBrush="{StaticResource BorderBrush}">
+
+                        <i:Interaction.Behaviors>
+                           <bh:TextEditorFoldingHighlightingBehavior />
+                           <bh:TextEditorTextBehavior Text="{Binding XML.Text, Mode=TwoWay}" />
+                        </i:Interaction.Behaviors>
+                     </avalon:TextEditor>
+                  </Grid>
+               </Grid>
+            </Border>
+
+            <GridSplitter Grid.Column="1"
+                          Width="2"
+                          Background="Transparent"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch" />
+
+            <Border Grid.Column="2"
+                    BorderThickness="1"
+                    BorderBrush="{StaticResource BorderBrush}">
+
+               <web:WebView2 DefaultBackgroundColor="#2d2d2d" x:Name="WebView" />
+            </Border>
+         </Grid>
+      </DockPanel>
+   </Grid>
+</ui:FluentWindow>
