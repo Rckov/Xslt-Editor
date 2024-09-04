@@ -23,4 +23,4 @@ To get started with Xslt-Editor, follow these simple steps:
 - **.NET 6**: Ensure you have .NET 6 installed on your machine. You can download it from the [official .NET website](https://dotnet.microsoft.com/download/dotnet/6.0).
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details.
