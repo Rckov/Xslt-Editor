@@ -8,10 +8,15 @@
     <UseWPF>true</UseWPF>
     <LangVersion>preview</LangVersion>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <ApplicationIcon>Resources\appicon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Resources\Highlighting\XSLMode.xshd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\appicon.ico" />
   </ItemGroup>
 
   <ItemGroup>
