@@ -1,0 +1,23 @@
+[
+   { "Text": "html" },
+   { "Text": "head" },
+   { "Text": "title" },
+   { "Text": "body" },
+   { "Text": "div" },
+   { "Text": "span" },
+   { "Text": "img" },
+   { "Text": "table" },
+   { "Text": "style" },
+   { "Text": "xsl:value-of" },
+   { "Text": "xsl:choose" },
+   { "Text": "xsl:template" },
+   { "Text": "xsl:if" },
+   { "Text": "xsl:text" },
+   { "Text": "xsl:for-each" },
+   { "Text": "xsl:apply-templates" },
+   { "Text": "xsl:call-template" },
+   { "Text": "xsl:when" },
+   { "Text": "xsl:otherwise" },
+   { "Text": "xsl:variable" },
+   { "Text": "xsl:param" }
+]
