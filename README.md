@@ -10,7 +10,7 @@ A simple and convenient XSLT editor with real-time compilation and a Fluent Wind
 ## Features
 
 - **XSLT v1**: Compilation support using `XslCompiledTransform`.
-- ** Auto-completion**: Auto-completion support with the ability to edit sentences in `Resources/completions.json` or the corresponding window.
+- **Auto-completion**: Auto-completion support with the ability to edit sentences in `Resources/completions.json` or the corresponding window.
 
 ## Installation
 
