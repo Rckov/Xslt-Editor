@@ -27,7 +27,7 @@ jobs:
 
       # Build and publish for win-x64
       - name: Build and Publish for x64
-        run: dotnet publish ${{ env.PROJECT_PATH }} --configuration Release -r win-x64 -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false -p:PublishReadyToRun=true -p:PublishTrimmed=false -p:WindowsPackageType=None -o XsltEditor/bin/Release/net8.0-windows7.0/x64
+        run: dotnet publish ${{ env.PROJECT_PATH }} --configuration Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false -p:PublishReadyToRun=true -p:PublishTrimmed=false -p:WindowsPackageType=None -o XsltEditor/bin/Release/net8.0-windows7.0/x64
 
       - name: Zip x64 artifacts
         shell: pwsh
