@@ -12,8 +12,11 @@ public partial class WindowBar
     public static readonly DependencyProperty ShowTitleProperty =
         DependencyProperty.Register(nameof(ShowTitle), typeof(bool), typeof(WindowBar), new PropertyMetadata(null));
 
-    public static readonly DependencyProperty CustomContentProperty =
-        DependencyProperty.Register(nameof(CustomContent), typeof(object), typeof(WindowBar), new PropertyMetadata(null));
+    public static readonly DependencyProperty LeftContentProperty =
+        DependencyProperty.Register(nameof(LeftContent), typeof(object), typeof(WindowBar), new PropertyMetadata(null));
+
+    public static readonly DependencyProperty RightContentProperty =
+        DependencyProperty.Register(nameof(RightContent), typeof(object), typeof(WindowBar), new PropertyMetadata(null));
 
     public WindowBar()
     {
@@ -27,10 +30,16 @@ public partial class WindowBar
         set => SetValue(ShowTitleProperty, value);
     }
 
-    public object CustomContent
+    public object LeftContent
     {
-        get => GetValue(CustomContentProperty);
-        set => SetValue(CustomContentProperty, value);
+        get => GetValue(LeftContentProperty);
+        set => SetValue(LeftContentProperty, value);
+    }
+
+    public object RightContent
+    {
+        get => GetValue(RightContentProperty);
+        set => SetValue(RightContentProperty, value);
     }
 
     public ICommand? CloseCommand { get; private set; }
