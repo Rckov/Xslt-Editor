@@ -25,12 +25,16 @@ public partial class App
         services.AddSingleton<ICompletionDataService, CompletionDataService>();
         services.AddSingleton<IWindowService, WindowService>();
         services.AddSingleton<IXmlTransformService, XmlTransformService>();
+        services.AddSingleton<ISettingsService, SettingsService>();
 
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<MainView>();
 
         services.AddTransient<CompletionViewModel>();
         services.AddTransient<CompletionView>();
+
+        services.AddTransient<SettingsViewModel>();
+        services.AddTransient<SettingsService>();
 
         return services.BuildServiceProvider();
     }
