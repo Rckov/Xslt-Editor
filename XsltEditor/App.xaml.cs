@@ -34,7 +34,7 @@ public partial class App
         services.AddTransient<CompletionView>();
 
         services.AddTransient<SettingsViewModel>();
-        services.AddTransient<SettingsService>();
+        services.AddTransient<SettingsView>();
 
         return services.BuildServiceProvider();
     }

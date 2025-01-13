@@ -18,10 +18,11 @@
                    Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
                    Visibility="{Binding ShowTitle, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-        <ContentPresenter Grid.Column="2"
-                          Content="{Binding CustomContent, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+        <ContentPresenter Grid.Column="2" Content="{Binding LeftContent, RelativeSource={RelativeSource AncestorType=UserControl}}" />
 
         <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+            <ContentPresenter Content="{Binding RightContent, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+
             <Button Content="&#xE949;" Style="{StaticResource CaptionButton}"
                     Command="{Binding MinimizeCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" />

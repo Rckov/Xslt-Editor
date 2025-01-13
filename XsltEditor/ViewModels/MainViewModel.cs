@@ -45,12 +45,14 @@ public class MainViewModel : ObservableObject
 
     public ICommand? OpenFileCommand { get; private set; }
     public ICommand? SaveFileCommand { get; private set; }
+    public ICommand? OpenSettingsCommand { get; private set; }
     public ICommand? OpenCompletionWindowCommand { get; private set; }
 
     private void InitCommands()
     {
         OpenFileCommand = new RelayCommand(OpenFile);
         SaveFileCommand = new RelayCommand(SaveFile);
+        OpenSettingsCommand = new RelayCommand(OpenSettings);
         OpenCompletionWindowCommand = new RelayCommand(OpenCompletionWindow);
     }
 
@@ -113,6 +115,11 @@ public class MainViewModel : ObservableObject
         {
             MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+    }
+
+    private void OpenSettings(object? parameter)
+    {
+        _windowService.ShowDialogWindow<SettingsView>();
     }
 
     private void OpenCompletionWindow(object? parameter)

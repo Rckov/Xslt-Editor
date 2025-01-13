@@ -6,5 +6,5 @@ public interface ICompletionDataService
 {
     IList<CompletionData> LoadCompletionData();
 
-    Task SaveCompletionData(IEnumerable<CompletionData> completions);
+    void SaveCompletionData(IList<CompletionData> completions);
 }
