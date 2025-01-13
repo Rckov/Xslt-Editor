@@ -20,7 +20,7 @@ public class MainViewModel : ObservableObject
     private readonly IXmlTransformService _transformService;
     private readonly IWindowService _windowService;
 
-    public MainViewModel(IWindowService windowService, IXmlTransformService transformService)
+    public MainViewModel(IWindowService windowService, ISettingsService settingsService, IXmlTransformService transformService)
     {
         _windowService = windowService;
 
@@ -29,6 +29,8 @@ public class MainViewModel : ObservableObject
 
         InitCommands();
         SubscribeEvents();
+
+        Settings = settingsService.LoadSettings();
     }
 
     public string? HtmlText
@@ -37,6 +39,7 @@ public class MainViewModel : ObservableObject
         set => Set(ref field, value);
     }
 
+    public Settings Settings { get; }
     public TextDocument XslDocument { get; } = new(".xsl");
     public TextDocument XmlDocument { get; } = new(".xml");
 
