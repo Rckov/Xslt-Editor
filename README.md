@@ -22,6 +22,11 @@ A simple and convenient XSLT editor with real-time compilation and a Fluent Wind
 
 ![PREVIEW](Images/preview.png)
 
+## Future Plans
+
+- [ ] **Dynamic Font Color Adjustment**: Add automatic font color change to light mode depending on the theme.
+- [ ] **Saxon Support**: Integrate Saxon for better XSLT 2.0+ support.
+
 ## License
 
 This project is licensed under the [MIT](LICENSE) license.
