@@ -81,7 +81,7 @@ public class CompletionViewModel : ObservableObject
         try
         {
             await _dataService.SaveCompletionData(CompletionData);
-            MessageBox.Show("Data saved successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Data saved successfully. Please restart the application.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         catch (Exception e)
         {
