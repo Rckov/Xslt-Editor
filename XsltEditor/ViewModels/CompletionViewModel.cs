@@ -76,11 +76,11 @@ public class CompletionViewModel : ObservableObject
         return SelectedData is not null;
     }
 
-    private async void SaveCompletionData(object? parameter)
+    private void SaveCompletionData(object? parameter)
     {
         try
         {
-            await _dataService.SaveCompletionData(CompletionData);
+            _dataService.SaveCompletionData(CompletionData);
             MessageBox.Show("Data saved successfully. Please restart the application.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         catch (Exception e)

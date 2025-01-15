@@ -32,7 +32,7 @@
 
             <!-- Window Bar -->
             <ct:WindowBar Grid.Row="0">
-                <ct:WindowBar.CustomContent>
+                <ct:WindowBar.LeftContent>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -67,7 +67,7 @@
                             </Menu>
                         </StackPanel>
                     </Grid>
-                </ct:WindowBar.CustomContent>
+                </ct:WindowBar.LeftContent>
             </ct:WindowBar>
 
             <!-- Docking Manager -->
