@@ -2,8 +2,6 @@ using System.IO;
 using System.Runtime.Versioning;
 using System.Text.Json;
 
-using XsltEditor.DTO;
-using XsltEditor.Mappers;
 using XsltEditor.Models;
 using XsltEditor.Services.Interfaces;
 
@@ -22,9 +20,9 @@ internal class CompletionDataService : ICompletionDataService
         }
 
         var json = File.ReadAllText(FilePath);
-        var dtoList = JsonSerializer.Deserialize<IList<CompletionDataDto>>(json);
+        var list = JsonSerializer.Deserialize<IList<CompletionData>>(json);
 
-        return CompletionDataMapper.ToModelList(dtoList ?? Enumerable.Empty<CompletionDataDto>()).ToList();
+        return list ?? [];
     }
 
     public void SaveCompletionData(IList<CompletionData> completions)
@@ -34,7 +32,7 @@ internal class CompletionDataService : ICompletionDataService
             WriteIndented = true
         };
 
-        var json = JsonSerializer.Serialize(CompletionDataMapper.ToDtoList(completions), options);
+        var json = JsonSerializer.Serialize(completions, options);
 
         if (string.IsNullOrEmpty(json))
         {

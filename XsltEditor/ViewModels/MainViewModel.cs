@@ -20,7 +20,7 @@ public class MainViewModel : ObservableObject
     private readonly IXmlTransformService _transformService;
     private readonly IWindowService _windowService;
 
-    public MainViewModel(IWindowService windowService, ISettingsService settingsService, IXmlTransformService transformService)
+    public MainViewModel(IWindowService windowService, IXmlTransformService transformService)
     {
         _windowService = windowService;
 
@@ -29,8 +29,6 @@ public class MainViewModel : ObservableObject
 
         InitCommands();
         SubscribeEvents();
-
-        Settings = settingsService.LoadSettings();
     }
 
     public string? HtmlText
@@ -39,20 +37,17 @@ public class MainViewModel : ObservableObject
         set => Set(ref field, value);
     }
 
-    public Settings Settings { get; }
     public TextDocument XslDocument { get; } = new(".xsl");
     public TextDocument XmlDocument { get; } = new(".xml");
 
     public ICommand? OpenFileCommand { get; private set; }
     public ICommand? SaveFileCommand { get; private set; }
-    public ICommand? OpenSettingsCommand { get; private set; }
     public ICommand? OpenCompletionWindowCommand { get; private set; }
 
     private void InitCommands()
     {
         OpenFileCommand = new RelayCommand(OpenFile);
         SaveFileCommand = new RelayCommand(SaveFile);
-        OpenSettingsCommand = new RelayCommand(OpenSettings);
         OpenCompletionWindowCommand = new RelayCommand(OpenCompletionWindow);
     }
 
@@ -115,11 +110,6 @@ public class MainViewModel : ObservableObject
         {
             MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
-    }
-
-    private void OpenSettings(object? parameter)
-    {
-        _windowService.ShowDialogWindow<SettingsView>();
     }
 
     private void OpenCompletionWindow(object? parameter)

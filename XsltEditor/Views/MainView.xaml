@@ -68,10 +68,6 @@
                         </StackPanel>
                     </Grid>
                 </ct:WindowBar.LeftContent>
-
-               <ct:WindowBar.RightContent>
-                    <Button Content="&#xE713;" Command="{Binding OpenSettingsCommand}" Style="{StaticResource CaptionButton}" Padding="15,0" FontSize="14" />
-               </ct:WindowBar.RightContent>
             </ct:WindowBar>
 
             <!-- Docking Manager -->
