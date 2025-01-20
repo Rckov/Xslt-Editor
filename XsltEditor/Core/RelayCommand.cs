@@ -1,15 +1,15 @@
 ﻿using System.Runtime.Versioning;
 using System.Windows.Input;
 
-using XsltEditor.Tools.Commands.Base;
-
-namespace XsltEditor.Tools.Commands;
+namespace XsltEditor.Core;
 
 [SupportedOSPlatform("windows")]
-internal class RelayCommand : BaseCommand
+internal class RelayCommand : ICommand
 {
     private readonly Func<object?, bool>? _canExecute;
     private readonly Action<object?> _execute;
+
+    public event EventHandler? CanExecuteChanged;
 
     public RelayCommand(Action<object?> execute, Func<object?, bool>? canExecute = null)
     {
@@ -19,18 +19,18 @@ internal class RelayCommand : BaseCommand
         CommandManager.RequerySuggested += (_, _) => RaiseCanExecuteChanged();
     }
 
-    public override void Execute(object? parameter)
+    public void Execute(object? parameter)
     {
         _execute(parameter);
     }
 
-    public override bool CanExecute(object? parameter)
+    public bool CanExecute(object? parameter)
     {
         return _canExecute?.Invoke(parameter) ?? true;
     }
 
     public void RaiseCanExecuteChanged()
     {
-        OnCanExecuteChanged();
+        CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 }

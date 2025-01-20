@@ -24,19 +24,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\appicon.ico" />
     <None Remove="Resources\completions.json" />
+    <None Remove="Resources\Xshd\LightMode.xshd" />
     <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
     <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2903.40" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <Resource Include="Resources\appicon.ico" />
-    <None Remove="Resources\Xshd\HighlightingMode.xshd" />
     <Content Include="Resources\completions.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="Resources\Xshd\HighlightingMode.xshd" />
+    <EmbeddedResource Include="Resources\Xshd\DarkMode.xshd" />
+    <EmbeddedResource Include="Resources\Xshd\LightMode.xshd" />
   </ItemGroup>
 
   <ItemGroup>

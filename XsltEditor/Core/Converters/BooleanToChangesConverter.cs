@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace XsltEditor.Tools.Converters;
+namespace XsltEditor.Core.Converters;
 
 internal class BooleanToChangesConverter : IValueConverter
 {

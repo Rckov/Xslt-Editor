@@ -24,13 +24,9 @@ public partial class App
     {
         services.AddSingleton<ICompletionDataService, CompletionDataService>();
         services.AddSingleton<IWindowService, WindowService>();
-        services.AddSingleton<IXmlTransformService, XmlTransformService>();
 
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<MainView>();
-
-        services.AddTransient<CompletionViewModel>();
-        services.AddTransient<CompletionView>();
 
         return services.BuildServiceProvider();
     }

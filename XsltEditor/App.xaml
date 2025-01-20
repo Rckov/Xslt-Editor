@@ -1,7 +1,7 @@
 ﻿<Application x:Class="XsltEditor.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:converters="clr-namespace:XsltEditor.Tools.Converters">
+             xmlns:converters="clr-namespace:XsltEditor.Core.Converters">
    <Application.Resources>
       <ResourceDictionary>
          <ResourceDictionary.MergedDictionaries>
@@ -9,7 +9,7 @@
             <ResourceDictionary Source="Resources/Styles/AvalonDock.xaml" />
             <ResourceDictionary Source="Resources/Styles/TextEditor.xaml" />
 
-            <ResourceDictionary Source="Resources/Themes/ThemeBrushes.xaml" />
+            <ResourceDictionary Source="Resources/Themes/LightBrushes.xaml" />
          </ResourceDictionary.MergedDictionaries>
 
          <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />

@@ -1,8 +1,8 @@
-using XsltEditor.Models;
+﻿using XsltEditor.Models;
 
 namespace XsltEditor.Services.Interfaces;
 
-public interface ICompletionDataService
+internal interface ICompletionDataService
 {
     IList<CompletionData> LoadCompletionData();
 

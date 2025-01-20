@@ -1,3 +1,4 @@
+﻿using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Folding;
 
 using Microsoft.Xaml.Behaviors;
@@ -6,10 +7,12 @@ using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Media;
 
-namespace XsltEditor.Tools.Behaviors.TextEditor;
+using XsltEditor.Tools;
+
+namespace XsltEditor.Core.Behaviors;
 
 [SupportedOSPlatform("windows")]
-internal class TextEditorFoldingBehavior : Behavior<ICSharpCode.AvalonEdit.TextEditor>
+internal class TextEditorFoldingBehavior : Behavior<TextEditor>
 {
     private FoldingManager? _foldingManager;
     private XmlFoldingStrategy? _foldingStrategy;
@@ -23,7 +26,8 @@ internal class TextEditorFoldingBehavior : Behavior<ICSharpCode.AvalonEdit.TextE
             return;
         }
 
-        ApplyFoldingColors();
+        ThemeManager.ThemeChanged += ApplyFoldingColors;
+        ApplyFoldingColors(ThemeManager.CurrentTheme);
 
         _foldingManager = FoldingManager.Install(AssociatedObject.TextArea);
         _foldingStrategy = new XmlFoldingStrategy();
@@ -43,6 +47,9 @@ internal class TextEditorFoldingBehavior : Behavior<ICSharpCode.AvalonEdit.TextE
 
     protected override void OnDetaching()
     {
+        AssociatedObject.Loaded -= AssociatedObject_Loaded;
+        AssociatedObject.TextChanged -= OnTextEditorTextChanged;
+
         base.OnDetaching();
 
         if (_foldingManager is null)
@@ -69,7 +76,7 @@ internal class TextEditorFoldingBehavior : Behavior<ICSharpCode.AvalonEdit.TextE
         UpdateFolding();
     }
 
-    private void ApplyFoldingColors()
+    private void ApplyFoldingColors(ThemeType type)
     {
         var foldingBackgroundColor = GetColorFromResource("FoldingBackgroundColor");
         var foldingSelectBackgroundColor = GetColorFromResource("FoldingSelectBackgroundColor");

@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-using XsltEditor.Tools.Commands;
+using XsltEditor.Core;
 
 namespace XsltEditor.Controls;
 

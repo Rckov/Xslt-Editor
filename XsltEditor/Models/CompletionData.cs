@@ -1,4 +1,4 @@
-using ICSharpCode.AvalonEdit.CodeCompletion;
+﻿using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 
@@ -9,12 +9,17 @@ using System.Windows.Media;
 namespace XsltEditor.Models;
 
 [SupportedOSPlatform("windows")]
-public class CompletionData(string text) : ICompletionData
+internal class CompletionData : ICompletionData
 {
+    public CompletionData(string text)
+    {
+        Text = text;
+    }
+
     [JsonIgnore]
     public ImageSource? Image => null;
 
-    public string Text { get; } = text;
+    public string Text { get; }
 
     [JsonIgnore]
     public object Content => Text;
