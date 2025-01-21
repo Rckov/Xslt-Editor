@@ -9,26 +9,22 @@ using System.Windows.Media;
 namespace XsltEditor.Models;
 
 [SupportedOSPlatform("windows")]
-internal class CompletionData : ICompletionData
+public class CompletionData : ICompletionData
 {
     public CompletionData(string text)
     {
         Text = text;
     }
 
-    [JsonIgnore]
-    public ImageSource? Image => null;
+    [JsonIgnore] public ImageSource? Image => null;
 
     public string Text { get; }
 
-    [JsonIgnore]
-    public object Content => Text;
+    [JsonIgnore] public object Content => Text;
 
-    [JsonIgnore]
-    public object Description => $"Insert {Text}";
+    [JsonIgnore] public object Description => $"Insert {Text}";
 
-    [JsonIgnore]
-    public double Priority => 0;
+    [JsonIgnore] public double Priority => 0;
 
     public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
     {

@@ -16,7 +16,8 @@ public partial class WindowBar
         DependencyProperty.Register(nameof(LeftContent), typeof(object), typeof(WindowBar), new PropertyMetadata(null));
 
     public static readonly DependencyProperty RightContentProperty =
-        DependencyProperty.Register(nameof(RightContent), typeof(object), typeof(WindowBar), new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(RightContent), typeof(object), typeof(WindowBar),
+            new PropertyMetadata(null));
 
     public WindowBar()
     {
@@ -55,20 +56,14 @@ public partial class WindowBar
 
     private void MinimizeWindowExecuter(object? parameter)
     {
-        if (parameter is not Window window)
-        {
-            return;
-        }
+        if (parameter is not Window window) return;
 
         window.WindowState = WindowState.Minimized;
     }
 
     private void MaximizeWindowExecuter(object? parameter)
     {
-        if (parameter is not Window window)
-        {
-            return;
-        }
+        if (parameter is not Window window) return;
 
         window.WindowState = window.WindowState == WindowState.Maximized
             ? WindowState.Normal
@@ -77,10 +72,7 @@ public partial class WindowBar
 
     private void CloseWindowExecuter(object? parameter)
     {
-        if (parameter is not Window window)
-        {
-            return;
-        }
+        if (parameter is not Window window) return;
 
         window.Close();
     }

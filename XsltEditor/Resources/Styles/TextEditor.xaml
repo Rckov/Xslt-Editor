@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:cc="clr-namespace:ICSharpCode.AvalonEdit.CodeCompletion;assembly=ICSharpCode.AvalonEdit">
 
    <!-- AvalonEdit Style -->
@@ -40,10 +40,10 @@
                         <ColumnDefinition Width="Auto" />
                      </Grid.ColumnDefinitions>
                      <TextBox Name="PART_searchTextBox" Focusable="True" Margin="0,0,3,0" Grid.Column="0"
-                              Padding="6" FontSize="11" BorderThickness="1"
+                              Padding="6,8,6,0" FontSize="11" BorderThickness="1"
                               BorderBrush="{DynamicResource BorderColor}"
                               Foreground="{DynamicResource WindowForegroundColor}"
-                              Background="{DynamicResource WindowBackgroundSecondaryColor}">
+                              Background="{DynamicResource PopupBackgroundColor}">
 
                         <TextBox.Text>
                            <Binding Path="SearchPattern" RelativeSource="{RelativeSource TemplatedParent}" UpdateSourceTrigger="PropertyChanged">

@@ -2,7 +2,7 @@
 
 namespace XsltEditor.Services.Interfaces;
 
-internal interface ICompletionDataService
+public interface ICompletionDataService
 {
     IList<CompletionData> LoadCompletionData();
 

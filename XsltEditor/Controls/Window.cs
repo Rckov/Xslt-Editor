@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
-using System.Windows.Interop;
 using System.Windows;
+using System.Windows.Interop;
 
 namespace XsltEditor.Controls;
 
@@ -208,28 +208,6 @@ public class Window : System.Windows.Window
 
 internal static class AcrylicHelper
 {
-    internal enum WindowCompositionAttribute
-    {
-        WCA_ACCENT_POLICY = 19
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct AccentPolicy
-    {
-        public AccentState AccentState;
-        public uint AccentFlags;
-        public uint GradientColor;
-        public uint AnimationId;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct WindowCompositionAttributeData
-    {
-        public WindowCompositionAttribute Attribute;
-        public IntPtr Data;
-        public int SizeOfData;
-    }
-
     public static AccentState CurrentAccentState { get; private set; }
 
     public static void SetBlur(IntPtr handle, AccentState accentState, bool isWindow = true)
@@ -239,7 +217,7 @@ internal static class AcrylicHelper
         var accent = new AccentPolicy
         {
             AccentState = accentState,
-            AccentFlags = (uint)(isWindow ? 2 : (0x20 | 0x40 | 0x80 | 0x100)),
+            AccentFlags = (uint)(isWindow ? 2 : 0x20 | 0x40 | 0x80 | 0x100),
             GradientColor = 0x00FFFFFF
         };
 
@@ -270,6 +248,28 @@ internal static class AcrylicHelper
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern int SetWindowCompositionAttribute(IntPtr handle, ref WindowCompositionAttributeData data);
+
+    internal enum WindowCompositionAttribute
+    {
+        WCA_ACCENT_POLICY = 19
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct AccentPolicy
+    {
+        public AccentState AccentState;
+        public uint AccentFlags;
+        public uint GradientColor;
+        public uint AnimationId;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct WindowCompositionAttributeData
+    {
+        public WindowCompositionAttribute Attribute;
+        public IntPtr Data;
+        public int SizeOfData;
+    }
 }
 
 internal enum AccentState

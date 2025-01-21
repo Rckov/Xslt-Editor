@@ -1,7 +1,3 @@
-
-using Microsoft.Web.WebView2.Core;
-
-using System.ComponentModel;
 using System.Runtime.Versioning;
 
 using XsltEditor.ViewModels;

@@ -10,9 +10,9 @@ internal class ThemeManager
         { ThemeType.Light, "Resources/Themes/LightBrushes.xaml" }
     };
 
-    public static event Action<ThemeType>? ThemeChanged;
-
     public static ThemeType CurrentTheme { get; private set; } = ThemeType.Light;
+
+    public static event Action<ThemeType>? ThemeChanged;
 
     public static void Apply(ThemeType themeType)
     {

@@ -1,5 +1,10 @@
-﻿namespace XsltEditor.Services.Interfaces;
+﻿using XsltEditor.Transform.Enums;
 
-internal interface IXmlTransformService
+namespace XsltEditor.Services.Interfaces;
+
+public interface IXmlTransformService
 {
+    void Create(EngineType engineType);
+
+    Task<string> TransformAsync(string xml, string xsl, string? rootPath = null);
 }

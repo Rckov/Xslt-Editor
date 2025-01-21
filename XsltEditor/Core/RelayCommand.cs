@@ -9,8 +9,6 @@ internal class RelayCommand : ICommand
     private readonly Func<object?, bool>? _canExecute;
     private readonly Action<object?> _execute;
 
-    public event EventHandler? CanExecuteChanged;
-
     public RelayCommand(Action<object?> execute, Func<object?, bool>? canExecute = null)
     {
         _execute = execute;
@@ -18,6 +16,8 @@ internal class RelayCommand : ICommand
 
         CommandManager.RequerySuggested += (_, _) => RaiseCanExecuteChanged();
     }
+
+    public event EventHandler? CanExecuteChanged;
 
     public void Execute(object? parameter)
     {

@@ -41,8 +41,8 @@
             <ct:WindowBar.LeftContent>
                <Menu VerticalAlignment="Center" Background="Transparent">
                   <MenuItem Header="File">
-                     <MenuItem Header="Open XSL" Icon="&#xE70B;" Command="{Binding OpenFileCommand}" CommandParameter=".xsl" />
-                     <MenuItem Header="Open XML" Icon="&#xE8C4;" Command="{Binding OpenFileCommand}" CommandParameter=".xml" />
+                     <MenuItem Header="Open XSL" Icon="&#xE70B;" Command="{Binding XslDocument.OpenCommand}" />
+                     <MenuItem Header="Open XML" Icon="&#xE8C4;" Command="{Binding XmlDocument.OpenCommand}" />
                   </MenuItem>
 
                   <MenuItem Header="Edit">
@@ -77,10 +77,10 @@
                         <ad:LayoutAnchorablePane DockHeight="2*">
                            <ad:LayoutAnchorable Title="XSL" CanHide="False" CanAutoHide="False" CanDockAsTabbedDocument="False">
                               <Border>
-                                 <ae:TextEditor x:Name="XslEditor">
+                                 <ae:TextEditor x:Name="XslEditor" DataContext="{Binding XslDocument}">
                                     <i:Interaction.Behaviors>
                                        <bh:TextEditorHighlightingBehavior />
-                                       <bh:TextEditorTextBehavior />
+                                       <bh:TextEditorTextBehavior Text="{Binding Content, Mode=TwoWay}" />
                                        <bh:TextEditorCompleteBehavior />
                                        <bh:TextEditorFoldingBehavior />
                                     </i:Interaction.Behaviors>
@@ -95,10 +95,10 @@
                         <ad:LayoutAnchorablePane>
                            <ad:LayoutAnchorable Title="XML" CanHide="False" CanAutoHide="False" CanDockAsTabbedDocument="False">
                               <Border>
-                                 <ae:TextEditor x:Name="XmlEditor">
+                                 <ae:TextEditor x:Name="XmlEditor" DataContext="{Binding XmlDocument}">
                                     <i:Interaction.Behaviors>
                                        <bh:TextEditorHighlightingBehavior />
-                                       <bh:TextEditorTextBehavior />
+                                       <bh:TextEditorTextBehavior Text="{Binding Content, Mode=TwoWay}" />
                                        <bh:TextEditorFoldingBehavior />
                                     </i:Interaction.Behaviors>
                                     <ae:TextEditor.ContextMenu>

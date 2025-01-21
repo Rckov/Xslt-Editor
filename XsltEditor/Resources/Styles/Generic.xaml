@@ -38,6 +38,13 @@
       </Setter>
    </Style>
 
+   <!-- ListBox Style -->
+   <Style TargetType="ListBox">
+      <Setter Property="Foreground" Value="{DynamicResource WindowForegroundColor}" />
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+   </Style>
+
    <!-- ContextMenu Style -->
    <Style TargetType="ContextMenu">
       <Setter Property="Background" Value="{DynamicResource PopupBackgroundColor}" />
@@ -93,6 +100,12 @@
             </ControlTemplate>
          </Setter.Value>
       </Setter>
+   </Style>
+
+   <Style x:Key="CompletionButton" TargetType="Button" BasedOn="{StaticResource CaptionButton}">
+      <Setter Property="Padding" Value="3" />
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="FontFamily" Value="Segoe UI" />
    </Style>
 
    <!-- MenuItem Style -->

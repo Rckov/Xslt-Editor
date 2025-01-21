@@ -11,7 +11,7 @@ namespace XsltEditor.Core.Behaviors;
 [SupportedOSPlatform("windows")]
 internal class TextEditorTextBehavior : Behavior<TextEditor>
 {
-    public static readonly DependencyProperty TextProperty =
+    public static readonly DependencyProperty TextProperty = 
         DependencyProperty.Register(nameof(Text), typeof(string), typeof(TextEditorTextBehavior), new PropertyMetadata(string.Empty, OnTextChanged));
 
     public string Text
