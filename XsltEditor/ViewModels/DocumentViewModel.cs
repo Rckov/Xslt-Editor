@@ -14,7 +14,7 @@ namespace XsltEditor.ViewModels;
 [SupportedOSPlatform("windows")]
 public class DocumentViewModel : ObservableObject
 {
-    private string _extension { get; set; }
+    private readonly string _extension;
 
     public DocumentViewModel(string extension)
     {
