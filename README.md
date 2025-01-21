@@ -5,28 +5,42 @@
 [![Downloads](https://img.shields.io/github/downloads/Rckov/Xslt-Editor/total.svg)](https://github.com/Rckov/Xslt-Editor/releases/latest)
 [![GitHub Release](https://img.shields.io/github/v/release/Rckov/Xslt-Editor)](https://github.com/Rckov/Xslt-Editor/releases/latest)
 
-A simple and convenient XSLT editor with real-time compilation and a Fluent Window style interface.
+A lightweight XSLT editor with real-time compilation and Fluent Design interface.
+
+## Table of Contents
+- [Features](#features)
+- [Installation](#installation)
+- [Preview](#preview)
+- [Roadmap](#roadmap)
+- [License](#license)
 
 ## Features
-
-- **XSLT v1**: Compilation support using `XslCompiledTransform`.
-- **Auto-completion**: Auto-completion support with the ability to edit sentences in `Resources/completions.json` or the corresponding window.
+- **XSLT 1.0 Support**  
+  Instant error checking using `XslCompiledTransform` with live diagnostics.
+- **Smart Autocompletion**  
+  Context-aware suggestions for elements, attributes, and functions. Customizable via `Resources/completions.json`.
+- **Theme Support**  
+  Dark and light themes with adaptive UI components.
+- **Syntax Highlighting**  
+  Advanced code coloring for XSLT, XML, and XPath.
 
 ## Installation
-
-1. Go to the [releases page](https://github.com/Rckov/Xslt-Editor/releases/latest) and download the latest version.
-2. Extract the archive.
-3. Run the application.
+1. Download the latest release from [Releases](https://github.com/Rckov/Xslt-Editor/releases/latest).
+2. Extract the ZIP archive to your preferred directory.
+3. Run `XsltEditor.exe`.  
 
 ## Preview
+| Dark Theme | Light Theme |
+|------------|-------------|
+| ![Dark Theme](Images/preview-dark.png) | ![Light Theme](Images/preview-light.png) |
 
-![PREVIEW](Images/preview.png)
-
-## Future Plans
-
-- [ ] **Dynamic Font Color Adjustment**: Add automatic font color change to light mode depending on the theme.
-- [ ] **Saxon Support**: Integrate Saxon for better XSLT 2.0+ support.
+## Roadmap
+- [ ] 🚀 **Saxon-HE Integration**  
+  Add support for XSLT 2.0+/3.0 and XPath 3.1 via Saxon-HE engine.
+- [x] 🎨 **Dynamic Color Adaptation**  
+  Auto-adjust editor font colors based on active theme. *(Implemented in v1.0.4)*
+- [ ] 🔧 **Enhanced Snippets**  
+  Prebuilt templates for common patterns (e.g., `xsl:template`, `xsl:for-each`).
 
 ## License
-
-This project is licensed under the [MIT](LICENSE) license.
+Licensed under [MIT](LICENSE). [Report an Issue](https://github.com/Rckov/Xslt-Editor/issues)
