@@ -7,18 +7,11 @@
 
 A lightweight XSLT editor with real-time compilation and Fluent Design interface.
 
-## Table of Contents
-- [Features](#features)
-- [Installation](#installation)
-- [Preview](#preview)
-- [Roadmap](#roadmap)
-- [License](#license)
-
 ## Features
 - **XSLT 1.0 Support**  
   Instant error checking using `XslCompiledTransform` with live diagnostics.
 - **Smart Autocompletion**  
-  Context-aware suggestions for elements, attributes, and functions. Customizable via `Resources/completions.json`.
+  Context-aware suggestions for elements, attributes, and functions.
 - **Theme Support**  
   Dark and light themes with adaptive UI components.
 - **Syntax Highlighting**  
