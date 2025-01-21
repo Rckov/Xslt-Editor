@@ -1,190 +1,161 @@
-<Window x:Class="XsltEditor.Views.MainView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:wv="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
-        xmlns:ct="clr-namespace:XsltEditor.Controls"
-        xmlns:textEditor="clr-namespace:XsltEditor.Tools.Behaviors.TextEditor"
-        xmlns:webView="clr-namespace:XsltEditor.Tools.Behaviors.WebView"
-        xmlns:window="clr-namespace:XsltEditor.Tools.Behaviors.Window"
-        xmlns:ad="https://github.com/Dirkster99/AvalonDock"
-        Title="Xslt Editor"
-        Height="650"
-        Width="1200"
-        ResizeMode="CanResizeWithGrip"
-        WindowStartupLocation="CenterScreen"
-        Style="{StaticResource WindowStyle}">
+<ct:Window x:Class="XsltEditor.Views.MainView"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 
-    <!-- Window Behaviors -->
-    <i:Interaction.Behaviors>
-        <window:WindowBehavior />
-    </i:Interaction.Behaviors>
+           xmlns:ct="clr-namespace:XsltEditor.Controls"
+           xmlns:bh="clr-namespace:XsltEditor.Core.Behaviors"
 
-    <!-- Main Layout -->
-    <Border Style="{StaticResource BorderlessWindow}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+           xmlns:ad="https://github.com/Dirkster99/AvalonDock"
+           xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
+           xmlns:wv="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
 
-            <!-- Window Bar -->
-            <ct:WindowBar Grid.Row="0">
-                <ct:WindowBar.LeftContent>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
+           Height="650"
+           Width="1200"
+           Title="Xslt Editor"
 
-                        <StackPanel Grid.Column="0" Orientation="Horizontal">
-                            <Menu VerticalAlignment="Center" Background="Transparent">
-                                <MenuItem Header="File">
-                                    <MenuItem Header="Open XSL" Icon="&#xE70B;" Command="{Binding OpenFileCommand}"
-                                              CommandParameter=".xsl" />
-                                    <MenuItem Header="Open XML" Icon="&#xE8C4;" Command="{Binding OpenFileCommand}"
-                                              CommandParameter=".xml" />
-                                </MenuItem>
+           ResizeMode="CanResizeWithGrip"
+           WindowStartupLocation="CenterScreen"
+           Style="{StaticResource WindowStyle}" AcrylicEffect="True">
 
-                                <MenuItem Header="Edit">
-                                    <MenuItem Icon="&#xE7A7;" Command="ApplicationCommands.Undo" />
-                                    <MenuItem Icon="&#xE7A6;" Command="ApplicationCommands.Redo" />
-                                    <MenuItem Icon="&#xE8C8;" Command="ApplicationCommands.Copy" />
-                                    <MenuItem Icon="&#xE8C6;" Command="ApplicationCommands.Cut" />
-                                    <MenuItem Icon="&#xE77F;" Command="ApplicationCommands.Paste" />
-                                    <MenuItem Icon="&#xE74D;" Command="ApplicationCommands.Delete" />
-                                </MenuItem>
+   <ct:Window.Resources>
+      <ContextMenu x:Key="CommonTextEditorContextMenu">
+         <MenuItem Icon="&#xE7A7;" Command="ApplicationCommands.Undo" />
+         <MenuItem Icon="&#xE7A6;" Command="ApplicationCommands.Redo" />
+         <MenuItem Icon="&#xE8C8;" Command="ApplicationCommands.Copy" />
+         <MenuItem Icon="&#xE8C6;" Command="ApplicationCommands.Cut" />
+         <MenuItem Icon="&#xE77F;" Command="ApplicationCommands.Paste" />
+         <MenuItem Icon="&#xE74D;" Command="ApplicationCommands.Delete" />
+      </ContextMenu>
+   </ct:Window.Resources>
 
-                                <MenuItem Header="Tools">
-                                    <MenuItem Header="Completion Data" Icon="&#xE75D;" Command="{Binding OpenCompletionWindowCommand}" />
-                                </MenuItem>
+   <Border Style="{StaticResource BorderWindow}">
+      <Grid>
+         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+         </Grid.RowDefinitions>
 
-                                <Separator Style="{StaticResource VerticalSeparator}" Height="20" />
+         <ct:WindowBar Grid.Row="0" Background="{DynamicResource WindowBackgroundColor}">
+            <ct:WindowBar.LeftContent>
+               <Menu VerticalAlignment="Center" Background="Transparent">
+                  <MenuItem Header="File">
+                     <MenuItem Header="Open XSL" Icon="&#xE70B;" Command="{Binding XslDocument.OpenCommand}" />
+                     <MenuItem Header="Open XML" Icon="&#xE8C4;" Command="{Binding XmlDocument.OpenCommand}" />
+                  </MenuItem>
 
-                                <MenuItem Icon="&#xE721;" Command="ApplicationCommands.Find" />
-                            </Menu>
-                        </StackPanel>
-                    </Grid>
-                </ct:WindowBar.LeftContent>
-            </ct:WindowBar>
+                  <MenuItem Header="Edit">
+                     <MenuItem Icon="&#xE7A7;" Command="ApplicationCommands.Undo" />
+                     <MenuItem Icon="&#xE7A6;" Command="ApplicationCommands.Redo" />
+                     <MenuItem Icon="&#xE8C8;" Command="ApplicationCommands.Copy" />
+                     <MenuItem Icon="&#xE8C6;" Command="ApplicationCommands.Cut" />
+                     <MenuItem Icon="&#xE77F;" Command="ApplicationCommands.Paste" />
+                     <MenuItem Icon="&#xE74D;" Command="ApplicationCommands.Delete" />
+                  </MenuItem>
 
-            <!-- Docking Manager -->
-            <Border Grid.Row="1" Padding="5,5,5,0" Background="{DynamicResource WindowBackgroundSecondaryColor}">
-                <ad:DockingManager AnchorablePaneControlStyle="{StaticResource CustomLayoutAnchorablePane}">
-                    <ad:LayoutRoot>
-                        <ad:LayoutPanel Orientation="Horizontal">
+                  <MenuItem Header="Tools">
+                     <MenuItem Header="Completion Data" Icon="&#xE75D;" Command="{Binding OpenCompletionWindowCommand}" />
+                  </MenuItem>
 
-                            <!-- XSL and XML Group Editors -->
-                            <ad:LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="2*">
-                                <ad:LayoutAnchorablePane DockHeight="2*">
-                                    <ad:LayoutAnchorable Title="XSL" CanHide="False" CanAutoHide="False"
-                                                         CanDockAsTabbedDocument="False">
+                  <Separator Style="{StaticResource VerticalSeparator}" Height="20" />
 
-                                        <!-- XSL Editor -->
-                                        <Border Padding="0 5 0 0" Background="{DynamicResource WindowBackgroundColor}">
-                                            <ae:TextEditor x:Name="XslEditor">
-                                                <i:Interaction.Behaviors>
-                                                    <textEditor:TextEditorHighlightingBehavior />
-                                                    <textEditor:TextEditorTextBehavior  Text="{Binding XslDocument.Content, Mode=TwoWay}" />
-                                                    <textEditor:TextEditorFoldingBehavior />
-                                                    <textEditor:TextEditorCompleteBehavior />
-                                                </i:Interaction.Behaviors>
-                                                <ae:TextEditor.InputBindings>
-                                                    <KeyBinding Key="S" Modifiers="Control"
-                                                                Command="{Binding SaveFileCommand}"
-                                                                CommandParameter="{Binding XslDocument}" />
-                                                </ae:TextEditor.InputBindings>
-                                            </ae:TextEditor>
-                                        </Border>
-                                    </ad:LayoutAnchorable>
-                                </ad:LayoutAnchorablePane>
+                  <MenuItem Icon="&#xE721;" Command="ApplicationCommands.Find" />
+               </Menu>
+            </ct:WindowBar.LeftContent>
 
-                                <ad:LayoutAnchorablePane>
-                                    <ad:LayoutAnchorable Title="XML" CanHide="False" CanAutoHide="False"
-                                                         CanDockAsTabbedDocument="False">
+            <ct:WindowBar.RightContent>
+               <Button Content="&#xE706;" FontSize="12" Style="{StaticResource CaptionButton}" Command="{Binding SwitchThemeCommand}" />
+            </ct:WindowBar.RightContent>
+         </ct:WindowBar>
 
-                                        <!-- XML Editor -->
-                                        <Border Padding="0 5 0 0" Background="{DynamicResource WindowBackgroundColor}">
-                                            <ae:TextEditor x:Name="XmlEditor">
-                                                <i:Interaction.Behaviors>
-                                                    <textEditor:TextEditorHighlightingBehavior />
-                                                    <textEditor:TextEditorTextBehavior Text="{Binding XmlDocument.Content, Mode=TwoWay}" />
-                                                    <textEditor:TextEditorFoldingBehavior />
-                                                    <textEditor:TextEditorCompleteBehavior />
-                                                </i:Interaction.Behaviors>
-                                                <ae:TextEditor.InputBindings>
-                                                    <KeyBinding Key="S" Modifiers="Control"
-                                                                Command="{Binding SaveFileCommand}"
-                                                                CommandParameter="{Binding XmlDocument}" />
-                                                </ae:TextEditor.InputBindings>
-                                            </ae:TextEditor>
-                                        </Border>
-                                    </ad:LayoutAnchorable>
-                                </ad:LayoutAnchorablePane>
-                            </ad:LayoutAnchorablePaneGroup>
+         <Border Grid.Row="1" Padding="5,5,5,0">
+            <ad:DockingManager AnchorablePaneControlStyle="{StaticResource CustomLayoutAnchorablePane}">
+               <ad:LayoutRoot>
+                  <ad:LayoutPanel Orientation="Horizontal">
+                     <ad:LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="2*">
+                        <ad:LayoutAnchorablePane DockHeight="2*">
+                           <ad:LayoutAnchorable Title="XSL" CanHide="False" CanAutoHide="False" CanDockAsTabbedDocument="False">
+                              <Border>
+                                 <ae:TextEditor x:Name="XslEditor" DataContext="{Binding XslDocument}">
+                                    <i:Interaction.Behaviors>
+                                       <bh:TextEditorHighlightingBehavior />
+                                       <bh:TextEditorTextBehavior Text="{Binding Content, Mode=TwoWay}" />
+                                       <bh:TextEditorCompleteBehavior />
+                                       <bh:TextEditorFoldingBehavior />
+                                    </i:Interaction.Behaviors>
+                                    <ae:TextEditor.ContextMenu>
+                                       <StaticResource ResourceKey="CommonTextEditorContextMenu" />
+                                    </ae:TextEditor.ContextMenu>
+                                 </ae:TextEditor>
+                              </Border>
+                           </ad:LayoutAnchorable>
+                        </ad:LayoutAnchorablePane>
 
-                            <!-- WebView Result -->
-                            <ad:LayoutAnchorablePane>
-                                <ad:LayoutAnchorable Title="Result" CanHide="False" CanAutoHide="False"
-                                                     CanDockAsTabbedDocument="False">
-                                    <wv:WebView2 DefaultBackgroundColor="Transparent">
-                                        <i:Interaction.Behaviors>
-                                            <webView:WebView2Behavior />
-                                        </i:Interaction.Behaviors>
-                                    </wv:WebView2>
-                                </ad:LayoutAnchorable>
-                            </ad:LayoutAnchorablePane>
-                        </ad:LayoutPanel>
-                    </ad:LayoutRoot>
-                </ad:DockingManager>
-            </Border>
+                        <ad:LayoutAnchorablePane>
+                           <ad:LayoutAnchorable Title="XML" CanHide="False" CanAutoHide="False" CanDockAsTabbedDocument="False">
+                              <Border>
+                                 <ae:TextEditor x:Name="XmlEditor" DataContext="{Binding XmlDocument}">
+                                    <i:Interaction.Behaviors>
+                                       <bh:TextEditorHighlightingBehavior />
+                                       <bh:TextEditorTextBehavior Text="{Binding Content, Mode=TwoWay}" />
+                                       <bh:TextEditorFoldingBehavior />
+                                    </i:Interaction.Behaviors>
+                                    <ae:TextEditor.ContextMenu>
+                                       <StaticResource ResourceKey="CommonTextEditorContextMenu" />
+                                    </ae:TextEditor.ContextMenu>
+                                 </ae:TextEditor>
+                              </Border>
+                           </ad:LayoutAnchorable>
+                        </ad:LayoutAnchorablePane>
+                     </ad:LayoutAnchorablePaneGroup>
 
-            <!-- Status Bar -->
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+                     <ad:LayoutAnchorablePane>
+                        <ad:LayoutAnchorable Title="Result" CanHide="False" CanAutoHide="False" CanDockAsTabbedDocument="False">
+                           <wv:WebView2 DefaultBackgroundColor="Transparent">
+                              <i:Interaction.Behaviors>
+                                 <bh:WebView2Behavior />
+                              </i:Interaction.Behaviors>
+                           </wv:WebView2>
+                        </ad:LayoutAnchorable>
+                     </ad:LayoutAnchorablePane>
+                  </ad:LayoutPanel>
+               </ad:LayoutRoot>
+            </ad:DockingManager>
+         </Border>
 
-                <!-- Left Status Bar -->
-                <StackPanel Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="&#xF745;" Margin="0,0,3,0" FontSize="9" FontFamily="{StaticResource FontIcon}"
-                               VerticalAlignment="Center" />
-                    <TextBlock>
-                        <Run Text="{Binding ElementName=XslEditor, Path=TextArea.Caret.Position.Line, StringFormat=Line: {0}}" />
-                        <Run Text="{Binding ElementName=XslEditor, Path=TextArea.Document.LineCount, StringFormat=/ {0}, Mode=OneWay}" />
-                    </TextBlock>
-                    <TextBlock
-                        Text="{Binding ElementName=XslEditor, Path=TextArea.Caret.Position.Column, StringFormat=Column: {0}}"
-                        Margin="5,0,0,0" />
-                </StackPanel>
+         <Grid Grid.Row="2" Background="{DynamicResource WindowBackgroundColor}">
+            <Grid.ColumnDefinitions>
+               <ColumnDefinition />
+               <ColumnDefinition />
+            </Grid.ColumnDefinitions>
 
-                <!-- Right Status Bar -->
-                <Grid Grid.Column="1" Margin="5" HorizontalAlignment="Right">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="5" />
-                        <ColumnDefinition Width="80" />
-                    </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Margin="5">
+               <TextBlock Text="&#xF745;" Margin="0,0,3,0" FontSize="9" FontFamily="{StaticResource FontIcon}" VerticalAlignment="Center" />
+               <TextBlock>
+                  <Run Text="{Binding ElementName=XslEditor, Path=TextArea.Caret.Position.Line, StringFormat=Line: {0}}" />
+                  <Run Text="{Binding ElementName=XslEditor, Path=TextArea.Document.LineCount, StringFormat=/ {0}, Mode=OneWay}" />
+               </TextBlock>
+               <TextBlock Text="{Binding ElementName=XslEditor, Path=TextArea.Caret.Position.Column, StringFormat=Column: {0}}" Margin="5,0,0,0" />
+            </StackPanel>
 
-                    <!-- Changes Indicator -->
-                    <TextBlock Grid.Column="0"
-                               TextAlignment="Right"
-                               Margin="0,0,5,0"
-                               Text="{Binding XslDocument.HasChanged, Converter={StaticResource BooleanToChangesConverter}, StringFormat='Changes: {0}'}" />
+            <Grid Grid.Column="1" Margin="5" HorizontalAlignment="Right">
+               <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="Auto" />
+                  <ColumnDefinition Width="5" />
+                  <ColumnDefinition Width="80" />
+               </Grid.ColumnDefinitions>
 
-                    <!-- Separator -->
-                    <Separator Grid.Column="1" Height="13" HorizontalAlignment="Center"
-                               Style="{StaticResource VerticalSeparator}" />
-
-                    <!-- Encoding Info -->
-                    <TextBlock Grid.Column="2"
-                               Text="{Binding XslDocument.Encoding.HeaderName, StringFormat='Encoding {0}', FallbackValue='Encoding: def'}"
-                               TextAlignment="Left" TextTrimming="CharacterEllipsis" />
-                </Grid>
+               <TextBlock Grid.Column="0"
+                          TextAlignment="Right"
+                          Margin="0,0,5,0"
+                          Text="{Binding XslDocument.HasChanged, Converter={StaticResource BooleanToChangesConverter}, StringFormat='Changes: {0}'}" />
+               <Separator Grid.Column="1" Height="13" HorizontalAlignment="Center" Style="{StaticResource VerticalSeparator}" />
+               <TextBlock Grid.Column="2"
+                          Text="{Binding XslDocument.Encoding.HeaderName, StringFormat='Encoding {0}', FallbackValue='Encoding: def'}"
+                          TextAlignment="Left" TextTrimming="CharacterEllipsis" />
             </Grid>
-        </Grid>
-    </Border>
-</Window>
+         </Grid>
+      </Grid>
+   </Border>
+</ct:Window>

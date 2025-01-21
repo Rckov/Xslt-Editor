@@ -1,102 +1,103 @@
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:cc="clr-namespace:ICSharpCode.AvalonEdit.CodeCompletion;assembly=ICSharpCode.AvalonEdit">
 
-    <!-- AvalonEdit Style -->
-    <Style TargetType="ae:TextEditor">
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="FontFamily" Value="Consolas" />
-        <Setter Property="Foreground" Value="{DynamicResource WindowForegroundColor}" />
-        <Setter Property="ShowLineNumbers" Value="True" />
-        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
-        <Setter Property="Options">
-            <Setter.Value>
-                <ae:TextEditorOptions
-                    ConvertTabsToSpaces="True"
-                    EnableEmailHyperlinks="False"
-                    EnableHyperlinks="False" />
-            </Setter.Value>
-        </Setter>
-    </Style>
+   <!-- AvalonEdit Style -->
+   <Style TargetType="ae:TextEditor">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="FontFamily" Value="Consolas" />
+      <Setter Property="Foreground" Value="{DynamicResource WindowForegroundColor}" />
+      <Setter Property="ShowLineNumbers" Value="True" />
+      <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+      <Setter Property="Options">
+         <Setter.Value>
+            <ae:TextEditorOptions ConvertTabsToSpaces="True" EnableEmailHyperlinks="False" EnableHyperlinks="False" />
+         </Setter.Value>
+      </Setter>
+   </Style>
 
-    <!-- AvalonEdit SearchPanel Style -->
-    <Style TargetType="ae:SearchPanel">
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-        <Setter Property="Background" Value="{DynamicResource PopupBackgroundColor}" />
+   <!-- AvalonEdit SearchPanel Style -->
+   <Style TargetType="ae:SearchPanel">
+      <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+      <Setter Property="Background" Value="{DynamicResource PopupBackgroundColor}" />
 
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="ae:SearchPanel">
-                    <Border BorderThickness="1" Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}" VerticalAlignment="Top"
-                            HorizontalAlignment="Center" Padding="2" Width="300">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBox Name="PART_searchTextBox" Focusable="True" Margin="0,0,3,0" Grid.Column="0"
-                                     Padding="6" FontSize="11" BorderThickness="1"
-                                     BorderBrush="{DynamicResource BorderColor}"
-                                     Foreground="{DynamicResource WindowForegroundColor}"
-                                     Background="{DynamicResource WindowBackgroundSecondaryColor}">
+      <Setter Property="Template">
+         <Setter.Value>
+            <ControlTemplate TargetType="ae:SearchPanel">
+               <Border BorderThickness="1"
+                       Background="{TemplateBinding Background}"
+                       BorderBrush="{TemplateBinding BorderBrush}"
+                       VerticalAlignment="Top"
+                       HorizontalAlignment="Center"
+                       Padding="2"
+                       Width="300">
+                  <Grid>
+                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                     </Grid.ColumnDefinitions>
+                     <TextBox Name="PART_searchTextBox" Focusable="True" Margin="0,0,3,0" Grid.Column="0"
+                              Padding="6,8,6,0" FontSize="11" BorderThickness="1"
+                              BorderBrush="{DynamicResource BorderColor}"
+                              Foreground="{DynamicResource WindowForegroundColor}"
+                              Background="{DynamicResource PopupBackgroundColor}">
 
-                                <TextBox.Text>
-                                    <Binding Path="SearchPattern" RelativeSource="{RelativeSource TemplatedParent}"
-                                             UpdateSourceTrigger="PropertyChanged">
-                                        <Binding.ValidationRules>
-                                            <ExceptionValidationRule />
-                                        </Binding.ValidationRules>
-                                    </Binding>
-                                </TextBox.Text>
-                                <TextBox.Style>
-                                    <Style TargetType="TextBox">
-                                        <Setter Property="Height" Value="30" />
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="TextBox">
-                                                    <Border x:Name="Border" Background="{TemplateBinding Background}"
-                                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                                            BorderThickness="{TemplateBinding BorderThickness}">
-                                                        <ScrollViewer x:Name="PART_ContentHost" />
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </TextBox.Style>
-                            </TextBox>
+                        <TextBox.Text>
+                           <Binding Path="SearchPattern" RelativeSource="{RelativeSource TemplatedParent}" UpdateSourceTrigger="PropertyChanged">
+                              <Binding.ValidationRules>
+                                 <ExceptionValidationRule />
+                              </Binding.ValidationRules>
+                           </Binding>
+                        </TextBox.Text>
+                        <TextBox.Style>
+                           <Style TargetType="TextBox">
+                              <Setter Property="Height" Value="30" />
+                              <Setter Property="Template">
+                                 <Setter.Value>
+                                    <ControlTemplate TargetType="TextBox">
+                                       <Border x:Name="Border"
+                                               Background="{TemplateBinding Background}"
+                                               BorderBrush="{TemplateBinding BorderBrush}"
+                                               BorderThickness="{TemplateBinding BorderThickness}">
+                                          <ScrollViewer x:Name="PART_ContentHost" />
+                                       </Border>
+                                    </ControlTemplate>
+                                 </Setter.Value>
+                              </Setter>
+                           </Style>
+                        </TextBox.Style>
+                     </TextBox>
 
-                            <Button Grid.Column="1" Content="&#xE973;" Width="30" Height="30"
-                                    Command="ae:SearchCommands.FindNext"
-                                    ToolTip="{Binding Localization.FindNextText, RelativeSource={RelativeSource TemplatedParent}}"
-                                    Style="{StaticResource CaptionButton}" BorderThickness="0" />
+                     <Button Grid.Column="1" Content="&#xE973;" Width="30" Height="30"
+                             Command="ae:SearchCommands.FindNext"
+                             ToolTip="{Binding Localization.FindNextText, RelativeSource={RelativeSource TemplatedParent}}"
+                             Style="{StaticResource CaptionButton}" BorderThickness="0" />
 
-                            <Button Grid.Column="2" Content="&#xE974;" Width="30" Height="30"
-                                    Command="ae:SearchCommands.FindPrevious"
-                                    ToolTip="{Binding Localization.FindPreviousText, RelativeSource={RelativeSource TemplatedParent}}"
-                                    Style="{StaticResource CaptionButton}" BorderThickness="0" />
+                     <Button Grid.Column="2" Content="&#xE974;" Width="30" Height="30"
+                             Command="ae:SearchCommands.FindPrevious"
+                             ToolTip="{Binding Localization.FindPreviousText, RelativeSource={RelativeSource TemplatedParent}}"
+                             Style="{StaticResource CaptionButton}" BorderThickness="0" />
 
-                            <Button Grid.Column="3" Content="&#xE711;" Width="30" Height="30"
-                                    Command="ae:SearchCommands.CloseSearchPanel" Style="{StaticResource CaptionButton}"
-                                    BorderThickness="0" />
-                        </Grid>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+                     <Button Grid.Column="3" Content="&#xE711;" Width="30" Height="30"
+                             Command="ae:SearchCommands.CloseSearchPanel" Style="{StaticResource CaptionButton}"
+                             BorderThickness="0" />
+                  </Grid>
+               </Border>
+            </ControlTemplate>
+         </Setter.Value>
+      </Setter>
+   </Style>
 
-    <!-- Completion Style -->
-    <Style TargetType="cc:CompletionWindow">
-        <Setter Property="Foreground" Value="{DynamicResource WindowForegroundColor}" />
-        <Setter Property="Background" Value="{DynamicResource PopupBackgroundColor}" />
-    </Style>
+   <!-- Completion Style -->
+   <Style TargetType="cc:CompletionWindow">
+      <Setter Property="Foreground" Value="{DynamicResource WindowForegroundColor}" />
+      <Setter Property="Background" Value="{DynamicResource PopupBackgroundColor}" />
+   </Style>
 
-    <Style TargetType="cc:CompletionListBox">
-        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
-    </Style>
+   <Style TargetType="cc:CompletionListBox">
+      <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+   </Style>
 </ResourceDictionary>

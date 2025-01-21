@@ -2,7 +2,6 @@
 using System.Xml;
 using System.Xml.Linq;
 
-using XsltEditor.Models;
 using XsltEditor.Services.Interfaces;
 using XsltEditor.Transform;
 using XsltEditor.Transform.Enums;
@@ -13,30 +12,24 @@ namespace XsltEditor.Services;
 [SupportedOSPlatform("windows")]
 internal class XmlTransformService : IXmlTransformService
 {
-    private readonly Transformer _transformer;
-    private readonly XsltUriResolver _xsltUriResolver;
-
-    public XmlTransformService()
-    {
-        _transformer = new Transformer();
-        _xsltUriResolver = new XsltUriResolver();
-    }
+    private readonly Transformer _transformer = new();
+    private readonly XsltUriResolver _xsltUriResolver = new();
 
     public void Create(EngineType engineType)
     {
         _transformer.Create(engineType);
     }
 
-    public async Task<string> TransformAsync(TextDocument xsl, TextDocument xml)
+    public async Task<string> TransformAsync(string xsl, string xml, string? rootPath = null)
     {
         try
         {
-            using var xslReader = GetReader(xsl.Content);
-            using var xmlReader = GetReader(xml.Content);
+            using var xslReader = GetReader(xsl);
+            using var xmlReader = GetReader(xml);
 
-            if (!string.IsNullOrWhiteSpace(xsl.FilePath))
+            if (!string.IsNullOrWhiteSpace(rootPath))
             {
-                _xsltUriResolver.SetBaseUri(xsl.FilePath);
+                _xsltUriResolver.SetBaseUri(rootPath);
             }
 
             return await _transformer.TransformAsync(xmlReader, xslReader, _xsltUriResolver);

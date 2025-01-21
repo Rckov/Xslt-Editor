@@ -1,59 +1,55 @@
-﻿<Window x:Class="XsltEditor.Views.CompletionView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:ct="clr-namespace:XsltEditor.Controls"
-        xmlns:window="clr-namespace:XsltEditor.Tools.Behaviors.Window"
-        Title="Completion Data Editor" Height="420" Width="300"
-        ResizeMode="CanResizeWithGrip"
-        WindowStartupLocation="CenterScreen"
-        Style="{StaticResource WindowStyle}">
+﻿<ct:Window x:Class="XsltEditor.Views.CompletionView"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 
-    <i:Interaction.Behaviors>
-        <window:WindowBehavior />
-    </i:Interaction.Behaviors>
+           xmlns:ct="clr-namespace:XsltEditor.Controls"
 
-    <Border Style="{StaticResource BorderlessWindow}">
-        <Grid>
+           Height="450"
+           Width="800"
+           Title="CompletionView"
+
+           ResizeMode="CanResizeWithGrip"
+           WindowStartupLocation="CenterScreen"
+           Style="{StaticResource WindowStyle}" AcrylicEffect="True">
+
+   <Border Style="{StaticResource BorderWindow}">
+      <Grid>
+         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+         </Grid.RowDefinitions>
+
+         <ct:WindowBar Grid.Row="0" ShowTitle="True" />
+
+         <Grid Margin="5" Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition />
+               <RowDefinition Height="*" />
+               <RowDefinition Height="Auto" />
+               <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <ct:WindowBar Grid.Row="0" ShowTitle="True" />
+            <ListBox ItemsSource="{Binding CompletionData}" SelectedItem="{Binding SelectedData}" DisplayMemberPath="Text" />
 
-            <Grid Margin="5" Grid.Row="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+            <StackPanel Grid.Row="1" Margin="0,5">
+               <TextBlock Text="New completion text:" Margin="0,0,0,5" />
+               <TextBox Text="{Binding NameData}"
+                        Foreground="{DynamicResource WindowForegroundColor}"
+                        Background="{DynamicResource PopupBackgroundColor}"
+                        BorderBrush="{DynamicResource BorderColor}" Padding="2" />
+            </StackPanel>
 
-                <ListBox ItemsSource="{Binding CompletionData}" SelectedItem="{Binding SelectedData}" DisplayMemberPath="Text" />
+            <Grid Grid.Row="2">
+               <Grid.ColumnDefinitions>
+                  <ColumnDefinition />
+                  <ColumnDefinition />
+                  <ColumnDefinition />
+               </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Row="1" Margin="0,5">
-                    <TextBlock Text="New completion text:" Margin="0,0,0,5" />
-                    <TextBox Text="{Binding NameData}"
-                             Foreground="{DynamicResource WindowForegroundColor}"
-                             Background="{DynamicResource PopupBackgroundColor}"
-                             BorderBrush="{DynamicResource BorderColor}" Padding="2" />
-                </StackPanel>
-
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-
-                    <Button Grid.Column="0" Content="Add" Command="{Binding AddCommand}"
-                            Style="{StaticResource CompletionButton}" />
-                    <Button Grid.Column="1" Content="Delete" Command="{Binding DeleteCommand}"
-                            Style="{StaticResource CompletionButton}" />
-                    <Button Grid.Column="2" Content="Save" Command="{Binding SaveCommand}"
-                            Style="{StaticResource CompletionButton}" />
-                </Grid>
+               <Button Grid.Column="0" Content="Add" Command="{Binding AddCommand}" Style="{StaticResource CompletionButton}" />
+               <Button Grid.Column="1" Content="Delete" Command="{Binding DeleteCommand}" Style="{StaticResource CompletionButton}" />
+               <Button Grid.Column="2" Content="Save" Command="{Binding SaveCommand}" Style="{StaticResource CompletionButton}" />
             </Grid>
-        </Grid>
-    </Border>
-</Window>
+         </Grid>
+      </Grid>
+   </Border>
+</ct:Window>

@@ -8,10 +8,10 @@ using System.Windows;
 
 using XsltEditor.ViewModels;
 
-namespace XsltEditor.Tools.Behaviors.WebView;
+namespace XsltEditor.Core.Behaviors;
 
 [SupportedOSPlatform("windows")]
-public class WebView2Behavior : Behavior<WebView2>
+internal class WebView2Behavior : Behavior<WebView2>
 {
     protected override async void OnAttached()
     {
@@ -41,23 +41,12 @@ public class WebView2Behavior : Behavior<WebView2>
 
     private async Task InitializeWebViewBrowserAsync()
     {
-        var webView2Environment = await CoreWebView2Environment.CreateAsync(null, null,
-            new CoreWebView2EnvironmentOptions
-            {
-                AreBrowserExtensionsEnabled = false
-            });
+        var webView2Environment = await CoreWebView2Environment.CreateAsync(null, null, new CoreWebView2EnvironmentOptions
+        {
+            AreBrowserExtensionsEnabled = false
+        });
 
         await AssociatedObject.EnsureCoreWebView2Async(webView2Environment);
-
-        AssociatedObject.CoreWebView2.IsMuted = true;
-        AssociatedObject.CoreWebView2.Settings.IsWebMessageEnabled = false;
-        AssociatedObject.CoreWebView2.Settings.IsReputationCheckingRequired = false;
-        AssociatedObject.CoreWebView2.Settings.IsNonClientRegionSupportEnabled = false;
-        AssociatedObject.CoreWebView2.Settings.IsGeneralAutofillEnabled = false;
-        AssociatedObject.CoreWebView2.Settings.IsStatusBarEnabled = false;
-        AssociatedObject.CoreWebView2.Settings.AreDefaultScriptDialogsEnabled = false;
-        AssociatedObject.CoreWebView2.Settings.IsSwipeNavigationEnabled = false;
-        AssociatedObject.CoreWebView2.Profile.PreferredColorScheme = CoreWebView2PreferredColorScheme.Dark;
 
         if (AssociatedObject.DataContext is MainViewModel viewModel)
         {

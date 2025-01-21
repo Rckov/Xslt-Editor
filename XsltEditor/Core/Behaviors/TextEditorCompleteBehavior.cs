@@ -1,3 +1,4 @@
+﻿using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -10,13 +11,13 @@ using System.Windows.Input;
 using XsltEditor.Models;
 using XsltEditor.Services.Interfaces;
 
-namespace XsltEditor.Tools.Behaviors.TextEditor;
+namespace XsltEditor.Core.Behaviors;
 
 [SupportedOSPlatform("windows")]
-internal class TextEditorCompleteBehavior : Behavior<ICSharpCode.AvalonEdit.TextEditor>
+internal class TextEditorCompleteBehavior : Behavior<TextEditor>
 {
-    private IList<CompletionData>? _completionDataList;
     private CompletionWindow? _completionWindow;
+    private IList<CompletionData>? _completionDataList;
 
     public TextEditorCompleteBehavior()
     {

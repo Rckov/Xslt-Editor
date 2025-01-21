@@ -1,3 +1,4 @@
+﻿using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 
@@ -8,11 +9,19 @@ using System.Runtime.Versioning;
 using System.Windows;
 using System.Xml;
 
-namespace XsltEditor.Tools.Behaviors.TextEditor;
+using XsltEditor.Tools;
+
+namespace XsltEditor.Core.Behaviors;
 
 [SupportedOSPlatform("windows")]
-internal class TextEditorHighlightingBehavior : Behavior<ICSharpCode.AvalonEdit.TextEditor>
+internal class TextEditorHighlightingBehavior : Behavior<TextEditor>
 {
+    public static Dictionary<ThemeType, string> _highlightings = new()
+    {
+        { ThemeType.Dark, "XsltEditor.Resources.Xshd.DarkMode.xshd" },
+        { ThemeType.Light, "XsltEditor.Resources.Xshd.LightMode.xshd" }
+    };
+
     protected override void OnAttached()
     {
         base.OnAttached();
@@ -22,15 +31,22 @@ internal class TextEditorHighlightingBehavior : Behavior<ICSharpCode.AvalonEdit.
             return;
         }
 
-        LoadHighlighting();
+        ThemeManager.ThemeChanged += LoadHighlighting;
+        LoadHighlighting(ThemeManager.CurrentTheme);
     }
 
-    private void LoadHighlighting()
+    protected override void OnDetaching()
+    {
+        ThemeManager.ThemeChanged -= LoadHighlighting;
+        base.OnDetaching();
+    }
+
+    private void LoadHighlighting(ThemeType type)
     {
         try
         {
-            using var stream = Assembly.GetExecutingAssembly()
-                .GetManifestResourceStream("XsltEditor.Resources.Xshd.HighlightingMode.xshd");
+            var highlighting = _highlightings[type];
+            using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(highlighting);
 
             if (stream == null)
             {

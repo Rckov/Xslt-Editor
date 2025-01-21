@@ -1,14 +1,11 @@
 using System.ComponentModel;
-using System.IO;
 using System.Runtime.Versioning;
-using System.Windows;
 using System.Windows.Input;
 
-using XsltEditor.Models;
+using XsltEditor.Core;
 using XsltEditor.Models.Base;
 using XsltEditor.Services.Interfaces;
-using XsltEditor.Tools.Commands;
-using XsltEditor.Tools.Helpers;
+using XsltEditor.Tools;
 using XsltEditor.Transform.Enums;
 using XsltEditor.Views;
 
@@ -17,8 +14,8 @@ namespace XsltEditor.ViewModels;
 [SupportedOSPlatform("windows")]
 public class MainViewModel : ObservableObject
 {
-    private readonly IXmlTransformService _transformService;
     private readonly IWindowService _windowService;
+    private readonly IXmlTransformService _transformService;
 
     public MainViewModel(IWindowService windowService, IXmlTransformService transformService)
     {
@@ -37,17 +34,16 @@ public class MainViewModel : ObservableObject
         set => Set(ref field, value);
     }
 
-    public TextDocument XslDocument { get; } = new(".xsl");
-    public TextDocument XmlDocument { get; } = new(".xml");
+    public DocumentViewModel XslDocument { get; } = new(".xsl");
+    public DocumentViewModel XmlDocument { get; } = new(".xml");
 
     public ICommand? OpenFileCommand { get; private set; }
-    public ICommand? SaveFileCommand { get; private set; }
+    public ICommand? SwitchThemeCommand { get; private set; }
     public ICommand? OpenCompletionWindowCommand { get; private set; }
 
     private void InitCommands()
     {
-        OpenFileCommand = new RelayCommand(OpenFile);
-        SaveFileCommand = new RelayCommand(SaveFile);
+        SwitchThemeCommand = new RelayCommand(SwitchTheme);
         OpenCompletionWindowCommand = new RelayCommand(OpenCompletionWindow);
     }
 
@@ -57,59 +53,12 @@ public class MainViewModel : ObservableObject
         XmlDocument.PropertyChanged += OnTextPropertyChanged;
     }
 
-    private async void OpenFile(object? parameter)
+    private void SwitchTheme(object? obj)
     {
-        if (parameter is not string extension)
-        {
-            return;
-        }
+        var curTheme = ThemeManager.CurrentTheme;
+        var newTheme = curTheme == ThemeType.Dark ? ThemeType.Light : ThemeType.Dark;
 
-        var filePath = FileDialog.OpenFile("File", extension);
-
-        if (string.IsNullOrEmpty(filePath))
-        {
-            return;
-        }
-
-        try
-        {
-            var load = extension.ToLowerInvariant() switch
-            {
-                ".xsl" => XslDocument.LoadContent(filePath),
-                ".xml" => XmlDocument.LoadContent(filePath),
-                _ => Task.CompletedTask
-            };
-
-            await load;
-        }
-        catch (Exception e)
-        {
-            MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-    }
-
-    private async void SaveFile(object? parameter)
-    {
-        if (parameter is not TextDocument document)
-        {
-            return;
-        }
-
-        var path = File.Exists(document.FilePath) ? document.FilePath : FileDialog.SaveFile("File", document.Extension);
-
-        if (string.IsNullOrEmpty(path))
-        {
-            return;
-        }
-
-        try
-        {
-            await document.SaveContent(path);
-        }
-        catch (Exception e)
-        {
-            MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+        ThemeManager.Apply(newTheme);
     }
 
     private void OpenCompletionWindow(object? parameter)
@@ -119,12 +68,10 @@ public class MainViewModel : ObservableObject
 
     private async void OnTextPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName != nameof(TextDocument.Content))
+        if (e.PropertyName != nameof(DocumentViewModel.Content))
         {
             return;
         }
-
-        XslDocument.HasChanged = true;
 
         if (string.IsNullOrWhiteSpace(XslDocument.Content) || string.IsNullOrWhiteSpace(XmlDocument.Content))
         {
@@ -132,6 +79,6 @@ public class MainViewModel : ObservableObject
             return;
         }
 
-        HtmlText = await _transformService.TransformAsync(XslDocument, XmlDocument);
+        HtmlText = await _transformService.TransformAsync(XslDocument.Content, XmlDocument.Content, XslDocument.FilePath);
     }
 }

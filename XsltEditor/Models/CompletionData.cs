@@ -1,4 +1,4 @@
-using ICSharpCode.AvalonEdit.CodeCompletion;
+﻿using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 
@@ -9,21 +9,22 @@ using System.Windows.Media;
 namespace XsltEditor.Models;
 
 [SupportedOSPlatform("windows")]
-public class CompletionData(string text) : ICompletionData
+public class CompletionData : ICompletionData
 {
-    [JsonIgnore]
-    public ImageSource? Image => null;
+    public CompletionData(string text)
+    {
+        Text = text;
+    }
 
-    public string Text { get; } = text;
+    [JsonIgnore] public ImageSource? Image => null;
 
-    [JsonIgnore]
-    public object Content => Text;
+    public string Text { get; }
 
-    [JsonIgnore]
-    public object Description => $"Insert {Text}";
+    [JsonIgnore] public object Content => Text;
 
-    [JsonIgnore]
-    public double Priority => 0;
+    [JsonIgnore] public object Description => $"Insert {Text}";
+
+    [JsonIgnore] public double Priority => 0;
 
     public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
     {

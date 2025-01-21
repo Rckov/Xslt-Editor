@@ -1,3 +1,4 @@
+﻿using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Search;
 
 using Microsoft.Xaml.Behaviors;
@@ -5,12 +6,12 @@ using Microsoft.Xaml.Behaviors;
 using System.Runtime.Versioning;
 using System.Windows;
 
-namespace XsltEditor.Tools.Behaviors.TextEditor;
+namespace XsltEditor.Core.Behaviors;
 
 [SupportedOSPlatform("windows")]
-internal class TextEditorTextBehavior : Behavior<ICSharpCode.AvalonEdit.TextEditor>
+internal class TextEditorTextBehavior : Behavior<TextEditor>
 {
-    public static readonly DependencyProperty TextProperty =
+    public static readonly DependencyProperty TextProperty = 
         DependencyProperty.Register(nameof(Text), typeof(string), typeof(TextEditorTextBehavior), new PropertyMetadata(string.Empty, OnTextChanged));
 
     public string Text

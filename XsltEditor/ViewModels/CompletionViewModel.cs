@@ -3,10 +3,10 @@ using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Input;
 
+using XsltEditor.Core;
 using XsltEditor.Models;
 using XsltEditor.Models.Base;
 using XsltEditor.Services.Interfaces;
-using XsltEditor.Tools.Commands;
 
 namespace XsltEditor.ViewModels;
 
@@ -68,7 +68,10 @@ public class CompletionViewModel : ObservableObject
             return;
         }
 
-        if (CompletionData.Any(x => x.Equals(SelectedData))) CompletionData.Remove(SelectedData);
+        if (CompletionData.Any(x => x.Equals(SelectedData)))
+        {
+            CompletionData.Remove(SelectedData);
+        }
     }
 
     private bool CanDeleteCompletionData(object? parameter)

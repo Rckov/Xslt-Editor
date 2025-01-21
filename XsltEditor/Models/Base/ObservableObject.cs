@@ -14,10 +14,7 @@ public abstract class ObservableObject : INotifyPropertyChanged
 
     protected void Set<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
-        if (EqualityComparer<T>.Default.Equals(field, value))
-        {
-            return;
-        }
+        if (EqualityComparer<T>.Default.Equals(field, value)) return;
 
         field = value;
         OnPropertyChanged(propertyName);

@@ -2,9 +2,9 @@
 
 using System.IO;
 
-namespace XsltEditor.Tools.Helpers;
+namespace XsltEditor.Tools;
 
-internal static class FileDialog
+internal static class Dialog
 {
     public static string OpenFile(string title, params string[]? extensions)
     {
@@ -25,16 +25,25 @@ internal static class FileDialog
             Filter = BuildFilter(title, extensions)
         };
 
-        if (saveFileDialog.ShowDialog() != true) return string.Empty;
+        if (saveFileDialog.ShowDialog() != true)
+        {
+            return string.Empty;
+        }
 
-        if (File.Exists(saveFileDialog.FileName)) File.Delete(saveFileDialog.FileName);
+        if (File.Exists(saveFileDialog.FileName))
+        {
+            File.Delete(saveFileDialog.FileName);
+        }
 
         return saveFileDialog.FileName;
     }
 
     private static string BuildFilter(string title, string[]? extensions)
     {
-        if (extensions == null || extensions.Length == 0) return "All Files|*.*";
+        if (extensions == null || extensions.Length == 0)
+        {
+            return "All Files|*.*";
+        }
 
         var filter = string.Join(";", extensions.Select(ext => $"*{ext}"));
         return $"{title} |{filter}";
