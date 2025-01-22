@@ -87,6 +87,9 @@
                                     <ae:TextEditor.ContextMenu>
                                        <StaticResource ResourceKey="CommonTextEditorContextMenu" />
                                     </ae:TextEditor.ContextMenu>
+                                    <ae:TextEditor.InputBindings>
+                                       <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
+                                    </ae:TextEditor.InputBindings>
                                  </ae:TextEditor>
                               </Border>
                            </ad:LayoutAnchorable>
@@ -104,6 +107,9 @@
                                     <ae:TextEditor.ContextMenu>
                                        <StaticResource ResourceKey="CommonTextEditorContextMenu" />
                                     </ae:TextEditor.ContextMenu>
+                                    <ae:TextEditor.InputBindings>
+                                       <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
+                                    </ae:TextEditor.InputBindings>
                                  </ae:TextEditor>
                               </Border>
                            </ad:LayoutAnchorable>
