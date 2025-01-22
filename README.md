@@ -2,23 +2,16 @@
 
 [![.NET Version](https://img.shields.io/badge/.NET-8.0-blue)]()
 [![Build and Release](https://github.com/Rckov/Xslt-Editor/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/Rckov/Xslt-Editor/actions/workflows/dotnet-desktop.yml)
-[![Downloads](https://img.shields.io/github/downloads/Rckov/Xslt-Editor/total.svg)](https://github.com/Rckov/Xslt-Editor/releases/latest)
 [![GitHub Release](https://img.shields.io/github/v/release/Rckov/Xslt-Editor)](https://github.com/Rckov/Xslt-Editor/releases/latest)
+<!--[![Downloads](https://img.shields.io/github/downloads/Rckov/Xslt-Editor/total.svg)](https://github.com/Rckov/Xslt-Editor/releases/latest)-->
 
 A lightweight XSLT editor with real-time compilation and Fluent Design interface.
-
-## Table of Contents
-- [Features](#features)
-- [Installation](#installation)
-- [Preview](#preview)
-- [Roadmap](#roadmap)
-- [License](#license)
 
 ## Features
 - **XSLT 1.0 Support**  
   Instant error checking using `XslCompiledTransform` with live diagnostics.
 - **Smart Autocompletion**  
-  Context-aware suggestions for elements, attributes, and functions. Customizable via `Resources/completions.json`.
+  Context-aware suggestions for elements, attributes, and functions.
 - **Theme Support**  
   Dark and light themes with adaptive UI components.
 - **Syntax Highlighting**  
