@@ -50,7 +50,10 @@ public class DocumentViewModel : ObservableObject
 
     private void DocumentViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(Content)) HasChanged = true;
+        if (e.PropertyName == nameof(Content))
+        {
+            HasChanged = true;
+        }
     }
 
     private async void OpenDocument(object? obj)
@@ -89,7 +92,7 @@ public class DocumentViewModel : ObservableObject
 
         try
         {
-            await using var fileStream = new FileStream(path, FileMode.OpenOrCreate);
+            await using var fileStream = new FileStream(path, FileMode.Create);
             await using var streamWriter = new StreamWriter(fileStream);
 
             await streamWriter.WriteAsync(Content);

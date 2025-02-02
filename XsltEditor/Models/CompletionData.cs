@@ -20,11 +20,14 @@ public class CompletionData : ICompletionData
 
     public string Text { get; }
 
-    [JsonIgnore] public object Content => Text;
+    [JsonIgnore] 
+    public object Content => Text;
 
-    [JsonIgnore] public object Description => $"Insert {Text}";
+    [JsonIgnore] 
+    public object Description => $"Insert {Text}";
 
-    [JsonIgnore] public double Priority => 0;
+    [JsonIgnore] 
+    public double Priority => 0;
 
     public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
     {
