@@ -1,0 +1,168 @@
+<ct:Window x:Class="XsltEditor.Views.Windows.SettingsView"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+           xmlns:ct="clr-namespace:XsltEditor.Views.UserControls"
+           Height="450"
+           Width="600"
+           Title="Settings"
+           ResizeMode="CanResizeWithGrip"
+           WindowStartupLocation="CenterOwner"
+           Style="{StaticResource WindowStyle}"
+           AcrylicEffect="False">
+
+   <Border Style="{StaticResource BorderWindow}">
+      <Grid>
+         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+         </Grid.RowDefinitions>
+
+         <ct:WindowBar Grid.Row="0"
+                       Background="{DynamicResource GeneralPanelBackground}"
+                       Title="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" 
+                       ShowTitle="True" />
+
+         <ScrollViewer Grid.Row="1" Margin="10">
+            <StackPanel>
+               <TextBlock Text="Editor Settings"
+                          FontSize="16"
+                          FontWeight="Bold"
+                          Margin="0,0,0,10"
+                          Foreground="{DynamicResource TextForeground}" />
+
+               <GroupBox Header="Appearance" 
+                        Style="{StaticResource SettingsGroupBox}"
+                        Margin="0,0,0,10">
+                  <Grid Margin="5">
+                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                     </Grid.ColumnDefinitions>
+                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                     </Grid.RowDefinitions>
+
+                     <TextBlock Text="Theme:" 
+                               Grid.Row="0" 
+                               Grid.Column="0"
+                               Margin="0,0,10,0"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextForeground}" />
+                     <ComboBox Grid.Row="0" 
+                              Grid.Column="1"
+                              Style="{StaticResource SettingsComboBox}"
+                              ItemsSource="{Binding Themes}"
+                              SelectedItem="{Binding SelectedTheme}" />
+                  </Grid>
+               </GroupBox>
+
+               <GroupBox Header="Font" 
+                        Style="{StaticResource SettingsGroupBox}"
+                        Margin="0,0,0,10">
+                  <Grid Margin="5">
+                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                     </Grid.ColumnDefinitions>
+                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                     </Grid.RowDefinitions>
+
+                     <TextBlock Text="Font Family:" 
+                               Grid.Row="0" 
+                               Grid.Column="0"
+                               Margin="0,0,10,5"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextForeground}" />
+                     <ComboBox Grid.Row="0" 
+                              Grid.Column="1"
+                              Style="{StaticResource SettingsComboBox}"
+                              Margin="0,0,0,5" />
+
+                     <TextBlock Text="Font Size:" 
+                               Grid.Row="1" 
+                               Grid.Column="0"
+                               Margin="0,0,10,0"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextForeground}" />
+                     <ComboBox Grid.Row="1" 
+                              Grid.Column="1"
+                              Style="{StaticResource SettingsComboBox}" />
+                  </Grid>
+               </GroupBox>
+
+               <GroupBox Header="Editor Options" 
+                        Style="{StaticResource SettingsGroupBox}"
+                        Margin="0,0,0,10">
+                  <StackPanel Margin="5">
+                     <CheckBox Content="Show Line Numbers"
+                               Style="{StaticResource SettingsCheckBox}"
+                               Margin="0,0,0,5" />
+                     <CheckBox Content="Convert Tabs to Spaces"
+                               Style="{StaticResource SettingsCheckBox}"
+                               Margin="0,0,0,5" />
+                     <CheckBox Content="Enable Email Hyperlinks"
+                               Style="{StaticResource SettingsCheckBox}"
+                               Margin="0,0,0,5" />
+                     <CheckBox Content="Enable Hyperlinks"
+                               Style="{StaticResource SettingsCheckBox}"
+                               Margin="0,0,0,5" />
+                     <CheckBox Content="Enable Code Folding"
+                               Style="{StaticResource SettingsCheckBox}"
+                               Margin="0,0,0,5" />
+                  </StackPanel>
+               </GroupBox>
+
+               <GroupBox Header="Indentation" 
+                        Style="{StaticResource SettingsGroupBox}"
+                        Margin="0,0,0,10">
+                  <Grid Margin="5">
+                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                     </Grid.ColumnDefinitions>
+                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                     </Grid.RowDefinitions>
+
+                     <TextBlock Text="Tab Size:" 
+                               Grid.Row="0" 
+                               Grid.Column="0"
+                               Margin="0,0,10,5"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextForeground}" />
+                     <TextBox Grid.Row="0" 
+                             Grid.Column="1"
+                             Style="{StaticResource SettingsTextBox}"
+                             Margin="0,0,0,5"
+                             MaxLength="2" />
+
+                     <TextBlock Text="Indent Size:" 
+                               Grid.Row="1" 
+                               Grid.Column="0"
+                               Margin="0,0,10,0"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextForeground}" />
+                     <TextBox Grid.Row="1" 
+                             Grid.Column="1"
+                             Style="{StaticResource SettingsTextBox}"
+                             MaxLength="2" />
+                  </Grid>
+               </GroupBox>
+
+               <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                  <Button Content="Save"
+                          Style="{StaticResource CompletionButton}"
+                          Command="{Binding SaveCommand}"
+                          Margin="0,0,5,0" />
+                  <Button Content="Cancel"
+                          Style="{StaticResource CompletionButton}"
+                          Command="{Binding CancelCommand}" />
+               </StackPanel>
+            </StackPanel>
+         </ScrollViewer>
+      </Grid>
+   </Border>
+</ct:Window> 

@@ -30,6 +30,7 @@ public class MainViewModel : ObservableObject
     public ICommand? OpenFileCommand { get; private set; }
     public ICommand? OpenCompletionWindowCommand { get; private set; }
     public ICommand? OpenGoToLineWindowCommand { get; private set; }
+    public ICommand? OpenSettinsWindowCommand { get; private set; }
 
     public DocumentViewModel? ActiveDocument
     {
@@ -42,6 +43,7 @@ public class MainViewModel : ObservableObject
         OpenFileCommand = new RelayCommand(OpenFile);
         OpenCompletionWindowCommand = new RelayCommand(OpenCompletionWindow);
         OpenGoToLineWindowCommand = new RelayCommand(OpenGoToLineWindow);
+        OpenSettinsWindowCommand = new RelayCommand(OpenSettingWindow);
     }
 
     private void OpenFile(object? parameter)
@@ -57,5 +59,10 @@ public class MainViewModel : ObservableObject
     private void OpenGoToLineWindow(object? parameter)
     {
         _windowService.ShowDialogWindow<GoToLineView>();
+    }
+
+    private void OpenSettingWindow(object? parameter)
+    {
+        _windowService.ShowDialogWindow<SettingsView>();
     }
 }

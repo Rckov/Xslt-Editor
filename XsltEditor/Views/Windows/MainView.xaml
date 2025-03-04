@@ -55,7 +55,7 @@
             </ct:WindowBar.LeftContent>
 
             <ct:WindowBar.RightContent>
-               <Button Content="&#xE713;" FontSize="12" Style="{StaticResource CaptionButton}" ToolTip="Settings" />
+               <Button Content="&#xE713;" FontSize="12" Style="{StaticResource CaptionButton}" Command="{Binding OpenSettinsWindowCommand}" ToolTip="Settings" />
             </ct:WindowBar.RightContent>
          </ct:WindowBar>
 

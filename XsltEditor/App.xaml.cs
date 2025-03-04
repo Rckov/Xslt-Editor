@@ -34,6 +34,9 @@ public partial class App
         services.AddTransient<GoToLineViewModel>();
         services.AddTransient<GoToLineView>();
 
+        services.AddTransient<SettingsViewModel>();
+        services.AddTransient<SettingsView>();
+
         return services.BuildServiceProvider();
     }
 
