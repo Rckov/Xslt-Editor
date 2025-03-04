@@ -12,12 +12,6 @@ namespace XsltEditor.ViewModels;
 
 public class DocumentViewModel : ObservableObject
 {
-    public DocumentViewModel(string name)
-    {
-        Name = name;
-        ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
-    }
-
     public string? Name
     {
         get;
@@ -72,6 +66,12 @@ public class DocumentViewModel : ObservableObject
         set => Set(ref field, value);
     }
 
+    public DocumentViewModel(string name)
+    {
+        Name = name;
+        ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
+    }
+
     public async Task OpenDocument(string path)
     {
         if (string.IsNullOrEmpty(path))
@@ -86,7 +86,6 @@ public class DocumentViewModel : ObservableObject
 
             FilePath = path;
             Encoding = streamReader.CurrentEncoding;
-
             Text = await streamReader.ReadToEndAsync();
         }
         catch (Exception e)
@@ -125,14 +124,10 @@ public class DocumentViewModel : ObservableObject
 
     private void ThemeManager_ThemeChanged(ThemeType obj)
     {
-        var highlighting = ThemeManager.CurrentHighlighting;
-
-        if (highlighting is null)
+        if (ThemeManager.CurrentHighlighting is { } highlighting)
         {
-            return;
+            Highlighting = highlighting;
         }
-
-        Highlighting = highlighting;
     }
 
     protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -147,13 +142,13 @@ public class DocumentViewModel : ObservableObject
 
     public void NavigateToLine(int lineNumber)
     {
-        if (lineNumber < 1)
+        if (lineNumber < 1 || Text is null)
         {
             return;
         }
 
-        var lines = Text?.Split('\n');
-        if (lines is null || lineNumber > lines.Length)
+        var lines = Text.Split('\n');
+        if (lineNumber > lines.Length)
         {
             return;
         }

@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+
 using XsltEditor.Infrastructure;
 using XsltEditor.Models.Base;
 using XsltEditor.Services;
@@ -10,11 +11,11 @@ public class SettingsViewModel : ObservableObject
 {
     private ThemeType _selectedTheme;
 
-    public ObservableCollection<ThemeType> Themes { get; } = new()
-    {
+    public ObservableCollection<ThemeType> Themes { get; } =
+    [
         ThemeType.Light,
         ThemeType.Dark
-    };
+    ];
 
     public ThemeType SelectedTheme
     {
@@ -90,7 +91,7 @@ public class SettingsViewModel : ObservableObject
     public SettingsViewModel()
     {
         _selectedTheme = ThemeManager.CurrentTheme;
-        
+
         SaveCommand = new RelayCommand(Save);
         CancelCommand = new RelayCommand(Cancel);
     }
@@ -105,4 +106,4 @@ public class SettingsViewModel : ObservableObject
     {
         CloseWindow?.Invoke();
     }
-} 
+}

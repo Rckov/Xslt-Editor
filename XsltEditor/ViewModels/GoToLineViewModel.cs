@@ -1,5 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-
 using System.Windows.Input;
 
 using XsltEditor.Infrastructure;
@@ -11,14 +9,6 @@ public class GoToLineViewModel : ObservableObject
 {
     private readonly MainViewModel? _viewModel;
 
-    public GoToLineViewModel(IServiceProvider service)
-    {
-        _viewModel = service.GetService<MainViewModel>();
-
-        LineNumber = "0";
-        GoToCommand = new RelayCommand(GoToLine);
-    }
-
     public Action? CloseWindow { get; set; }
 
     public string? LineNumber
@@ -27,11 +17,22 @@ public class GoToLineViewModel : ObservableObject
         set => Set(ref field, value);
     }
 
-    public ICommand GoToCommand { get; }
+    public ICommand GoToCommand { get; private set; } = null!;
+
+    public GoToLineViewModel(MainViewModel? viewModel)
+    {
+        _viewModel = viewModel;
+        InitCommands();
+    }
+
+    private void InitCommands()
+    {
+        GoToCommand = new RelayCommand(GoToLine);
+    }
 
     private void GoToLine(object? parameter)
     {
-        if (_viewModel?.ActiveDocument is null)
+        if (_viewModel?.ActiveDocument is null || string.IsNullOrEmpty(LineNumber))
         {
             return;
         }

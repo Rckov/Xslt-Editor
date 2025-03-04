@@ -1,4 +1,3 @@
-using System.Windows;
 using XsltEditor.ViewModels;
 
 namespace XsltEditor.Views.Windows;
@@ -10,4 +9,4 @@ public partial class SettingsView
         InitializeComponent();
         DataContext = viewModel;
     }
-} 
+}

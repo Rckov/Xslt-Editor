@@ -15,17 +15,6 @@ public class CompletionViewModel : ObservableObject
 {
     private readonly ICompletionDataService _dataService;
 
-    public CompletionViewModel(ICompletionDataService dataService)
-    {
-        _dataService = dataService;
-
-        AddCommand = new RelayCommand(AddCompletionData);
-        DeleteCommand = new RelayCommand(DeleteCompletionData, CanDeleteCompletionData);
-        SaveCommand = new RelayCommand(SaveCompletionData);
-
-        CompletionData = new ObservableCollection<CompletionData>(dataService.LoadCompletionData());
-    }
-
     public string? NameData
     {
         get;
@@ -40,9 +29,23 @@ public class CompletionViewModel : ObservableObject
 
     public ObservableCollection<CompletionData> CompletionData { get; }
 
-    public ICommand AddCommand { get; }
-    public ICommand DeleteCommand { get; }
-    public ICommand SaveCommand { get; }
+    public ICommand AddCommand { get; private set; } = null!;
+    public ICommand DeleteCommand { get; private set; } = null!;
+    public ICommand SaveCommand { get; private set; } = null!;
+
+    public CompletionViewModel(ICompletionDataService dataService)
+    {
+        _dataService = dataService;
+        CompletionData = new(dataService.LoadCompletionData());
+        InitCommands();
+    }
+
+    private void InitCommands()
+    {
+        AddCommand = new RelayCommand(AddCompletionData);
+        DeleteCommand = new RelayCommand(DeleteCompletionData, CanDeleteCompletionData);
+        SaveCommand = new RelayCommand(SaveCompletionData);
+    }
 
     private void AddCompletionData(object? parameter)
     {
@@ -53,11 +56,16 @@ public class CompletionViewModel : ObservableObject
 
         if (CompletionData.Any(x => x.Text == NameData))
         {
-            MessageBox.Show("Item already exists.", "Duplicate Item", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show(
+                "Item already exists.",
+                "Duplicate Item",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning
+            );
             return;
         }
 
-        CompletionData.Add(new CompletionData(NameData));
+        CompletionData.Add(new(NameData));
         NameData = null;
     }
 
@@ -84,11 +92,21 @@ public class CompletionViewModel : ObservableObject
         try
         {
             _dataService.SaveCompletionData(CompletionData);
-            MessageBox.Show("Data saved successfully. Please restart the application.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show(
+                "Data saved successfully. Please restart the application.",
+                "Success",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information
+            );
         }
         catch (Exception e)
         {
-            MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(
+                e.Message,
+                "Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error
+            );
         }
     }
 }

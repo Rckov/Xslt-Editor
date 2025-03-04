@@ -88,7 +88,7 @@
                                           Margin="{TemplateBinding Padding}"
                                           VerticalAlignment="Center" />
 
-                        <ToggleButton x:Name="ToggleButton" 
+                        <ToggleButton x:Name="ToggleButton"
                                       Grid.Column="1"
                                       BorderThickness="0"
                                       IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
@@ -260,14 +260,8 @@
             </ControlTemplate>
          </Setter.Value>
       </Setter>
-      <Style.Triggers>
-         <Trigger Property="IsMouseOver" Value="True">
-            <Setter Property="Background" Value="{DynamicResource ButtonHoverBackground}" />
-         </Trigger>
-      </Style.Triggers>
    </Style>
 
-   <!-- Button Styles -->
    <Style x:Key="CaptionButton" TargetType="Button">
       <Setter Property="FontSize" Value="10" />
       <Setter Property="FontFamily" Value="{StaticResource FontIcon}" />
@@ -336,12 +330,10 @@
       </Setter>
    </Style>
 
-   <!-- Separator Style -->
    <Style x:Key="VerticalSeparator" TargetType="Separator" BasedOn="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}">
       <Setter Property="Background" Value="{DynamicResource BorderColor}" />
    </Style>
 
-   <!-- MenuItem Style -->
    <Style TargetType="MenuItem">
       <Setter Property="Margin" Value="0" />
       <Setter Property="Padding" Value="6,2" />
