@@ -1,5 +1,7 @@
 ﻿using Microsoft.Win32;
 
+using System.IO;
+
 namespace XsltEditor.Helpers;
 
 internal static class Dialog
@@ -12,7 +14,7 @@ internal static class Dialog
             Filter = BuildFilter(title, extensions)
         };
 
-        return openFileDialog.ShowDialog().GetValueOrDefault() ? openFileDialog.FileName : string.Empty;
+        return openFileDialog.ShowDialog() == true ? openFileDialog.FileName : string.Empty;
     }
 
     public static string SaveFile(string title, params string[]? extensions)
@@ -23,9 +25,14 @@ internal static class Dialog
             Filter = BuildFilter(title, extensions)
         };
 
-        if (saveFileDialog.ShowDialog().GetValueOrDefault())
+        if (saveFileDialog.ShowDialog() != true)
         {
             return string.Empty;
+        }
+
+        if (File.Exists(saveFileDialog.FileName))
+        {
+            File.Delete(saveFileDialog.FileName);
         }
 
         return saveFileDialog.FileName;

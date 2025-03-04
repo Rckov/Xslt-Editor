@@ -15,6 +15,7 @@
            Style="{StaticResource WindowStyle}" AcrylicEffect="False">
 
    <ct:Window.InputBindings>
+      <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
       <KeyBinding Key="G" Modifiers="Control" Command="{Binding OpenGoToLineWindowCommand}" />
    </ct:Window.InputBindings>
 
@@ -30,13 +31,15 @@
             <ct:WindowBar.LeftContent>
                <Menu VerticalAlignment="Center" Background="Transparent">
                   <MenuItem Header="File">
-                     <MenuItem Header="Open XSL" Icon="&#xE70B;" />
-                     <MenuItem Header="Open XML" Icon="&#xE8C4;" />
+                     <MenuItem Header="Open file" Icon="&#xE70B;" Command="{Binding OpenFileCommand}" />
+                     <Separator Style="{StaticResource SeparatorStyle}" />
+                     <MenuItem Header="Save file" Icon="&#xE74E;" Command="{Binding SaveCommand}" />
                   </MenuItem>
 
                   <MenuItem Header="Edit">
                      <MenuItem Icon="&#xE7A7;" Command="ApplicationCommands.Undo" Header="Undo" />
                      <MenuItem Icon="&#xE7A6;" Command="ApplicationCommands.Redo" Header="Redo" />
+                     <Separator Style="{StaticResource SeparatorStyle}" />
                      <MenuItem Icon="&#xE8C8;" Command="ApplicationCommands.Copy" Header="Copy" />
                      <MenuItem Icon="&#xE8C6;" Command="ApplicationCommands.Cut" Header="Cut" />
                      <MenuItem Icon="&#xE77F;" Command="ApplicationCommands.Paste" Header="Paste" />
@@ -48,7 +51,7 @@
                      <MenuItem Header="Completion" Icon="&#xE75D;" Command="{Binding OpenCompletionWindowCommand}" />
                   </MenuItem>
 
-                  <Separator Style="{StaticResource VerticalSeparator}" Height="20" />
+                  <Separator Style="{StaticResource SeparatorStyle}" Height="20" />
 
                   <MenuItem Icon="&#xE721;" Command="ApplicationCommands.Find" Header="Find" />
                </Menu>
@@ -68,7 +71,8 @@
                                     IsReadOnly="{Binding IsReadOnly, Mode=TwoWay}"
                                     Line="{Binding Line, Mode=TwoWay}"
                                     Column="{Binding Column, Mode=TwoWay}"
-                                    SyntaxHighlighting="{Binding Highlighting, Mode=OneWay}" />
+                                    SyntaxHighlighting="{Binding Highlighting, Mode=OneWay}">
+                     </ct:TextEditor>
                   </DataTemplate>
                </ad:DockingManager.Resources>
 
@@ -110,6 +114,10 @@
                   <TextBlock Foreground="{DynamicResource TextInactiveForeground}">
                      <Run Text="{Binding ActiveDocument.Line, StringFormat='Ln: {0},'}" />
                      <Run Text="{Binding ActiveDocument.Column, StringFormat='Col: {0}'}" />
+
+                     <TextBlock.InputBindings>
+                        <MouseBinding Command="{Binding OpenGoToLineWindowCommand}" MouseAction="LeftClick" />
+                     </TextBlock.InputBindings>
                   </TextBlock>
                </Button>
 

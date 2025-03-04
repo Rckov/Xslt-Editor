@@ -330,7 +330,7 @@
       </Setter>
    </Style>
 
-   <Style x:Key="VerticalSeparator" TargetType="Separator" BasedOn="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}">
+   <Style x:Key="SeparatorStyle" TargetType="Separator" BasedOn="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}">
       <Setter Property="Background" Value="{DynamicResource BorderColor}" />
    </Style>
 
