@@ -1,9 +1,13 @@
-﻿using System.Runtime.InteropServices;
-using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Interop;
+using System.Windows;
 
-namespace XsltEditor.Controls;
-
+namespace XsltEditor.Views.UserControls;
 public class Window : System.Windows.Window
 {
     #region Enums
@@ -161,9 +165,6 @@ public class Window : System.Windows.Window
 
         if ((bool)e.NewValue)
         {
-            window.AllowsTransparency = true;
-            window.WindowStyle = WindowStyle.None;
-
             window.Loaded += (s, e) => EnableBlur(helper.Handle);
 
             if (window.IsLoaded)
@@ -173,8 +174,6 @@ public class Window : System.Windows.Window
         }
         else
         {
-            window.AllowsTransparency = false;
-            window.WindowStyle = WindowStyle.SingleBorderWindow;
             DisableBlur(helper.Handle);
         }
     }

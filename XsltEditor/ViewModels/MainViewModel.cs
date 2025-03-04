@@ -1,64 +1,52 @@
-using System.ComponentModel;
-using System.Runtime.Versioning;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-using XsltEditor.Core;
+using XsltEditor.Infrastructure;
 using XsltEditor.Models.Base;
+using XsltEditor.Services;
 using XsltEditor.Services.Interfaces;
-using XsltEditor.Tools;
-using XsltEditor.Transform.Enums;
-using XsltEditor.Views;
+using XsltEditor.Views.Windows;
 
 namespace XsltEditor.ViewModels;
 
-[SupportedOSPlatform("windows")]
 public class MainViewModel : ObservableObject
 {
     private readonly IWindowService _windowService;
-    private readonly IXmlTransformService _transformService;
 
-    public MainViewModel(IWindowService windowService, IXmlTransformService transformService)
+    public MainViewModel(IWindowService windowService)
     {
         _windowService = windowService;
 
-        _transformService = transformService;
-        _transformService.Create(EngineType.XslCompiledTransform);
+        Documents.Add(new DocumentViewModel("XSL"));
+        Documents.Add(new DocumentViewModel("XML") { IsReadOnly = true });
 
         InitCommands();
-        SubscribeEvents();
+
+        ThemeManager.Apply(ThemeType.Dark);
     }
 
-    public string? HtmlText
+    public ObservableCollection<DocumentViewModel> Documents { get; set; } = [];
+
+    public ICommand? OpenFileCommand { get; private set; }
+    public ICommand? OpenCompletionWindowCommand { get; private set; }
+    public ICommand? OpenGoToLineWindowCommand { get; private set; }
+
+    public DocumentViewModel? ActiveDocument
     {
         get;
         set => Set(ref field, value);
     }
 
-    public DocumentViewModel XslDocument { get; } = new(".xsl");
-    public DocumentViewModel XmlDocument { get; } = new(".xml");
-
-    public ICommand? OpenFileCommand { get; private set; }
-    public ICommand? SwitchThemeCommand { get; private set; }
-    public ICommand? OpenCompletionWindowCommand { get; private set; }
-
     private void InitCommands()
     {
-        SwitchThemeCommand = new RelayCommand(SwitchTheme);
+        OpenFileCommand = new RelayCommand(OpenFile);
         OpenCompletionWindowCommand = new RelayCommand(OpenCompletionWindow);
+        OpenGoToLineWindowCommand = new RelayCommand(OpenGoToLineWindow);
     }
 
-    private void SubscribeEvents()
+    private void OpenFile(object? parameter)
     {
-        XslDocument.PropertyChanged += OnTextPropertyChanged;
-        XmlDocument.PropertyChanged += OnTextPropertyChanged;
-    }
-
-    private void SwitchTheme(object? obj)
-    {
-        var curTheme = ThemeManager.CurrentTheme;
-        var newTheme = curTheme == ThemeType.Dark ? ThemeType.Light : ThemeType.Dark;
-
-        ThemeManager.Apply(newTheme);
+        throw new NotImplementedException();
     }
 
     private void OpenCompletionWindow(object? parameter)
@@ -66,19 +54,8 @@ public class MainViewModel : ObservableObject
         _windowService.ShowDialogWindow<CompletionView>();
     }
 
-    private async void OnTextPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void OpenGoToLineWindow(object? parameter)
     {
-        if (e.PropertyName != nameof(DocumentViewModel.Content))
-        {
-            return;
-        }
-
-        if (string.IsNullOrWhiteSpace(XslDocument.Content) || string.IsNullOrWhiteSpace(XmlDocument.Content))
-        {
-            HtmlText = string.Empty;
-            return;
-        }
-
-        HtmlText = await _transformService.TransformAsync(XslDocument.Content, XmlDocument.Content, XslDocument.FilePath);
+        _windowService.ShowDialogWindow<GoToLineView>();
     }
 }

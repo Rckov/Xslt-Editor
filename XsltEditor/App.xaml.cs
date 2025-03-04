@@ -6,7 +6,7 @@ using System.Windows;
 using XsltEditor.Services;
 using XsltEditor.Services.Interfaces;
 using XsltEditor.ViewModels;
-using XsltEditor.Views;
+using XsltEditor.Views.Windows;
 
 namespace XsltEditor;
 
@@ -24,13 +24,15 @@ public partial class App
     {
         services.AddSingleton<ICompletionDataService, CompletionDataService>();
         services.AddSingleton<IWindowService, WindowService>();
-        services.AddSingleton<IXmlTransformService, XmlTransformService>();
 
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<MainView>();
 
         services.AddTransient<CompletionViewModel>();
         services.AddTransient<CompletionView>();
+
+        services.AddTransient<GoToLineViewModel>();
+        services.AddTransient<GoToLineView>();
 
         return services.BuildServiceProvider();
     }
@@ -39,5 +41,15 @@ public partial class App
     {
         var windowService = Services.GetRequiredService<IWindowService>();
         windowService?.ShowWindow<MainView>();
+    }
+
+    protected override void OnExit(ExitEventArgs e)
+    {
+        if (Services is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
+
+        base.OnExit(e);
     }
 }

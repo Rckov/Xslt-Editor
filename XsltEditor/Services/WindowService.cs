@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
 using System.Runtime.Versioning;
-using System.Windows;
 
 using XsltEditor.Services.Interfaces;
+using XsltEditor.Views.UserControls;
 
 namespace XsltEditor.Services;
 

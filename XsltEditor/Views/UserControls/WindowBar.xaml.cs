@@ -2,13 +2,16 @@
 using System.Windows;
 using System.Windows.Input;
 
-using XsltEditor.Core;
+using XsltEditor.Infrastructure;
 
-namespace XsltEditor.Controls;
+namespace XsltEditor.Views.UserControls;
 
 [SupportedOSPlatform("windows")]
 public partial class WindowBar
 {
+    public static readonly DependencyProperty TitleProperty =
+        DependencyProperty.Register(nameof(Title), typeof(string), typeof(WindowBar), new PropertyMetadata(null));
+
     public static readonly DependencyProperty ShowTitleProperty =
         DependencyProperty.Register(nameof(ShowTitle), typeof(bool), typeof(WindowBar), new PropertyMetadata(null));
 
@@ -23,6 +26,12 @@ public partial class WindowBar
     {
         InitializeComponent();
         InitCommands();
+    }
+
+    public string Title
+    {
+        get => (string)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
     }
 
     public bool ShowTitle
@@ -56,14 +65,20 @@ public partial class WindowBar
 
     private void MinimizeWindowExecuter(object? parameter)
     {
-        if (parameter is not Window window) return;
+        if (parameter is not Window window)
+        {
+            return;
+        }
 
         window.WindowState = WindowState.Minimized;
     }
 
     private void MaximizeWindowExecuter(object? parameter)
     {
-        if (parameter is not Window window) return;
+        if (parameter is not Window window)
+        {
+            return;
+        }
 
         window.WindowState = window.WindowState == WindowState.Maximized
             ? WindowState.Normal
@@ -72,7 +87,10 @@ public partial class WindowBar
 
     private void CloseWindowExecuter(object? parameter)
     {
-        if (parameter is not Window window) return;
+        if (parameter is not Window window)
+        {
+            return;
+        }
 
         window.Close();
     }

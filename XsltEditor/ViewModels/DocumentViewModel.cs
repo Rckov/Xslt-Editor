@@ -1,39 +1,60 @@
-﻿using System.ComponentModel;
+﻿using ICSharpCode.AvalonEdit.Highlighting;
+
 using System.IO;
-using System.Runtime.Versioning;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
-using System.Windows.Input;
 
-using XsltEditor.Core;
 using XsltEditor.Models.Base;
-using XsltEditor.Tools;
+using XsltEditor.Services;
 
 namespace XsltEditor.ViewModels;
 
-[SupportedOSPlatform("windows")]
 public class DocumentViewModel : ObservableObject
 {
-    private readonly string _extension;
-
-    public DocumentViewModel(string extension)
+    public DocumentViewModel(string name)
     {
-        _extension = extension;
-
-        OpenCommand = new RelayCommand(OpenDocument);
-        SaveCommand = new RelayCommand(SaveDocument);
-        PropertyChanged += DocumentViewModel_PropertyChanged;
+        Name = name;
+        ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
     }
 
-    public string? FilePath { get; private set; }
-
-    public string? Content
+    public string? Name
     {
         get;
         set => Set(ref field, value);
     }
 
-    public bool HasChanged
+    public string? FilePath
+    {
+        get;
+        set => Set(ref field, value);
+    }
+
+    public bool? IsDirty
+    {
+        get;
+        set => Set(ref field, value);
+    }
+
+    public bool IsReadOnly
+    {
+        get;
+        set => Set(ref field, value);
+    }
+
+    public int Line
+    {
+        get;
+        set => Set(ref field, value);
+    }
+
+    public int Column
+    {
+        get;
+        set => Set(ref field, value);
+    }
+
+    public string? Text
     {
         get;
         set => Set(ref field, value);
@@ -42,24 +63,17 @@ public class DocumentViewModel : ObservableObject
     public Encoding? Encoding
     {
         get;
-        private set => Set(ref field, value);
+        set => Set(ref field, value);
     }
 
-    public ICommand? OpenCommand { get; private set; }
-    public ICommand? SaveCommand { get; private set; }
-
-    private void DocumentViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    public IHighlightingDefinition? Highlighting
     {
-        if (e.PropertyName == nameof(Content))
-        {
-            HasChanged = true;
-        }
+        get;
+        set => Set(ref field, value);
     }
 
-    private async void OpenDocument(object? obj)
+    public async Task OpenDocument(string path)
     {
-        var path = Dialog.OpenFile("File", _extension);
-
         if (string.IsNullOrEmpty(path))
         {
             return;
@@ -73,7 +87,7 @@ public class DocumentViewModel : ObservableObject
             FilePath = path;
             Encoding = streamReader.CurrentEncoding;
 
-            Content = await streamReader.ReadToEndAsync();
+            Text = await streamReader.ReadToEndAsync();
         }
         catch (Exception e)
         {
@@ -81,10 +95,8 @@ public class DocumentViewModel : ObservableObject
         }
     }
 
-    private async void SaveDocument(object? obj)
+    public async Task SaveDocument(string path)
     {
-        var path = File.Exists(FilePath) ? FilePath : Dialog.SaveFile("File", _extension);
-
         if (string.IsNullOrEmpty(path))
         {
             return;
@@ -95,7 +107,7 @@ public class DocumentViewModel : ObservableObject
             await using var fileStream = new FileStream(path, FileMode.Create);
             await using var streamWriter = new StreamWriter(fileStream);
 
-            await streamWriter.WriteAsync(Content);
+            await streamWriter.WriteAsync(Text);
 
             if (string.IsNullOrEmpty(FilePath))
             {
@@ -103,11 +115,50 @@ public class DocumentViewModel : ObservableObject
                 Encoding = streamWriter.Encoding;
             }
 
-            HasChanged = false;
+            IsDirty = false;
         }
         catch (Exception e)
         {
             MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+    }
+
+    private void ThemeManager_ThemeChanged(ThemeType obj)
+    {
+        var highlighting = ThemeManager.CurrentHighlighting;
+
+        if (highlighting is null)
+        {
+            return;
+        }
+
+        Highlighting = highlighting;
+    }
+
+    protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        base.OnPropertyChanged(propertyName);
+
+        if (propertyName is nameof(Text))
+        {
+            IsDirty = true;
+        }
+    }
+
+    public void NavigateToLine(int lineNumber)
+    {
+        if (lineNumber < 1)
+        {
+            return;
+        }
+
+        var lines = Text?.Split('\n');
+        if (lines is null || lineNumber > lines.Length)
+        {
+            return;
+        }
+
+        Line = lineNumber;
+        Column = 1;
     }
 }

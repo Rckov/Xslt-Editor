@@ -3,7 +3,7 @@ using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Input;
 
-using XsltEditor.Core;
+using XsltEditor.Infrastructure;
 using XsltEditor.Models;
 using XsltEditor.Models.Base;
 using XsltEditor.Services.Interfaces;

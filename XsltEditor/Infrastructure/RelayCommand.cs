@@ -1,7 +1,7 @@
 ﻿using System.Runtime.Versioning;
 using System.Windows.Input;
 
-namespace XsltEditor.Core;
+namespace XsltEditor.Infrastructure;
 
 [SupportedOSPlatform("windows")]
 internal class RelayCommand : ICommand
