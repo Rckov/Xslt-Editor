@@ -29,6 +29,8 @@
          </Grid.RowDefinitions>
 
          <ct:WindowBar Grid.Row="0" Background="{DynamicResource GeneralPanelBackground}">
+
+            <!-- Left Side -->
             <ct:WindowBar.LeftContent>
                <Menu Background="Transparent" VerticalAlignment="Center">
                   <MenuItem Header="File">
@@ -123,9 +125,14 @@
                   </MenuItem>
 
                   <Separator Style="{StaticResource SeparatorStyle}" Height="20" />
+
+                  <MenuItem Header="Compile"
+                            Icon="&#xE768;"
+                            Visibility="Collapsed"/>
                </Menu>
             </ct:WindowBar.LeftContent>
 
+            <!-- Right Side -->
             <ct:WindowBar.RightContent>
                <Button ToolTip="Settings"
                        Content="&#xE713;"
@@ -211,9 +218,7 @@
                           Foreground="Gray" Margin="5,0"
                           Visibility="{Binding ActiveDocument.IsDirty, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
-               <Button Style="{StaticResource StatusBarButton}"
-                       VerticalAlignment="Center"
-                       Command="{Binding OpenGoToLineWindowCommand}">
+               <Button Style="{StaticResource StatusBarButton}" VerticalAlignment="Center" Command="{Binding OpenGoToLineWindowCommand}">
                   <TextBlock Foreground="{DynamicResource TextInactiveForeground}">
                      <Run Text="{Binding ActiveDocument.Line, StringFormat='Ln: {0},'}" />
                      <Run Text="{Binding ActiveDocument.Column, StringFormat='Col: {0}'}" />

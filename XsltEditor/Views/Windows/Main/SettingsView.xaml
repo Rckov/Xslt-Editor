@@ -4,12 +4,12 @@
 
            xmlns:ct="clr-namespace:XsltEditor.Views.UserControls"
 
-           Height="450"
-           Width="600"
+           Height="605"
+           Width="400"
            Title="Settings"
 
            ResizeMode="CanResizeWithGrip"
-           WindowStartupLocation="CenterOwner"
+           WindowStartupLocation="CenterScreen"
            Style="{StaticResource WindowStyle}" AcrylicEffect="False">
 
    <Border Style="{StaticResource BorderWindow}">
@@ -19,150 +19,79 @@
             <RowDefinition />
          </Grid.RowDefinitions>
 
-         <ct:WindowBar Grid.Row="0"
-                       Background="{DynamicResource GeneralPanelBackground}"
-                       Title="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
-                       ShowTitle="True" />
+         <ct:WindowBar Grid.Row="0" Background="{DynamicResource GeneralPanelBackground}" Title="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" ShowTitle="True" />
 
-         <ScrollViewer Grid.Row="1" Margin="10">
+         <ScrollViewer Grid.Row="1" Margin="10" VerticalScrollBarVisibility="Auto">
             <StackPanel>
-               <TextBlock Text="Editor Settings"
-                          FontSize="16"
-                          FontWeight="Bold"
-                          Margin="0,0,0,10"
-                          Foreground="{DynamicResource TextForeground}" />
-
-               <GroupBox Header="Appearance"
-                        Style="{StaticResource SettingsGroupBox}"
-                        Margin="0,0,0,10">
+               <GroupBox Header="Appearance" Margin="0,0,0,10">
                   <Grid Margin="5">
                      <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="100" />
                         <ColumnDefinition />
                      </Grid.ColumnDefinitions>
-                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                     </Grid.RowDefinitions>
 
-                     <TextBlock Text="Theme:"
-                               Grid.Row="0"
-                               Grid.Column="0"
-                               Margin="0,0,10,0"
-                               VerticalAlignment="Center"
-                               Foreground="{DynamicResource TextForeground}" />
-                     <ComboBox Grid.Row="0"
-                              Grid.Column="1"
-                              Style="{StaticResource SettingsComboBox}"
-                              ItemsSource="{Binding Themes}"
-                              SelectedItem="{Binding SelectedTheme}" />
+                     <TextBlock Text="Theme:" Grid.Column="0" VerticalAlignment="Center" Foreground="{DynamicResource TextForeground}" />
+                     <ComboBox Grid.Column="1" ItemsSource="{Binding Themes}" SelectedItem="{Binding SelectedTheme}" />
                   </Grid>
                </GroupBox>
 
-               <GroupBox Header="Font"
-                        Style="{StaticResource SettingsGroupBox}"
-                        Margin="0,0,0,10">
-                  <Grid Margin="5">
-                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                     </Grid.ColumnDefinitions>
-                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                     </Grid.RowDefinitions>
+               <TextBlock Text="Text Editor Settings" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" Foreground="{DynamicResource TextForeground}" />
 
-                     <TextBlock Text="Font Family:"
-                               Grid.Row="0"
-                               Grid.Column="0"
-                               Margin="0,0,10,5"
-                               VerticalAlignment="Center"
-                               Foreground="{DynamicResource TextForeground}" />
-                     <ComboBox Grid.Row="0"
-                              Grid.Column="1"
-                              Style="{StaticResource SettingsComboBox}"
-                              Margin="0,0,0,5" />
+               <GroupBox Header="Font" Margin="0,0,0,10">
+                  <StackPanel>
+                     <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                           <ColumnDefinition Width="100" />
+                           <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                           <RowDefinition />
+                           <RowDefinition />
+                        </Grid.RowDefinitions>
 
-                     <TextBlock Text="Font Size:"
-                               Grid.Row="1"
-                               Grid.Column="0"
-                               Margin="0,0,10,0"
-                               VerticalAlignment="Center"
-                               Foreground="{DynamicResource TextForeground}" />
-                     <ComboBox Grid.Row="1"
-                              Grid.Column="1"
-                              Style="{StaticResource SettingsComboBox}" />
-                  </Grid>
-               </GroupBox>
+                        <TextBlock Text="Font Size:" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Foreground="{DynamicResource TextForeground}" Margin="0,0,0,5" />
+                        <ComboBox Grid.Column="1" Grid.Row="0" ItemsSource="{Binding FontSize}" Margin="0,0,0,5" />
 
-               <GroupBox Header="Editor Options"
-                        Style="{StaticResource SettingsGroupBox}"
-                        Margin="0,0,0,10">
-                  <StackPanel Margin="5">
-                     <CheckBox Content="Show Line Numbers"
-                               Style="{StaticResource SettingsCheckBox}"
-                               Margin="0,0,0,5" />
-                     <CheckBox Content="Convert Tabs to Spaces"
-                               Style="{StaticResource SettingsCheckBox}"
-                               Margin="0,0,0,5" />
-                     <CheckBox Content="Enable Email Hyperlinks"
-                               Style="{StaticResource SettingsCheckBox}"
-                               Margin="0,0,0,5" />
-                     <CheckBox Content="Enable Hyperlinks"
-                               Style="{StaticResource SettingsCheckBox}"
-                               Margin="0,0,0,5" />
-                     <CheckBox Content="Enable Code Folding"
-                               Style="{StaticResource SettingsCheckBox}"
-                               Margin="0,0,0,5" />
+                        <TextBlock Text="Font Family:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Foreground="{DynamicResource TextForeground}" />
+                        <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={x:Static Member=Fonts.SystemFontFamilies}}" />
+                     </Grid>
                   </StackPanel>
                </GroupBox>
 
-               <GroupBox Header="Indentation"
-                        Style="{StaticResource SettingsGroupBox}"
-                        Margin="0,0,0,10">
+               <GroupBox Header="Options" Margin="0,0,0,10">
+                  <StackPanel Margin="5">
+                     <CheckBox Content="Show Line Numbers" Style="{StaticResource SettingsCheckBox}" Margin="0,0,0,5" />
+                     <CheckBox Content="Convert Tabs to Spaces" Style="{StaticResource SettingsCheckBox}" Margin="0,0,0,5" />
+                     <CheckBox Content="Enable Email Hyperlinks" Style="{StaticResource SettingsCheckBox}" Margin="0,0,0,5" />
+                     <CheckBox Content="Enable Hyperlinks" Style="{StaticResource SettingsCheckBox}" Margin="0,0,0,5" />
+                     <CheckBox Content="Enable Code Folding" Style="{StaticResource SettingsCheckBox}" Margin="0,0,0,5" />
+                  </StackPanel>
+               </GroupBox>
+
+               <GroupBox Header="Indentation" Margin="0,0,0,10">
                   <Grid Margin="5">
                      <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="100" />
                         <ColumnDefinition />
                      </Grid.ColumnDefinitions>
                      <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                        <RowDefinition />
                      </Grid.RowDefinitions>
 
-                     <TextBlock Text="Tab Size:"
-                               Grid.Row="0"
-                               Grid.Column="0"
-                               Margin="0,0,10,5"
-                               VerticalAlignment="Center"
-                               Foreground="{DynamicResource TextForeground}" />
-                     <TextBox Grid.Row="0"
-                             Grid.Column="1"
-                             Style="{StaticResource SettingsTextBox}"
-                             Margin="0,0,0,5"
-                             MaxLength="2" />
+                     <TextBlock Text="Tab Size:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Foreground="{DynamicResource TextForeground}" />
+                     <TextBox Grid.Row="0" Grid.Column="1" Margin="0,0,0,5" MaxLength="2" />
 
-                     <TextBlock Text="Indent Size:"
-                               Grid.Row="1"
-                               Grid.Column="0"
-                               Margin="0,0,10,0"
-                               VerticalAlignment="Center"
-                               Foreground="{DynamicResource TextForeground}" />
-                     <TextBox Grid.Row="1"
-                             Grid.Column="1"
-                             Style="{StaticResource SettingsTextBox}"
-                             MaxLength="2" />
+                     <TextBlock Text="Indent Size:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Foreground="{DynamicResource TextForeground}" />
+                     <TextBox Grid.Row="1" Grid.Column="1" Margin="0,0,0,5" MaxLength="2" />
                   </Grid>
                </GroupBox>
 
-               <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                  <Button Content="Save"
-                          Style="{StaticResource CompletionButton}"
-                          Command="{Binding SaveCommand}"
-                          Margin="0,0,5,0" />
-                  <Button Content="Cancel"
-                          Style="{StaticResource CompletionButton}"
-                          Command="{Binding CancelCommand}" />
-               </StackPanel>
+               <GroupBox Header="Xslt Transformation">
+                  <StackPanel Margin="5">
+                     <CheckBox Content="Runtime" Style="{StaticResource SettingsCheckBox}" />
+                  </StackPanel>
+               </GroupBox>
             </StackPanel>
          </ScrollViewer>
       </Grid>
