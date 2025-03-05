@@ -30,6 +30,7 @@ public class MainViewModel : ObservableObject
     public ICommand OpenCompletionWindowCommand { get; private set; } = null!;
     public ICommand OpenGoToLineWindowCommand { get; private set; } = null!;
     public ICommand OpenSettingsWindowCommand { get; private set; } = null!;
+    public ICommand OpenFileInExplorerCommand { get; private set; } = null!;
 
     public MainViewModel(IWindowService windowService)
     {
@@ -47,6 +48,7 @@ public class MainViewModel : ObservableObject
         OpenCompletionWindowCommand = new RelayCommand(OpenCompletionWindow);
         OpenGoToLineWindowCommand = new RelayCommand(OpenGoToLineWindow);
         OpenSettingsWindowCommand = new RelayCommand(OpenSettingWindow);
+        OpenFileInExplorerCommand = new RelayCommand(OpenFileInExplorer);
     }
 
     private async void OpenFile(object? parameter)
@@ -86,6 +88,14 @@ public class MainViewModel : ObservableObject
         else
         {
             await ActiveDocument.SaveDocument(ActiveDocument.FilePath);
+        }
+    }
+
+    private void OpenFileInExplorer(object? parameter)
+    {
+        if (ActiveDocument?.FilePath is not null)
+        {
+            System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{ActiveDocument.FilePath}\"");
         }
     }
 

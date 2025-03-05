@@ -32,6 +32,7 @@
                <Menu VerticalAlignment="Center" Background="Transparent">
                   <MenuItem Header="File">
                      <MenuItem Header="Open file" Icon="&#xE70B;" Command="{Binding OpenFileCommand}" />
+                     <MenuItem Header="Create template" Icon="&#xE7B8;" IsEnabled="False" />
                      <Separator Style="{StaticResource SeparatorStyle}" />
                      <MenuItem Header="Save file" Icon="&#xE74E;" Command="{Binding SaveCommand}" />
                   </MenuItem>
@@ -47,8 +48,8 @@
                   </MenuItem>
 
                   <MenuItem Header="Tools">
-                     <MenuItem Header="Go To Line" Icon="&#xE933;" Command="{Binding OpenGoToLineWindowCommand}" />
-                     <MenuItem Header="Completion" Icon="&#xE75D;" Command="{Binding OpenCompletionWindowCommand}" />
+                     <MenuItem Header="Go To Line" Icon="&#xE8AB;" Command="{Binding OpenGoToLineWindowCommand}" />
+                     <MenuItem Header="Completion" Icon="&#xE8A4;" Command="{Binding OpenCompletionWindowCommand}" />
                   </MenuItem>
 
                   <Separator Style="{StaticResource SeparatorStyle}" Height="20" />
@@ -96,8 +97,12 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Horizontal" Margin="5">
-               <TextBlock Text="&#xF745;" Margin="0,0,3,0" FontSize="9" FontFamily="{StaticResource FontIcon}" Foreground="{DynamicResource TextInactiveForeground}" VerticalAlignment="Center" />
-               <TextBlock Text="{Binding ActiveDocument.FilePath, TargetNullValue='No file selected'}" Foreground="{DynamicResource TextInactiveForeground}" VerticalAlignment="Center" />
+               <TextBlock Foreground="{DynamicResource TextInactiveForeground}" VerticalAlignment="Center">
+                  <Run Text="&#xF745;" FontSize="9" FontFamily="{StaticResource FontIcon}" />
+                  <Hyperlink Command="{Binding OpenFileInExplorerCommand}" Foreground="{DynamicResource TextInactiveForeground}" TextDecorations="None">
+                     <Run Text="{Binding ActiveDocument.FilePath, TargetNullValue='No file selected'}" />
+                  </Hyperlink>
+               </TextBlock>
             </StackPanel>
 
             <Grid Grid.Column="1" HorizontalAlignment="Right">
@@ -147,7 +152,7 @@
                   </CheckBox.Template>
                </CheckBox>
 
-               <TextBlock Text="{Binding ActiveDocument.Encoding.BodyName, FallbackValue=UTF-8}"
+               <TextBlock Text="{Binding ActiveDocument.Encoding.EncodingName, FallbackValue=UTF-8}"
                           Margin="5,0"
                           Grid.Column="3"
                           VerticalAlignment="Center"
