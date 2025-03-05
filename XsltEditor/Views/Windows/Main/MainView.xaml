@@ -72,8 +72,51 @@
 
                   <MenuItem Header="Tools">
                      <MenuItem Header="Go To Line"
-                               Icon="&#xE8AB;"
+                               Icon="&#xE8A3;"
                                Command="{Binding OpenGoToLineWindowCommand}" />
+                     <MenuItem Header="Text Case" Icon="&#xE8D2;">
+                        <MenuItem Header="Convert Text To Upper Case"
+                                  Icon="&#xE943;"
+                                  Command="{x:Static aeditCmd:AvalonEditCommands.ConvertToUppercase}" />
+                        <MenuItem Header="Convert Text To Lower Case"
+                                  Icon="&#xE943;"
+                                  Command="{x:Static aeditCmd:AvalonEditCommands.ConvertToLowercase}" />
+                        <MenuItem Header="Convert Text To Title Case"
+                                  Icon="&#xE943;"
+                                  Command="{x:Static aeditCmd:AvalonEditCommands.ConvertToTitleCase}" />
+                        <MenuItem Header="Invert Text Case"
+                                  Icon="&#xE1CD;"
+                                  Command="{x:Static aeditCmd:AvalonEditCommands.InvertCase}" />
+                     </MenuItem>
+                     <MenuItem Header="White Spaces" Icon="&#xE290;">
+                        <MenuItem Header="Remove Leading White Spaces"
+                                  Icon="&#xE1CD;"
+                                  Command="{x:Static aeditCmd:AvalonEditCommands.RemoveLeadingWhitespace}" />
+                        <MenuItem Header="Remove Trailing White Spaces"
+                                  Icon="&#xE1CD;"
+                                  Command="{x:Static aeditCmd:AvalonEditCommands.RemoveTrailingWhitespace}" />
+                        <MenuItem Header="Convert Tabs To Spaces"
+                                  Icon="&#xE943;"
+                                  Command="{x:Static aeditCmd:AvalonEditCommands.ConvertTabsToSpaces}" />
+                        <MenuItem Header="Convert Spaces To Tabs"
+                                  Icon="&#xE943;"
+                                  Command="{x:Static aeditCmd:AvalonEditCommands.ConvertSpacesToTabs}" />
+                        <MenuItem Header="Convert Leading Tabs To Spaces"
+                                  Icon="&#xE943;"
+                                  Command="{x:Static aeditCmd:AvalonEditCommands.ConvertLeadingTabsToSpaces}" />
+                        <MenuItem Header="Convert Leading Spaces To Tabs"
+                                  Icon="&#xE943;"
+                                  Command="{x:Static aeditCmd:AvalonEditCommands.ConvertLeadingSpacesToTabs}" />
+                     </MenuItem>
+
+                     <Separator Style="{StaticResource SeparatorStyle}" />
+
+                     <MenuItem Header="Delete Line"
+                               Icon="&#xE738;"
+                               Command="{x:Static aeditCmd:AvalonEditCommands.DeleteLine}" />
+                  </MenuItem>
+
+                  <MenuItem Header="Services">
                      <MenuItem Header="Completion"
                                Icon="&#xE8A4;"
                                Command="{Binding OpenCompletionWindowCommand}" />
@@ -98,82 +141,35 @@
                                IsVirtualizingAnchorable="True" IsVirtualizingDocument="True">
                <ad:DockingManager.Resources>
                   <DataTemplate DataType="{x:Type vm:DocumentViewModel}">
-                     <ct:TextEditor Text="{Binding Text, Mode=TwoWay}"
-                                  IsReadOnly="{Binding IsReadOnly, Mode=TwoWay}"
-                                  Line="{Binding Line, Mode=TwoWay}"
-                                  Column="{Binding Column, Mode=TwoWay}"
-                                  SyntaxHighlighting="{Binding Highlighting, Mode=OneWay}">
+                     <ct:TextEditor Text="{Binding Text, Mode=TwoWay}" IsReadOnly="{Binding IsReadOnly, Mode=TwoWay}"
+                                    Line="{Binding Line, Mode=TwoWay}" Column="{Binding Column, Mode=TwoWay}"
+                                    SyntaxHighlighting="{Binding Highlighting, Mode=OneWay}">
                         <ct:TextEditor.ContextMenu>
                            <ContextMenu>
-                              <!-- Edit Operations -->
-                              <MenuItem Header="Cut"
-                                        Icon="&#xE8C6;"
+                              <MenuItem Header="Cut" 
+                                        Icon="&#xE8C6;" 
                                         Command="ApplicationCommands.Cut" />
-                              <MenuItem Header="Copy"
-                                        Icon="&#xE8C8;"
+                              <MenuItem Header="Copy" 
+                                        Icon="&#xE8C8;" 
                                         Command="ApplicationCommands.Copy" />
-                              <MenuItem Header="Paste"
-                                        Icon="&#xE77F;"
+                              <MenuItem Header="Paste" 
+                                        Icon="&#xE77F;" 
                                         Command="ApplicationCommands.Paste" />
-                                
+
                               <Separator Style="{StaticResource SeparatorStyle}" />
-                                
-                              <!-- Selection -->
+                              
                               <MenuItem Header="Select All"
                                         Icon="&#xE8B3;"
                                         Command="ApplicationCommands.SelectAll" />
-                                
+                                         
                               <Separator Style="{StaticResource SeparatorStyle}" />
-                                
-                              <!-- Undo/Redo -->
+                              
                               <MenuItem Header="Undo"
                                         Icon="&#xE7A7;"
                                         Command="ApplicationCommands.Undo" />
                               <MenuItem Header="Redo"
                                         Icon="&#xE7A6;"
                                         Command="ApplicationCommands.Redo" />
-
-                              <Separator Style="{StaticResource SeparatorStyle}" />
-
-                              <MenuItem Header="Delete Line"
-                                        Icon="&#xE74D;"
-                                        Command="{x:Static aeditCmd:AvalonEditCommands.DeleteLine}" />
-
-                              <MenuItem Header="White Spaces" Icon="&#xE71E;">
-                                 <MenuItem Header="Remove Leading White Spaces"
-                                           Icon="&#xE75C;"
-                                           Command="{x:Static aeditCmd:AvalonEditCommands.RemoveLeadingWhitespace}" />
-                                 <MenuItem Header="Remove Trailing White Spaces"
-                                           Icon="&#xE75C;"
-                                           Command="{x:Static aeditCmd:AvalonEditCommands.RemoveTrailingWhitespace}" />
-                                 <MenuItem Header="Convert Tabs To Spaces"
-                                           Icon="&#xE7A8;"
-                                           Command="{x:Static aeditCmd:AvalonEditCommands.ConvertTabsToSpaces}" />
-                                 <MenuItem Header="Convert Spaces To Tabs"
-                                           Icon="&#xE7A8;"
-                                           Command="{x:Static aeditCmd:AvalonEditCommands.ConvertSpacesToTabs}" />
-                                 <MenuItem Header="Convert Leading Tabs To Spaces"
-                                           Icon="&#xE7A8;"
-                                           Command="{x:Static aeditCmd:AvalonEditCommands.ConvertLeadingTabsToSpaces}" />
-                                 <MenuItem Header="Convert Leading Spaces To Tabs"
-                                           Icon="&#xE7A8;"
-                                           Command="{x:Static aeditCmd:AvalonEditCommands.ConvertLeadingSpacesToTabs}" />
-                              </MenuItem>
-
-                              <MenuItem Header="Text Case" Icon="&#xE8C1;">
-                                 <MenuItem Header="Convert Text To Upper Case"
-                                           Icon="&#xED9D;"
-                                           Command="{x:Static aeditCmd:AvalonEditCommands.ConvertToUppercase}" />
-                                 <MenuItem Header="Convert Text To Lower Case"
-                                           Icon="&#xEDA1;"
-                                           Command="{x:Static aeditCmd:AvalonEditCommands.ConvertToLowercase}" />
-                                 <MenuItem Header="Convert Text To Title Case"
-                                           Icon="&#xE8C1;"
-                                           Command="{x:Static aeditCmd:AvalonEditCommands.ConvertToTitleCase}" />
-                                 <MenuItem Header="Invert Text Case"
-                                           Icon="&#xE8C3;"
-                                           Command="{x:Static aeditCmd:AvalonEditCommands.InvertCase}" />
-                              </MenuItem>
                            </ContextMenu>
                         </ct:TextEditor.ContextMenu>
                      </ct:TextEditor>
