@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Windows;
 using System.Xml;
 
-namespace XsltEditor.Services;
+namespace XsltEditor.Helpers;
 
 internal class ThemeManager
 {

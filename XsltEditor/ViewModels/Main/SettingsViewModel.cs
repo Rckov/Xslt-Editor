@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 
 using XsltEditor.Models.Base;
-using XsltEditor.Services;
+using XsltEditor.Helpers;
 
 namespace XsltEditor.ViewModels.Main;
 
@@ -34,5 +34,4 @@ public class SettingsViewModel : ObservableObject
             Themes.Add(theme);
         }
     }
-
 }

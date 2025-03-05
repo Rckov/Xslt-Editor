@@ -26,12 +26,12 @@ public class MainViewModel : ObservableObject
         set => Set(ref field, value);
     }
 
-    public ICommand OpenFileCommand { get; private set; } = null!;
-    public ICommand SaveCommand { get; private set; } = null!;
-    public ICommand OpenCompletionWindowCommand { get; private set; } = null!;
-    public ICommand OpenGoToLineWindowCommand { get; private set; } = null!;
-    public ICommand OpenSettingsWindowCommand { get; private set; } = null!;
-    public ICommand OpenFileInExplorerCommand { get; private set; } = null!;
+    public ICommand? OpenFileCommand { get; private set; }
+    public ICommand? SaveCommand { get; private set; }
+    public ICommand? OpenCompletionWindowCommand { get; private set; }
+    public ICommand? OpenGoToLineWindowCommand { get; private set; }
+    public ICommand? OpenSettingsWindowCommand { get; private set; }
+    public ICommand? OpenFileInExplorerCommand { get; private set; }
 
     public MainViewModel(IWindowService windowService)
     {
