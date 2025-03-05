@@ -2,6 +2,7 @@ using System.Windows.Input;
 
 using XsltEditor.Infrastructure;
 using XsltEditor.Models.Base;
+using XsltEditor.ViewModels.Main;
 
 namespace XsltEditor.ViewModels;
 

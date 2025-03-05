@@ -5,7 +5,7 @@ using XsltEditor.Infrastructure;
 using XsltEditor.Models.Base;
 using XsltEditor.Services;
 
-namespace XsltEditor.ViewModels;
+namespace XsltEditor.ViewModels.Main;
 
 public class SettingsViewModel : ObservableObject
 {

@@ -1,6 +1,6 @@
-﻿using XsltEditor.ViewModels;
+﻿using XsltEditor.ViewModels.Dialogs;
 
-namespace XsltEditor.Views.Windows;
+namespace XsltEditor.Views.Windows.Dialogs;
 
 public partial class CompletionView
 {

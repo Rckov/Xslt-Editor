@@ -6,9 +6,10 @@ using XsltEditor.Infrastructure;
 using XsltEditor.Models.Base;
 using XsltEditor.Services;
 using XsltEditor.Services.Interfaces;
-using XsltEditor.Views.Windows;
+using XsltEditor.Views.Windows.Dialogs;
+using XsltEditor.Views.Windows.Main;
 
-namespace XsltEditor.ViewModels;
+namespace XsltEditor.ViewModels.Main;
 
 public class MainViewModel : ObservableObject
 {
@@ -74,20 +75,13 @@ public class MainViewModel : ObservableObject
             return;
         }
 
-        if (string.IsNullOrEmpty(ActiveDocument.FilePath))
+        var filePath = string.IsNullOrEmpty(ActiveDocument.FilePath)
+            ? Dialog.SaveFile("Save File", ".xsl", ".xslt", ".xml")
+            : ActiveDocument.FilePath;
+
+        if (!string.IsNullOrEmpty(filePath))
         {
-            var filePath = Dialog.SaveFile("Save File", ".xsl", ".xslt", ".xml");
-
-            if (string.IsNullOrEmpty(filePath))
-            {
-                return;
-            }
-
             await ActiveDocument.SaveDocument(filePath);
-        }
-        else
-        {
-            await ActiveDocument.SaveDocument(ActiveDocument.FilePath);
         }
     }
 

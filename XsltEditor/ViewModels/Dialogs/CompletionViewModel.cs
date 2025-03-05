@@ -8,7 +8,7 @@ using XsltEditor.Models;
 using XsltEditor.Models.Base;
 using XsltEditor.Services.Interfaces;
 
-namespace XsltEditor.ViewModels;
+namespace XsltEditor.ViewModels.Dialogs;
 
 [SupportedOSPlatform("windows")]
 public class CompletionViewModel : ObservableObject

@@ -1,4 +1,4 @@
-﻿<ct:Window x:Class="XsltEditor.Views.Windows.MainView"
+﻿<ct:Window x:Class="XsltEditor.Views.Windows.Main.MainView"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 
@@ -131,7 +131,7 @@
                      <ControlTemplate TargetType="{x:Type CheckBox}">
                         <Border Name="Bd" Padding="5">
                            <TextBlock Name="IconCheckBox"
-                                      FontSize="14"
+                                      FontSize="12"
                                       Foreground="{DynamicResource TextInactiveForeground}"
                                       VerticalAlignment="Center"
                                       HorizontalAlignment="Center" />

@@ -2,7 +2,7 @@ using System.Text.RegularExpressions;
 
 using XsltEditor.ViewModels;
 
-namespace XsltEditor.Views.Windows;
+namespace XsltEditor.Views.Windows.Dialogs;
 
 public partial class GoToLineView
 {

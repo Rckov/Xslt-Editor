@@ -1,8 +1,8 @@
 ﻿using System.Runtime.Versioning;
 
-using XsltEditor.ViewModels;
+using XsltEditor.ViewModels.Main;
 
-namespace XsltEditor.Views.Windows;
+namespace XsltEditor.Views.Windows.Main;
 
 [SupportedOSPlatform("windows")]
 public partial class MainView

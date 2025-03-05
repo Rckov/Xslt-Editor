@@ -6,7 +6,10 @@ using System.Windows;
 using XsltEditor.Services;
 using XsltEditor.Services.Interfaces;
 using XsltEditor.ViewModels;
-using XsltEditor.Views.Windows;
+using XsltEditor.ViewModels.Dialogs;
+using XsltEditor.ViewModels.Main;
+using XsltEditor.Views.Windows.Dialogs;
+using XsltEditor.Views.Windows.Main;
 
 namespace XsltEditor;
 

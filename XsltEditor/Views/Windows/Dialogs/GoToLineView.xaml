@@ -1,9 +1,7 @@
-<ct:Window x:Class="XsltEditor.Views.Windows.GoToLineView"
+<ct:Window x:Class="XsltEditor.Views.Windows.Dialogs.GoToLineView"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-
            xmlns:ct="clr-namespace:XsltEditor.Views.UserControls"
-
            Height="130"
            Width="300"
            Title="Go To Line"
