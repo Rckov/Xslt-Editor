@@ -63,6 +63,36 @@
       </Setter>
    </Style>
 
+   <Style TargetType="ContextMenu">
+      <Setter Property="Background" Value="{DynamicResource GeneralPanelBackground}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+      <Setter Property="Foreground" Value="{DynamicResource TextForeground}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Padding" Value="2" />
+      <Setter Property="SnapsToDevicePixels" Value="True" />
+
+      <Setter Property="Template">
+         <Setter.Value>
+            <ControlTemplate TargetType="ContextMenu">
+               <Border x:Name="Border"
+                       Background="{TemplateBinding Background}"
+                       BorderBrush="{TemplateBinding BorderBrush}"
+                       BorderThickness="{TemplateBinding BorderThickness}"
+                       CornerRadius="2">
+                  <StackPanel IsItemsHost="True" Margin="{TemplateBinding Padding}" KeyboardNavigation.TabNavigation="Cycle" />
+               </Border>
+               <ControlTemplate.Resources>
+                  <Style TargetType="Separator" BasedOn="{StaticResource {x:Type Separator}}">
+                     <Setter Property="Height" Value="1" />
+                     <Setter Property="Margin" Value="5 2" />
+                     <Setter Property="Background" Value="{DynamicResource SeparatorColor}" />
+                  </Style>
+               </ControlTemplate.Resources>
+            </ControlTemplate>
+         </Setter.Value>
+      </Setter>
+   </Style>
+
    <Style x:Key="SettingsComboBox" TargetType="ComboBox">
       <Setter Property="Background" Value="{DynamicResource GeneralPanelBackground}" />
       <Setter Property="Foreground" Value="{DynamicResource TextForeground}" />
