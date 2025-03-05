@@ -25,6 +25,7 @@ public partial class App
 
     private static ServiceProvider ConfigureServices(IServiceCollection services)
     {
+        services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<ICompletionDataService, CompletionDataService>();
         services.AddSingleton<IWindowService, WindowService>();
 
