@@ -9,9 +9,14 @@ namespace XsltEditor.Views.UserControls;
 
 public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
 {
+    private FoldingManager? _foldingManager;
+
     public TextEditor()
     {
         Install();
+
+        CommandBindings.Add(new CommandBinding(TextEditorCommands.ExpandAllFolds, ExpandAllFolds, CanExecuteFoldsCommand));
+        CommandBindings.Add(new CommandBinding(TextEditorCommands.CollapseAllFolds, CollapseAllFolds, CanExecuteFoldsCommand));
 
         Loaded += TextEditor_Loaded;
         PreviewMouseWheel += TextEditor_PreviewMouseWheel;
@@ -55,7 +60,7 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
     private void Install()
     {
         var strategy = new XmlFoldingStrategy();
-        var foldingManager = FoldingManager.Install(TextArea);
+        _foldingManager = FoldingManager.Install(TextArea);
 
         TextChanged += (_, _) =>
         {
@@ -64,7 +69,7 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
                 return;
             }
 
-            strategy.UpdateFoldings(foldingManager, Document);
+            strategy.UpdateFoldings(_foldingManager, Document);
         };
 
         SearchPanel.Install(TextArea);
@@ -144,4 +149,75 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
         SetCurrentValue(TextProperty, BaseText);
         base.OnTextChanged(e);
     }
+
+    private static void CollapseAllFolds(object sender, ExecutedRoutedEventArgs e)
+    {
+        if (sender is not TextEditor editor)
+        {
+            return;
+        }
+
+        editor.CollapseAllFolds();
+    }
+
+    private static void ExpandAllFolds(object sender, ExecutedRoutedEventArgs e)
+    {
+        if (sender is not TextEditor editor)
+        {
+            return;
+        }
+
+        editor.ExpandAllFolds();
+    }
+
+    private static void CanExecuteFoldsCommand(object sender, CanExecuteRoutedEventArgs e)
+    {
+        e.CanExecute = false;
+        e.Handled = true;
+
+        if (sender is not TextEditor editor || editor._foldingManager?.AllFoldings == null)
+        {
+            return;
+        }
+
+        e.CanExecute = true;
+    }
+
+    private void CollapseAllFolds()
+    {
+        if (_foldingManager?.AllFoldings == null)
+        {
+            return;
+        }
+
+        foreach (var folding in _foldingManager.AllFoldings)
+        {
+            folding.IsFolded = true;
+        }
+
+        var firstFolding = _foldingManager.GetNextFolding(0);
+        if (firstFolding != null)
+        {
+            firstFolding.IsFolded = false;
+        }
+    }
+
+    private void ExpandAllFolds()
+    {
+        if (_foldingManager?.AllFoldings == null)
+        {
+            return;
+        }
+
+        foreach (var folding in _foldingManager.AllFoldings)
+        {
+            folding.IsFolded = false;
+        }
+    }
+}
+
+public static class TextEditorCommands
+{
+    public static readonly RoutedCommand ExpandAllFolds = new("ExpandAllFolds", typeof(TextEditor));
+    public static readonly RoutedCommand CollapseAllFolds = new("CollapseAllFolds", typeof(TextEditor));
 }
