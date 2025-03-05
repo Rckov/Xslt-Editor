@@ -139,21 +139,4 @@ public class DocumentViewModel : ObservableObject
             IsDirty = true;
         }
     }
-
-    public void NavigateToLine(int lineNumber)
-    {
-        if (lineNumber < 1 || Text is null)
-        {
-            return;
-        }
-
-        var lines = Text.Split('\n');
-        if (lineNumber > lines.Length)
-        {
-            return;
-        }
-
-        Line = lineNumber;
-        Column = 1;
-    }
 }

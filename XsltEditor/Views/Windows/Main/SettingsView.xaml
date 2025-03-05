@@ -64,7 +64,6 @@
                      <CheckBox Content="Convert Tabs to Spaces" Style="{StaticResource SettingsCheckBox}" Margin="0,0,0,5" />
                      <CheckBox Content="Enable Email Hyperlinks" Style="{StaticResource SettingsCheckBox}" Margin="0,0,0,5" />
                      <CheckBox Content="Enable Hyperlinks" Style="{StaticResource SettingsCheckBox}" Margin="0,0,0,5" />
-                     <CheckBox Content="Enable Code Folding" Style="{StaticResource SettingsCheckBox}" Margin="0,0,0,5" />
                   </StackPanel>
                </GroupBox>
 
