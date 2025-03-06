@@ -1,10 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows.Input;
 
 using XsltEditor.Helpers;
 using XsltEditor.Infrastructure;
 using XsltEditor.Models.Base;
-using XsltEditor.Services;
 using XsltEditor.Services.Interfaces;
 using XsltEditor.Views.Windows.Dialogs;
 using XsltEditor.Views.Windows.Main;
@@ -14,11 +14,9 @@ namespace XsltEditor.ViewModels.Main;
 public class MainViewModel : ObservableObject
 {
     private readonly IWindowService _windowService;
+    private readonly ISettingsService _settingsService;
 
-    public ObservableCollection<DocumentViewModel> Documents { get; set; } = [
-        new("XSL"),
-        new("XML") { IsReadOnly = true }
-    ];
+    public ObservableCollection<DocumentViewModel> Documents { get; set; }
 
     public DocumentViewModel? ActiveDocument
     {
@@ -33,13 +31,19 @@ public class MainViewModel : ObservableObject
     public ICommand? OpenSettingsWindowCommand { get; private set; }
     public ICommand? OpenFileInExplorerCommand { get; private set; }
 
-    public MainViewModel(IWindowService windowService)
+    public MainViewModel(IWindowService windowService, ISettingsService settingsService)
     {
         _windowService = windowService;
+        _settingsService = settingsService;
+
+        Documents = [
+            new DocumentViewModel("XSL", _settingsService.Settings),
+            new DocumentViewModel("XML", _settingsService.Settings) { IsReadOnly = true }
+        ];
 
         InitCommands();
 
-        ThemeManager.Apply(ThemeType.Dark);
+        ThemeManager.Apply(_settingsService.Settings.Theme);
     }
 
     private void InitCommands()
@@ -89,7 +93,7 @@ public class MainViewModel : ObservableObject
     {
         if (ActiveDocument?.FilePath is not null)
         {
-            System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{ActiveDocument.FilePath}\"");
+            Process.Start("explorer.exe", $"/select,\"{ActiveDocument.FilePath}\"");
         }
     }
 

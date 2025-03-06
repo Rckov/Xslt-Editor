@@ -5,18 +5,16 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 
-using XsltEditor.Models.Base;
 using XsltEditor.Helpers;
+using XsltEditor.Models;
+using XsltEditor.Models.Base;
 
 namespace XsltEditor.ViewModels;
 
 public class DocumentViewModel : ObservableObject
 {
-    public string? Name
-    {
-        get;
-        set => Set(ref field, value);
-    }
+    public string? Name { get; init; }
+    public Settings? Settings { get; init; }
 
     public string? FilePath
     {
@@ -66,9 +64,13 @@ public class DocumentViewModel : ObservableObject
         set => Set(ref field, value);
     }
 
-    public DocumentViewModel(string name)
+    /*  */
+
+    public DocumentViewModel(string name, Settings settings)
     {
         Name = name;
+        Settings = settings;
+
         ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
     }
 

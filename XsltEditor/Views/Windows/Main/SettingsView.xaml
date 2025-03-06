@@ -4,7 +4,7 @@
 
            xmlns:ct="clr-namespace:XsltEditor.Views.UserControls"
 
-           Height="605"
+           Height="570"
            Width="400"
            Title="Settings"
 
@@ -50,20 +50,19 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock Text="Font Size:" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Foreground="{DynamicResource TextForeground}" Margin="0,0,0,5" />
-                        <ComboBox Grid.Column="1" Grid.Row="0" ItemsSource="{Binding FontSize}" Margin="0,0,0,5" />
+                        <ComboBox Grid.Column="1" Grid.Row="0" ItemsSource="{Binding FontSizes}" Margin="0,0,0,5" SelectedItem="{Binding FontSize}" />
 
                         <TextBlock Text="Font Family:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Foreground="{DynamicResource TextForeground}" />
-                        <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={x:Static Member=Fonts.SystemFontFamilies}}" />
+                        <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={x:Static Member=Fonts.SystemFontFamilies}}" SelectedItem="{Binding FontFamily}" />
                      </Grid>
                   </StackPanel>
                </GroupBox>
 
                <GroupBox Header="Options" Margin="0,0,0,10">
                   <StackPanel Margin="5">
-                     <CheckBox Content="Show Line Numbers" Style="{StaticResource SettingsCheckBox}" Margin="0,0,0,5" />
-                     <CheckBox Content="Convert Tabs to Spaces" Style="{StaticResource SettingsCheckBox}" Margin="0,0,0,5" />
-                     <CheckBox Content="Enable Email Hyperlinks" Style="{StaticResource SettingsCheckBox}" Margin="0,0,0,5" />
-                     <CheckBox Content="Enable Hyperlinks" Style="{StaticResource SettingsCheckBox}" Margin="0,0,0,5" />
+                     <CheckBox Content="Show Spaces" Style="{StaticResource SettingsCheckBox}" IsChecked="{Binding ShowSpaces}" Margin="0,0,0,5" />
+                     <CheckBox Content="Convert Tabs To Spaces" Style="{StaticResource SettingsCheckBox}" IsChecked="{Binding ConvertTabsToSpaces}" Margin="0,0,0,5" />
+                     <CheckBox Content="Highlight Current Line" Style="{StaticResource SettingsCheckBox}" IsChecked="{Binding HighlightCurrentLine}" />
                   </StackPanel>
                </GroupBox>
 
@@ -78,17 +77,27 @@
                         <RowDefinition />
                      </Grid.RowDefinitions>
 
-                     <TextBlock Text="Tab Size:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Foreground="{DynamicResource TextForeground}" />
-                     <TextBox Grid.Row="0" Grid.Column="1" Margin="0,0,0,5" MaxLength="2" />
+                     <TextBlock Text="Tab Size:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,0,5" Foreground="{DynamicResource TextForeground}" />
+                     <ComboBox Grid.Column="1" Grid.Row="0" Margin="0,0,0,5" ItemsSource="{Binding Sizes}" SelectedItem="{Binding TabSize}" />
 
                      <TextBlock Text="Indent Size:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Foreground="{DynamicResource TextForeground}" />
-                     <TextBox Grid.Row="1" Grid.Column="1" Margin="0,0,0,5" MaxLength="2" />
+                     <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Sizes}" SelectedItem="{Binding IndentSize}" />
                   </Grid>
                </GroupBox>
 
                <GroupBox Header="Xslt Transformation">
                   <StackPanel Margin="5">
-                     <CheckBox Content="Runtime" Style="{StaticResource SettingsCheckBox}" />
+                     <CheckBox Content="Runtime compile" Margin="0,0,0,5" Style="{StaticResource SettingsCheckBox}" />
+
+                     <Grid>
+                        <Grid.ColumnDefinitions>
+                           <ColumnDefinition Width="100" />
+                           <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="Engine:" Grid.Column="0" VerticalAlignment="Center" Foreground="{DynamicResource TextForeground}" />
+                        <ComboBox Grid.Column="1" ItemsSource="{Binding Engines}" SelectedIndex="0" />
+                     </Grid>
                   </StackPanel>
                </GroupBox>
             </StackPanel>

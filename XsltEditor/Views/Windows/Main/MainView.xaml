@@ -118,12 +118,14 @@
                                Command="{x:Static aeditCmd:AvalonEditCommands.DeleteLine}" />
                   </MenuItem>
 
-                  <MenuItem Header="Snippets" IsEnabled="False" />
-
                   <MenuItem Header="Services">
                      <MenuItem Header="Completion"
                                Icon="&#xE8A4;"
                                Command="{Binding OpenCompletionWindowCommand}" />
+
+                     <MenuItem Header="Snippets"
+                               Icon="&#xE81E;"
+                               IsEnabled="False" />
                   </MenuItem>
 
                   <Separator Style="{StaticResource SeparatorStyle}" Height="20" />

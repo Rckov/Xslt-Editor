@@ -13,7 +13,11 @@
       <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
       <Setter Property="Options">
          <Setter.Value>
-            <ae:TextEditorOptions ConvertTabsToSpaces="True" EnableEmailHyperlinks="False" EnableHyperlinks="False" />
+            <ae:TextEditorOptions ConvertTabsToSpaces="True"
+                                  ShowSpaces="True"
+                                  HighlightCurrentLine="False"
+                                  EnableEmailHyperlinks="False"
+                                  EnableHyperlinks="False" />
          </Setter.Value>
       </Setter>
    </Style>

@@ -21,6 +21,7 @@ public abstract class ObservableObject : INotifyPropertyChanged
 
         field = value;
         OnPropertyChanged(propertyName);
+
         return true;
     }
 }
