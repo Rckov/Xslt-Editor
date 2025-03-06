@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-using XsltEditor.ViewModels;
+using XsltEditor.ViewModels.Dialogs;
 
 namespace XsltEditor.Views.Windows.Dialogs;
 

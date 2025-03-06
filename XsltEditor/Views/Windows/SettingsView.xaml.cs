@@ -1,6 +1,6 @@
 using XsltEditor.ViewModels.Main;
 
-namespace XsltEditor.Views.Windows.Main;
+namespace XsltEditor.Views.Windows;
 
 public partial class SettingsView
 {

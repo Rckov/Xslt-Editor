@@ -6,10 +6,10 @@ using XsltEditor.Helpers;
 using XsltEditor.Infrastructure;
 using XsltEditor.Models.Base;
 using XsltEditor.Services.Interfaces;
+using XsltEditor.Views.Windows;
 using XsltEditor.Views.Windows.Dialogs;
-using XsltEditor.Views.Windows.Main;
 
-namespace XsltEditor.ViewModels.Main;
+namespace XsltEditor.ViewModels;
 
 public class MainViewModel : ObservableObject
 {
@@ -79,14 +79,19 @@ public class MainViewModel : ObservableObject
             return;
         }
 
-        var filePath = string.IsNullOrEmpty(ActiveDocument.FilePath)
-            ? Dialog.SaveFile("Save File", ".xsl", ".xslt", ".xml")
-            : ActiveDocument.FilePath;
+        var path = ActiveDocument.FilePath;
 
-        if (!string.IsNullOrEmpty(filePath))
+        if (string.IsNullOrEmpty(path))
         {
-            await ActiveDocument.SaveDocument(filePath);
+            path = Dialog.SaveFile("Save File", ".xsl", ".xslt", ".xml");
+
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
         }
+
+        await ActiveDocument.SaveDocument(path);
     }
 
     private void OpenFileInExplorer(object? parameter)
@@ -115,6 +120,7 @@ public class MainViewModel : ObservableObject
     private DocumentViewModel? GetDocumentByExtension(string filePath)
     {
         var extension = System.IO.Path.GetExtension(filePath).ToLower();
+
         return extension switch
         {
             ".xsl" or ".xslt" => Documents.FirstOrDefault(d => d.Name == "XSL"),
