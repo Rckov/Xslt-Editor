@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Input;
 
@@ -6,6 +7,7 @@ using XsltEditor.Helpers;
 using XsltEditor.Infrastructure;
 using XsltEditor.Models.Base;
 using XsltEditor.Services.Interfaces;
+using XsltEditor.Transform.Enums;
 using XsltEditor.Views.Windows;
 using XsltEditor.Views.Windows.Dialogs;
 
@@ -14,7 +16,7 @@ namespace XsltEditor.ViewModels;
 public class MainViewModel : ObservableObject
 {
     private readonly IWindowService _windowService;
-    private readonly ISettingsService _settingsService;
+    private readonly IXmlTransformService _transformService;
 
     public ObservableCollection<DocumentViewModel> Documents { get; set; }
 
@@ -24,6 +26,24 @@ public class MainViewModel : ObservableObject
         set => Set(ref field, value);
     }
 
+    public string? HtmlContent
+    {
+        get;
+        set => Set(ref field, value);
+    }
+
+    public EngineType Engine
+    {
+        get;
+        set
+        {
+            if (Set(ref field, value))
+            {
+                _transformService.Create(value);
+            }
+        }
+    }
+
     public ICommand? OpenFileCommand { get; private set; }
     public ICommand? SaveCommand { get; private set; }
     public ICommand? OpenCompletionWindowCommand { get; private set; }
@@ -31,19 +51,33 @@ public class MainViewModel : ObservableObject
     public ICommand? OpenSettingsWindowCommand { get; private set; }
     public ICommand? OpenFileInExplorerCommand { get; private set; }
 
-    public MainViewModel(IWindowService windowService, ISettingsService settingsService)
+    public MainViewModel(
+        IWindowService windowService,
+        IXmlTransformService transformService,
+        ISettingsService settingsService)
     {
         _windowService = windowService;
-        _settingsService = settingsService;
+        _transformService = transformService;
 
         Documents = [
             new DocumentViewModel("XSL", settingsService),
             new DocumentViewModel("XML", settingsService) { IsReadOnly = true }
         ];
 
-        InitCommands();
+        Engine = EngineType.XslCompiledTransform;
 
-        ThemeManager.Apply(_settingsService.Settings.Theme);
+        InitCommands();
+        SubscribeEvents();
+
+        ThemeManager.Apply(settingsService.Settings.Theme);
+    }
+
+    private void SubscribeEvents()
+    {
+        foreach (var item in Documents)
+        {
+            item.PropertyChanged += OnTextPropertyChanged;
+        }
     }
 
     private void InitCommands()
@@ -92,6 +126,25 @@ public class MainViewModel : ObservableObject
         }
 
         await ActiveDocument.SaveDocument(path);
+    }
+
+    private async void OnTextPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(DocumentViewModel.Text))
+        {
+            return;
+        }
+
+        var xsl = Documents[0];
+        var xml = Documents[1];
+
+        if (string.IsNullOrWhiteSpace(xsl.Text) || string.IsNullOrWhiteSpace(xml.Text))
+        {
+            HtmlContent = string.Empty;
+            return;
+        }
+
+        HtmlContent = await _transformService.TransformAsync(xsl.Text, xml.Text, xsl.FilePath);
     }
 
     private void OpenFileInExplorer(object? parameter)

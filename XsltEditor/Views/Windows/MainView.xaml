@@ -1,12 +1,12 @@
 ﻿<ct:Window x:Class="XsltEditor.Views.Windows.MainView"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-
+           xmlns:aeditCmd="clr-namespace:ICSharpCode.AvalonEdit;assembly=ICSharpCode.AvalonEdit"
+           xmlns:wv="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+           xmlns:conv="clr-namespace:XsltEditor.Infrastructure.Converters"
            xmlns:vm="clr-namespace:XsltEditor.ViewModels"
            xmlns:ct="clr-namespace:XsltEditor.Views.UserControls"
            xmlns:ad="https://github.com/Dirkster99/AvalonDock"
-           xmlns:aeditCmd="clr-namespace:ICSharpCode.AvalonEdit;assembly=ICSharpCode.AvalonEdit"
-
            Height="650"
            Width="1200"
            Title="Xslt Editor"
@@ -14,6 +14,10 @@
            ResizeMode="CanResizeWithGrip"
            WindowStartupLocation="CenterScreen"
            Style="{StaticResource WindowStyle}" AcrylicEffect="False">
+
+   <ct:Window.Resources>
+      <conv:ActiveDocumentConverter x:Key="ActiveDocConverter" />
+   </ct:Window.Resources>
 
    <ct:Window.InputBindings>
       <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
@@ -147,13 +151,13 @@
          </ct:WindowBar>
 
          <Border Grid.Row="1" Padding="5">
-            <ad:DockingManager DocumentsSource="{Binding Documents}" AnchorablesSource="{x:Null}"
-                               ActiveContent="{Binding ActiveDocument, Mode=TwoWay}"
+            <ad:DockingManager DocumentsSource="{Binding Documents}"
+                               ActiveContent="{Binding ActiveDocument, Mode=TwoWay, Converter={StaticResource ActiveDocConverter}}"
                                IsVirtualizingAnchorable="True" IsVirtualizingDocument="True">
                <ad:DockingManager.Resources>
                   <DataTemplate DataType="{x:Type vm:DocumentViewModel}">
                      <ct:TextEditor Text="{Binding Text, Mode=TwoWay}" IsReadOnly="{Binding IsReadOnly, Mode=TwoWay}"
-                                    Line="{Binding Line, Mode=TwoWay}" Column="{Binding Column, Mode=TwoWay}" IsModified="{Binding IsDirty, Mode=TwoWay}"
+                                    Line="{Binding Line, Mode=TwoWay}" Column="{Binding Column, Mode=TwoWay}"
                                     SyntaxHighlighting="{Binding Highlighting, Mode=OneWay}">
                         <ct:TextEditor.ContextMenu>
                            <ContextMenu>
@@ -201,7 +205,9 @@
                      <ad:LayoutDocumentPane />
 
                      <ad:LayoutAnchorablePane DockWidth="300">
-                        <ad:LayoutAnchorable Title="Result" CanHide="False" CanAutoHide="False" />
+                        <ad:LayoutAnchorable Title="Result" CanHide="False" CanAutoHide="False">
+                           <wv:WebView2 Name="WebView" DefaultBackgroundColor="Transparent" />
+                        </ad:LayoutAnchorable>
                      </ad:LayoutAnchorablePane>
                   </ad:LayoutPanel>
                </ad:LayoutRoot>
