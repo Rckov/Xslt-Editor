@@ -153,7 +153,7 @@
                <ad:DockingManager.Resources>
                   <DataTemplate DataType="{x:Type vm:DocumentViewModel}">
                      <ct:TextEditor Text="{Binding Text, Mode=TwoWay}" IsReadOnly="{Binding IsReadOnly, Mode=TwoWay}"
-                                    Line="{Binding Line, Mode=TwoWay}" Column="{Binding Column, Mode=TwoWay}"
+                                    Line="{Binding Line, Mode=TwoWay}" Column="{Binding Column, Mode=TwoWay}" IsModified="{Binding IsDirty, Mode=TwoWay}"
                                     SyntaxHighlighting="{Binding Highlighting, Mode=OneWay}">
                         <ct:TextEditor.ContextMenu>
                            <ContextMenu>

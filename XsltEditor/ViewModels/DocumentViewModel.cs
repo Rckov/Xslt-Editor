@@ -8,13 +8,14 @@ using System.Windows;
 using XsltEditor.Helpers;
 using XsltEditor.Models;
 using XsltEditor.Models.Base;
+using XsltEditor.Services.Interfaces;
 
 namespace XsltEditor.ViewModels;
 
 public class DocumentViewModel : ObservableObject
 {
-    public string? Name { get; init; }
-    public Settings? Settings { get; init; }
+    public string Name { get; init; }
+    public Settings Settings { get; init; }
 
     public string? FilePath
     {
@@ -64,12 +65,10 @@ public class DocumentViewModel : ObservableObject
         set => Set(ref field, value);
     }
 
-    /*  */
-
-    public DocumentViewModel(string name, Settings settings)
+    public DocumentViewModel(string name, ISettingsService settingsService)
     {
         Name = name;
-        Settings = settings;
+        Settings = settingsService.Settings;
 
         ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
     }

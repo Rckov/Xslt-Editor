@@ -1,4 +1,6 @@
-﻿using XsltEditor.Helpers;
+﻿using ICSharpCode.AvalonEdit;
+
+using XsltEditor.Helpers;
 using XsltEditor.Models.Base;
 
 namespace XsltEditor.Models;
@@ -8,7 +10,6 @@ public class Settings : ObservableObject
     public Settings()
     {
         Theme = ThemeType.Dark;
-        FontSize = 12;
         FontFamily = "Consolas";
         ShowSpaces = false;
         ConvertTabsToSpaces = false;
@@ -19,12 +20,6 @@ public class Settings : ObservableObject
     }
 
     public ThemeType Theme
-    {
-        get;
-        set => Set(ref field, value);
-    }
-
-    public int FontSize
     {
         get;
         set => Set(ref field, value);
@@ -67,6 +62,12 @@ public class Settings : ObservableObject
     }
 
     public bool RuntimeTransformation
+    {
+        get;
+        set => Set(ref field, value);
+    }
+
+    public TextEditorOptions TextEditorOptions
     {
         get;
         set => Set(ref field, value);

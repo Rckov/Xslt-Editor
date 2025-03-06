@@ -37,8 +37,8 @@ public class MainViewModel : ObservableObject
         _settingsService = settingsService;
 
         Documents = [
-            new DocumentViewModel("XSL", _settingsService.Settings),
-            new DocumentViewModel("XML", _settingsService.Settings) { IsReadOnly = true }
+            new DocumentViewModel("XSL", settingsService),
+            new DocumentViewModel("XML", settingsService) { IsReadOnly = true }
         ];
 
         InitCommands();
