@@ -42,7 +42,6 @@ public partial class MainView
                     el.style.color = 'white';
                     el.style.backgroundColor = 'transparent';
 
-                    // Обрабатываем границы таблиц
                     if (el.tagName === 'TABLE' || el.tagName === 'TD' || el.tagName === 'TH') {
                         el.style.border = '1px solid white';
                     }
