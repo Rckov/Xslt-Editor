@@ -32,7 +32,7 @@ jobs:
       - name: Zip x64 artifacts
         shell: pwsh
         run: |
-          Compress-Archive -Path src/XsltEditor/bin/Release/net8.0-windows7.0/x64/* -DestinationPath x64_release.zip
+          Compress-Archive -Path XsltEditor/bin/Release/net8.0-windows7.0/x64/* -DestinationPath x64_release.zip
 
       - name: Generate commit log
         id: commit_log
