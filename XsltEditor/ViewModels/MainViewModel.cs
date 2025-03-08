@@ -55,7 +55,8 @@ public class MainViewModel : BaseViewModel, IDisposable
         IWindowService windowService,
         IThemeManager themeManager,
         IXmlTransformService transformService,
-        ISettingsService settingsService)
+        ISettingsService settingsService,
+        ICompletionDataService completionDataService)
     {
         _messenger = messenger;
         _messenger.Subscribe<EngineMessage>(OnEngineChanged);
@@ -65,8 +66,8 @@ public class MainViewModel : BaseViewModel, IDisposable
         Engine = settingsService.Settings.Engine;
 
         Documents = [
-            new DocumentViewModel(messenger) { Name = "XSL" },
-            new DocumentViewModel(messenger) { Name = "XML" }
+            new DocumentViewModel(messenger, completionDataService) { Name = "XSL" },
+            new DocumentViewModel(messenger, null) { Name = "XML" }
         ];
 
         themeManager.Apply(settingsService.Settings.Theme);

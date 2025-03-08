@@ -2,7 +2,8 @@
                     xmlns:ae="http://icsharpcode.net/sharpdevelop/avalonedit"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:aef="clr-namespace:ICSharpCode.AvalonEdit.Folding;assembly=ICSharpCode.AvalonEdit"
-                    xmlns:ct="clr-namespace:XsltEditor.Views.UserControls">
+                    xmlns:ct="clr-namespace:XsltEditor.Views.UserControls"
+                    xmlns:cc="clr-namespace:ICSharpCode.AvalonEdit.CodeCompletion;assembly=ICSharpCode.AvalonEdit">
 
    <Style TargetType="{x:Type ct:CodeEditor}">
       <Setter Property="Background" Value="Transparent" />
@@ -97,5 +98,14 @@
             </ControlTemplate>
          </Setter.Value>
       </Setter>
+   </Style>
+
+   <Style TargetType="cc:CompletionWindow">
+      <Setter Property="Foreground" Value="{DynamicResource TextForeground}" />
+      <Setter Property="Background" Value="{DynamicResource GeneralPopupBackground}" />
+   </Style>
+
+   <Style TargetType="cc:CompletionListBox">
+      <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
    </Style>
 </ResourceDictionary>

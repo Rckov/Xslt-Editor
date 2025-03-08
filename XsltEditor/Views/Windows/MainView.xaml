@@ -160,7 +160,8 @@
                   <DataTemplate DataType="{x:Type vm:DocumentViewModel}">
                      <ct:CodeEditor Text="{Binding Text, Mode=TwoWay}" IsReadOnly="{Binding IsReadOnly, Mode=TwoWay}"
                                     Line="{Binding Line, Mode=TwoWay}" Column="{Binding Column, Mode=TwoWay}"
-                                    SyntaxHighlighting="{Binding Highlighting, Mode=OneWay}">
+                                    SyntaxHighlighting="{Binding Highlighting, Mode=OneWay}"
+                                    CompletionData="{Binding CompletionData}">
                         <ct:CodeEditor.ContextMenu>
                            <ContextMenu>
                               <MenuItem Header="Cut"

@@ -1,16 +1,26 @@
 ﻿using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.CodeCompletion;
+using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Search;
 
+using System.Text.Json.Serialization;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace XsltEditor.Views.UserControls;
 
 public class CodeEditor : TextEditor
 {
+    private SearchPanel? _searchPanel;
     private FoldingManager? _foldingManager;
+
+    private CompletionWindow? _completionWindow;
+
+    private KeyEventHandler _previewKeyDownHandler;
+    private TextCompositionEventHandler _textEnteredHandler;
 
     public CodeEditor()
     {
@@ -21,8 +31,10 @@ public class CodeEditor : TextEditor
 
         Loaded += TextEditor_Loaded;
         PreviewMouseWheel += TextEditor_PreviewMouseWheel;
-
         TextArea.Caret.PositionChanged += Caret_PositionChanged;
+
+        _textEnteredHandler = OnTextEntered;
+        _previewKeyDownHandler = OnPreviewKeyDown;
     }
 
     public static readonly DependencyProperty LineProperty =
@@ -33,6 +45,9 @@ public class CodeEditor : TextEditor
 
     public static readonly DependencyProperty TextProperty =
         DependencyProperty.Register(nameof(Text), typeof(string), typeof(CodeEditor), new PropertyMetadata(string.Empty, OnTextChanged));
+
+    public static readonly DependencyProperty CompletionDataProperty =
+        DependencyProperty.Register(nameof(CompletionData), typeof(IList<CompletionData>), typeof(CodeEditor), new PropertyMetadata(OnCompletionDataChanged));
 
     public int Line
     {
@@ -58,10 +73,18 @@ public class CodeEditor : TextEditor
         set => base.Text = value;
     }
 
+    public IList<CompletionData> CompletionData
+    {
+        get { return (IList<CompletionData>)GetValue(CompletionDataProperty); }
+        set { SetValue(CompletionDataProperty, value); }
+    }
+
     private void Install()
     {
-        var strategy = new XmlFoldingStrategy();
+        _searchPanel = SearchPanel.Install(TextArea);
         _foldingManager = FoldingManager.Install(TextArea);
+
+        var strategy = new XmlFoldingStrategy();
 
         TextChanged += (_, _) =>
         {
@@ -72,8 +95,6 @@ public class CodeEditor : TextEditor
 
             strategy.UpdateFoldings(_foldingManager, Document);
         };
-
-        SearchPanel.Install(TextArea);
     }
 
     private void TextEditor_Loaded(object sender, RoutedEventArgs e)
@@ -114,11 +135,43 @@ public class CodeEditor : TextEditor
         }
     }
 
+    private void OnPreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (_completionWindow == null || e.Key != Key.Enter)
+        {
+            return;
+        }
+
+        _completionWindow.CompletionList.RequestInsertion(e);
+        e.Handled = true;
+    }
+
+    private void OnTextEntered(object sender, TextCompositionEventArgs e)
+    {
+        if (e.Text != "<")
+        {
+            return;
+        }
+
+        _completionWindow = new CompletionWindow(TextArea)
+        {
+            ResizeMode = ResizeMode.NoResize
+        };
+
+        var data = _completionWindow.CompletionList.CompletionData;
+
+        foreach (var item in CompletionData!)
+        {
+            data.Add(item);
+        }
+
+        _completionWindow.Closed += (_, _) => _completionWindow = null;
+        _completionWindow.Show();
+    }
+
     private static void LineChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var editor = (CodeEditor)d;
-
-        if (editor.IsLoaded)
+        if (d is CodeEditor editor && editor.IsLoaded)
         {
             editor.TextArea.Caret.Line = (int)e.NewValue;
             editor.ScrollToLine(editor.Line);
@@ -127,19 +180,16 @@ public class CodeEditor : TextEditor
 
     private static void ColumnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var editor = (CodeEditor)d;
-
-        if (editor.IsLoaded)
+        if (d is CodeEditor editor && editor.IsLoaded)
         {
             editor.TextArea.Caret.Column = (int)e.NewValue;
         }
     }
 
+
     private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var editor = (CodeEditor)d;
-
-        if (editor.BaseText != (string)e.NewValue)
+        if (d is CodeEditor editor && editor.BaseText != (string)e.NewValue)
         {
             editor.BaseText = (string)e.NewValue;
         }
@@ -153,22 +203,18 @@ public class CodeEditor : TextEditor
 
     private static void CollapseAllFolds(object sender, ExecutedRoutedEventArgs e)
     {
-        if (sender is not CodeEditor editor)
+        if (sender is CodeEditor editor)
         {
-            return;
+            editor.CollapseAllFolds();
         }
-
-        editor.CollapseAllFolds();
     }
 
     private static void ExpandAllFolds(object sender, ExecutedRoutedEventArgs e)
     {
-        if (sender is not CodeEditor editor)
+        if (sender is CodeEditor editor)
         {
-            return;
+            editor.ExpandAllFolds();
         }
-
-        editor.ExpandAllFolds();
     }
 
     private static void CanExecuteFoldsCommand(object sender, CanExecuteRoutedEventArgs e)
@@ -182,6 +228,23 @@ public class CodeEditor : TextEditor
         }
 
         e.CanExecute = true;
+    }
+
+    private static void OnCompletionDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is not CodeEditor editor)
+        {
+            return;
+        }
+
+        editor.TextArea.TextEntered -= editor._textEnteredHandler;
+        editor.PreviewKeyDown -= editor._previewKeyDownHandler;
+
+        if (editor.CompletionData != null)
+        {
+            editor.TextArea.TextEntered += editor._textEnteredHandler;
+            editor.PreviewKeyDown += editor._previewKeyDownHandler;
+        }
     }
 
     private void CollapseAllFolds()
@@ -214,6 +277,32 @@ public class CodeEditor : TextEditor
         {
             folding.IsFolded = false;
         }
+    }
+}
+
+public class CompletionData : ICompletionData
+{
+    public CompletionData(string text)
+    {
+        Text = text;
+    }
+
+    [JsonIgnore] public ImageSource? Image => null;
+
+    public string Text { get; }
+
+    [JsonIgnore]
+    public object Content => Text;
+
+    [JsonIgnore]
+    public object Description => $"Insert {Text}";
+
+    [JsonIgnore]
+    public double Priority => 0;
+
+    public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
+    {
+        textArea.Document.Replace(completionSegment, Text);
     }
 }
 

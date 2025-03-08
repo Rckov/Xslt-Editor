@@ -11,6 +11,7 @@ using XsltEditor.Models.Messages;
 using XsltEditor.Services.Implementation;
 using XsltEditor.Services.Interfaces;
 using XsltEditor.ViewModels.Base;
+using XsltEditor.Views.UserControls;
 
 namespace XsltEditor.ViewModels;
 
@@ -73,7 +74,9 @@ public class DocumentViewModel : BaseViewModel, IDisposable
         set => Set(ref field, value);
     }
 
-    public DocumentViewModel(IMessenger messenger)
+    public IList<CompletionData>? CompletionData { get; private set; }
+
+    public DocumentViewModel(IMessenger messenger, ICompletionDataService? completionDataService)
     {
         _messenger = messenger;
         _messenger.Subscribe<ThemeMessage>(OnThemeChanged);
@@ -81,6 +84,11 @@ public class DocumentViewModel : BaseViewModel, IDisposable
 
         AddHighlighting(ThemeType.Dark, "XsltEditor.Resources.Highlighting.DarkMode.xshd");
         AddHighlighting(ThemeType.Light, "XsltEditor.Resources.Highlighting.LightMode.xshd");
+
+        if (completionDataService != null)
+        {
+            CompletionData = completionDataService.LoadCompletionData();
+        }
     }
 
     public async Task OpenDocument(string path)

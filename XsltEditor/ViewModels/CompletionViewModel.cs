@@ -3,9 +3,9 @@ using System.Windows;
 using System.Windows.Input;
 
 using XsltEditor.Infrastructure;
-using XsltEditor.Models;
 using XsltEditor.Services.Interfaces;
 using XsltEditor.ViewModels.Base;
+using XsltEditor.Views.UserControls;
 
 namespace XsltEditor.ViewModels;
 
