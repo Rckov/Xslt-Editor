@@ -95,6 +95,7 @@ public class DocumentViewModel : BaseViewModel, IDisposable
 
     public void Dispose()
     {
+        _messenger.Unsubscribe<ThemeMessage>(OnThemeChanged);
         _messenger.Unsubscribe<CaretLineMessage>(OnScrollToLine);
         GC.SuppressFinalize(this);
     }
