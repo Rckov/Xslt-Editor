@@ -22,7 +22,7 @@ public class DocumentViewModel : BaseViewModel, IDisposable
     private readonly Dictionary<ThemeType, string> _highlightingPaths = [];
     private readonly IMessenger _messenger;
 
-    public DocumentViewModel(IMessenger messenger, ICompletionDataService? completionDataService)
+    public DocumentViewModel(IMessenger messenger, ICompletionDataService? completionDataService = null)
     {
         _messenger = messenger;
         _messenger.Subscribe<ThemeMessage>(OnThemeChanged);

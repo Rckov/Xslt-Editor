@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 using XsltEditor.Helpers;
 using XsltEditor.Infrastructure;
@@ -22,6 +23,8 @@ public class MainViewModel : BaseViewModel, IDisposable
     private readonly IMessenger _messenger;
     private readonly IXmlTransformService _transformService;
     private readonly IWindowService _windowService;
+
+    private DispatcherTimer _debounceTimer;
 
     public MainViewModel(
         IMessenger messenger,
@@ -41,10 +44,17 @@ public class MainViewModel : BaseViewModel, IDisposable
         Documents =
         [
             new DocumentViewModel(messenger, completionDataService) { Name = "XSL" },
-            new DocumentViewModel(messenger, null) { Name = "XML" }
+            new DocumentViewModel(messenger) { Name = "XML" }
         ];
 
         themeManager.Apply(settingsService.Settings.Theme);
+
+        _debounceTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(1),
+        }; 
+        _debounceTimer.Tick += DebounceTimer_Tick;
+
         InitializeEvents();
     }
 
@@ -76,6 +86,7 @@ public class MainViewModel : BaseViewModel, IDisposable
 
     public void Dispose()
     {
+        _debounceTimer.Stop();
         _messenger.Unsubscribe<EngineMessage>(OnEngineChanged);
 
         foreach (var doc in Documents.ToList())
@@ -162,13 +173,8 @@ public class MainViewModel : BaseViewModel, IDisposable
         }
     }
 
-    private async void OnTextPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private async void DebounceTimer_Tick(object? sender, EventArgs e)
     {
-        if (e.PropertyName != nameof(DocumentViewModel.Text))
-        {
-            return;
-        }
-
         var xsl = GetDocumentByExtension(".xsl");
         var xml = GetDocumentByExtension(".xml");
 
@@ -185,6 +191,17 @@ public class MainViewModel : BaseViewModel, IDisposable
         }
 
         HtmlContent = await _transformService.TransformAsync(xsl.Text, xml.Text, xsl.FilePath);
+    }
+
+    private void OnTextPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(DocumentViewModel.Text))
+        {
+            return;
+        }
+
+        _debounceTimer.Stop();
+        _debounceTimer.Start();
     }
 
     private void OpenCompletionWindow()
