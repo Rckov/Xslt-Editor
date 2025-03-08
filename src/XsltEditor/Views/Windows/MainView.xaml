@@ -229,7 +229,7 @@
                   <Run Text="&#xF745;" FontFamily="{StaticResource FontIcon}" FontSize="9" />
 
                   <Hyperlink Command="{Binding OpenFileExplorerCommand}" Foreground="{DynamicResource TextInactiveForeground}" TextDecorations="None">
-                     <Run Text="{Binding ActiveDocument.FilePath, TargetNullValue='No file selected'}" />
+                     <Run Text="{Binding ActiveDocument.FilePath, Mode=OneWay, TargetNullValue='No file selected'}" />
                   </Hyperlink>
                </TextBlock>
             </StackPanel>
