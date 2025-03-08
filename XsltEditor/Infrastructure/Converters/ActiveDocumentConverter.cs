@@ -1,4 +1,5 @@
-﻿using System.Windows.Data;
+﻿using System.Globalization;
+using System.Windows.Data;
 
 using XsltEditor.ViewModels;
 
@@ -6,23 +7,13 @@ namespace XsltEditor.Infrastructure.Converters;
 
 internal class ActiveDocumentConverter : IValueConverter
 {
-    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is DocumentViewModel)
-        {
-            return value;
-        }
-
-        return Binding.DoNothing;
+        return value is DocumentViewModel ? value : Binding.DoNothing;
     }
 
-    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (value is DocumentViewModel)
-        {
-            return value;
-        }
-
-        return Binding.DoNothing;
+        return value is DocumentViewModel ? value : Binding.DoNothing;
     }
 }

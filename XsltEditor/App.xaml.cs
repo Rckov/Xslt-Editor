@@ -29,8 +29,8 @@ public partial class App
         services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<IXmlTransformService, XmlTransformService>();
 
-        services.AddSingleton<MainViewModel>();
-        services.AddSingleton<MainView>();
+        services.AddTransient<MainViewModel>();
+        services.AddTransient<MainView>();
 
         services.AddTransient<CompletionViewModel>();
         services.AddTransient<CompletionView>();
@@ -47,7 +47,7 @@ public partial class App
     protected override void OnStartup(StartupEventArgs e)
     {
         var windowService = Services.GetRequiredService<IWindowService>();
-        windowService?.ShowWindow<MainView>();
+        windowService.ShowWindow<MainView>();
     }
 
     protected override void OnExit(ExitEventArgs e)

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Input;
 
@@ -15,11 +16,37 @@ using XsltEditor.Views.Windows;
 
 namespace XsltEditor.ViewModels;
 
+[SupportedOSPlatform("windows")]
 public class MainViewModel : BaseViewModel, IDisposable
 {
     private readonly IMessenger _messenger;
     private readonly IXmlTransformService _transformService;
     private readonly IWindowService _windowService;
+
+    public MainViewModel(
+        IMessenger messenger,
+        IWindowService windowService,
+        IThemeManager themeManager,
+        IXmlTransformService transformService,
+        ISettingsService settingsService,
+        ICompletionDataService completionDataService)
+    {
+        _messenger = messenger;
+        _messenger.Subscribe<EngineMessage>(OnEngineChanged);
+        _windowService = windowService;
+        _transformService = transformService;
+
+        Engine = settingsService.Settings.Engine;
+
+        Documents =
+        [
+            new DocumentViewModel(messenger, completionDataService) { Name = "XSL" },
+            new DocumentViewModel(messenger, null) { Name = "XML" }
+        ];
+
+        themeManager.Apply(settingsService.Settings.Theme);
+        InitializeEvents();
+    }
 
     public ObservableCollection<DocumentViewModel> Documents { get; set; }
 
@@ -37,10 +64,7 @@ public class MainViewModel : BaseViewModel, IDisposable
 
     public EngineType Engine
     {
-        set
-        {
-            _transformService.Create(value);
-        }
+        set => _transformService.Create(value);
     }
 
     public ICommand? OpenFileCommand { get; private set; }
@@ -50,28 +74,18 @@ public class MainViewModel : BaseViewModel, IDisposable
     public ICommand? OpenFileExplorerCommand { get; private set; }
     public ICommand? OpenSettingsWindowCommand { get; private set; }
 
-    public MainViewModel(
-        IMessenger messenger,
-        IWindowService windowService,
-        IThemeManager themeManager,
-        IXmlTransformService transformService,
-        ISettingsService settingsService,
-        ICompletionDataService completionDataService)
+    public void Dispose()
     {
-        _messenger = messenger;
-        _messenger.Subscribe<EngineMessage>(OnEngineChanged);
-        _windowService = windowService;
-        _transformService = transformService;
+        _messenger.Unsubscribe<EngineMessage>(OnEngineChanged);
 
-        Engine = settingsService.Settings.Engine;
+        foreach (var doc in Documents.ToList())
+        {
+            doc.PropertyChanged -= OnTextPropertyChanged;
+            doc.Dispose();
+        }
 
-        Documents = [
-            new DocumentViewModel(messenger, completionDataService) { Name = "XSL" },
-            new DocumentViewModel(messenger, null) { Name = "XML" }
-        ];
-
-        themeManager.Apply(settingsService.Settings.Theme);
-        InitializeEvents();
+        Documents.Clear();
+        GC.SuppressFinalize(this);
     }
 
     private void InitializeEvents()
@@ -105,11 +119,13 @@ public class MainViewModel : BaseViewModel, IDisposable
 
         try
         {
-            if (document != null)
+            if (document == null)
             {
-                await document.OpenDocument(path);
-                ActiveDocument = document;
+                return;
             }
+
+            await document.OpenDocument(path);
+            ActiveDocument = document;
         }
         catch (Exception ex)
         {
@@ -209,18 +225,5 @@ public class MainViewModel : BaseViewModel, IDisposable
             ".xml" => Documents.FirstOrDefault(d => d.Name == "XML"),
             _ => null
         };
-    }
-
-    public void Dispose()
-    {
-        _messenger.Unsubscribe<EngineMessage>(OnEngineChanged);
-
-        foreach (var item in Documents)
-        {
-            item.Dispose();
-        }
-
-        Documents.Clear();
-        GC.SuppressFinalize(this);
     }
 }

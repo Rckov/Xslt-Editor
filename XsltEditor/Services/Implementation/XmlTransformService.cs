@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.Versioning;
 using System.Xml;
 
 using XsltEditor.Services.Interfaces;
@@ -8,24 +9,17 @@ using XsltEditor.Transform.Tools;
 
 namespace XsltEditor.Services.Implementation;
 
+[SupportedOSPlatform("windows")]
 internal sealed class XmlTransformService : IXmlTransformService
 {
-    private readonly Transformer _transformer;
-    private readonly XsltUriResolver _xsltUriResolver;
-
-    private readonly XmlReaderSettings _readerSettings;
-
-    public XmlTransformService()
+    private readonly XmlReaderSettings _readerSettings = new()
     {
-        _transformer = new();
-        _xsltUriResolver = new();
+        Async = true,
+        DtdProcessing = DtdProcessing.Prohibit
+    };
 
-        _readerSettings = new XmlReaderSettings
-        {
-            Async = true,
-            DtdProcessing = DtdProcessing.Prohibit,
-        };
-    }
+    private readonly Transformer _transformer = new();
+    private readonly XsltUriResolver _xsltUriResolver = new();
 
     public void Create(EngineType engineType)
     {

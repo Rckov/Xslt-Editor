@@ -8,49 +8,44 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Resources\appicon.ico</ApplicationIcon>
-    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <Platforms>x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Highlighting\DarkMode.xshd" />
-    <None Remove="Resources\Highlighting\LightMode.xshd" />
-  </ItemGroup>
+    <Resource Include="Resources\appicon.ico" />
 
-  <ItemGroup>
-    <Page Remove="Resources\Themes\DarkBrushes.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Resources\Highlighting\DarkMode.xshd" />
     <EmbeddedResource Include="Resources\Highlighting\LightMode.xshd" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="Resources\appicon.ico" />
-    <Resource Include="Resources\Themes\DarkBrushes.xaml" />
-  </ItemGroup>
+   <ItemGroup>
+     <None Update="Resources\completions.json">
+       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+     </None>
+   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\XsltEditor.Transform\XsltEditor.Transform.csproj" />
-  </ItemGroup>
+   <ItemGroup>
+     <ProjectReference Include="..\XsltEditor.Transform\XsltEditor.Transform.csproj" />
 
-  <ItemGroup>
-    <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
-    <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3065.39" />
-  </ItemGroup>
+     <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
+     <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
+     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
+     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3065.39" />
+   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Resources\completions.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\Styles\" />
-  </ItemGroup>
+   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+      <DebugType>none</DebugType>
+      <GenerateDocumentationFile>false</GenerateDocumentationFile>
+      <SelfContained>false</SelfContained>
+      <PublishSingleFile>false</PublishSingleFile>
+      <EnableTrimAnalysis>true</EnableTrimAnalysis>
+      <AllowedReferenceRelatedFileExtensions>.pdb</AllowedReferenceRelatedFileExtensions>
+      <UseSingleFileStartupCode>true</UseSingleFileStartupCode>
+   </PropertyGroup>
 
 </Project>

@@ -11,6 +11,11 @@ public class CaretLineViewModel : BaseViewModel
 {
     private readonly IMessenger _messenger;
 
+    public CaretLineViewModel(IMessenger messenger)
+    {
+        _messenger = messenger;
+    }
+
     public Action? CloseWindow { get; set; }
 
     public string? Line
@@ -20,11 +25,6 @@ public class CaretLineViewModel : BaseViewModel
     }
 
     public ICommand? GoToCommand { get; private set; }
-
-    public CaretLineViewModel(IMessenger messenger)
-    {
-        _messenger = messenger;
-    }
 
     protected override void InitializeCommands()
     {

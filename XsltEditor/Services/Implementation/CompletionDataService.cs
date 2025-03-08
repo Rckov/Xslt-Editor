@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.Versioning;
 using System.Text.Json;
 
 using XsltEditor.Services.Interfaces;
@@ -6,9 +7,15 @@ using XsltEditor.Views.UserControls;
 
 namespace XsltEditor.Services.Implementation;
 
+[SupportedOSPlatform("windows")]
 internal class CompletionDataService : ICompletionDataService
 {
     private const string FilePath = "Resources/completions.json";
+
+    private readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        WriteIndented = true
+    };
 
     public IList<CompletionData> LoadCompletionData()
     {
@@ -25,12 +32,7 @@ internal class CompletionDataService : ICompletionDataService
 
     public void SaveCompletionData(IList<CompletionData> completions)
     {
-        var options = new JsonSerializerOptions
-        {
-            WriteIndented = true
-        };
-
-        var json = JsonSerializer.Serialize(completions, options);
+        var json = JsonSerializer.Serialize(completions, _jsonOptions);
 
         if (string.IsNullOrEmpty(json))
         {

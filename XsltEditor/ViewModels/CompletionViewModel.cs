@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,9 +10,16 @@ using XsltEditor.Views.UserControls;
 
 namespace XsltEditor.ViewModels;
 
+[SupportedOSPlatform("windows")]
 public class CompletionViewModel : BaseViewModel
 {
     private readonly ICompletionDataService _dataService;
+
+    public CompletionViewModel(ICompletionDataService dataService)
+    {
+        _dataService = dataService;
+        CompletionData = new ObservableCollection<CompletionData>(dataService.LoadCompletionData());
+    }
 
     public string? NameData
     {
@@ -30,12 +38,6 @@ public class CompletionViewModel : BaseViewModel
     public ICommand? AddCommand { get; private set; }
     public ICommand? DeleteCommand { get; private set; }
     public ICommand? SaveCommand { get; private set; }
-
-    public CompletionViewModel(ICompletionDataService dataService)
-    {
-        _dataService = dataService;
-        CompletionData = new(dataService.LoadCompletionData());
-    }
 
     protected override void InitializeCommands()
     {
@@ -57,11 +59,11 @@ public class CompletionViewModel : BaseViewModel
             return;
         }
 
-        CompletionData.Add(new(NameData));
+        CompletionData.Add(new CompletionData(NameData));
         NameData = null;
     }
 
-    private void DeleteCompletionData(object? parameter)
+    private void DeleteCompletionData()
     {
         if (SelectedData is null)
         {
@@ -74,12 +76,12 @@ public class CompletionViewModel : BaseViewModel
         }
     }
 
-    private bool CanDeleteCompletionData(object? parameter)
+    private bool CanDeleteCompletionData()
     {
         return SelectedData is not null;
     }
 
-    private void SaveCompletionData(object? parameter)
+    private void SaveCompletionData()
     {
         try
         {

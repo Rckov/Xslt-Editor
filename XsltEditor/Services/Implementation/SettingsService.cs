@@ -1,12 +1,13 @@
 ﻿using System.IO;
+using System.Runtime.Versioning;
 using System.Text.Json;
 
 using XsltEditor.Models;
-
 using XsltEditor.Services.Interfaces;
 
 namespace XsltEditor.Services.Implementation;
 
+[SupportedOSPlatform("windows")]
 internal class SettingsService : ISettingsService
 {
     private const string SettingsFileName = "settings.json";
@@ -24,9 +25,22 @@ internal class SettingsService : ISettingsService
         Settings = LoadSettings();
     }
 
-    public Settings Settings { get; private set; } = null!;
+    public Settings Settings { get; }
 
-    public Settings LoadSettings()
+    public void SaveSettings()
+    {
+        var directory = Path.GetDirectoryName(SettingsPath) ?? throw new InvalidOperationException("Invalid path settings");
+
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        var json = JsonSerializer.Serialize(Settings, _jsonOptions);
+        File.WriteAllText(SettingsPath, json);
+    }
+
+    private Settings LoadSettings()
     {
         try
         {
@@ -42,18 +56,5 @@ internal class SettingsService : ISettingsService
         {
             return new Settings();
         }
-    }
-
-    public void SaveSettings()
-    {
-        var directory = Path.GetDirectoryName(SettingsPath) ?? throw new InvalidOperationException("Invalid path settings");
-
-        if (!Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
-
-        var json = JsonSerializer.Serialize(Settings, _jsonOptions);
-        File.WriteAllText(SettingsPath, json);
     }
 }

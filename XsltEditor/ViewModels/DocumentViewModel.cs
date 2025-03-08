@@ -4,6 +4,7 @@ using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Xml;
 
@@ -15,21 +16,37 @@ using XsltEditor.Views.UserControls;
 
 namespace XsltEditor.ViewModels;
 
+[SupportedOSPlatform("windows")]
 public class DocumentViewModel : BaseViewModel, IDisposable
 {
-    private readonly IMessenger _messenger;
     private readonly Dictionary<ThemeType, string> _highlightingPaths = [];
+    private readonly IMessenger _messenger;
+
+    public DocumentViewModel(IMessenger messenger, ICompletionDataService? completionDataService)
+    {
+        _messenger = messenger;
+        _messenger.Subscribe<ThemeMessage>(OnThemeChanged);
+        _messenger.Subscribe<CaretLineMessage>(OnScrollToLine);
+
+        AddHighlighting(ThemeType.Dark, "XsltEditor.Resources.Highlighting.DarkMode.xshd");
+        AddHighlighting(ThemeType.Light, "XsltEditor.Resources.Highlighting.LightMode.xshd");
+
+        if (completionDataService != null)
+        {
+            CompletionData = completionDataService.LoadCompletionData();
+        }
+    }
 
     public string? Name
     {
         get;
-        set => Set(ref field, value);
+        init => Set(ref field, value);
     }
 
     public string? FilePath
     {
         get;
-        set => Set(ref field, value);
+        private set => Set(ref field, value);
     }
 
     public string? Text
@@ -71,24 +88,15 @@ public class DocumentViewModel : BaseViewModel, IDisposable
     public IHighlightingDefinition? Highlighting
     {
         get;
-        set => Set(ref field, value);
+        private set => Set(ref field, value);
     }
 
     public IList<CompletionData>? CompletionData { get; private set; }
 
-    public DocumentViewModel(IMessenger messenger, ICompletionDataService? completionDataService)
+    public void Dispose()
     {
-        _messenger = messenger;
-        _messenger.Subscribe<ThemeMessage>(OnThemeChanged);
-        _messenger.Subscribe<CaretLineMessage>(OnScrollToLine);
-
-        AddHighlighting(ThemeType.Dark, "XsltEditor.Resources.Highlighting.DarkMode.xshd");
-        AddHighlighting(ThemeType.Light, "XsltEditor.Resources.Highlighting.LightMode.xshd");
-
-        if (completionDataService != null)
-        {
-            CompletionData = completionDataService.LoadCompletionData();
-        }
+        _messenger.Unsubscribe<CaretLineMessage>(OnScrollToLine);
+        GC.SuppressFinalize(this);
     }
 
     public async Task OpenDocument(string path)
@@ -168,11 +176,5 @@ public class DocumentViewModel : BaseViewModel, IDisposable
         {
             IsDirty = true;
         }
-    }
-
-    public void Dispose()
-    {
-        _messenger.Unsubscribe<CaretLineMessage>(OnScrollToLine);
-        GC.SuppressFinalize(this);
     }
 }

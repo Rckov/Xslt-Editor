@@ -18,8 +18,6 @@ internal class ThemeManager : IThemeManager
         AddTheme(ThemeType.Light, "Resources/Themes/LightBrushes.xaml");
     }
 
-    //public static ThemeManager Instance { get; } = new ThemeManager();
-
     public void Apply(ThemeType themeType)
     {
         var dictionaries = Application.Current.Resources.MergedDictionaries;

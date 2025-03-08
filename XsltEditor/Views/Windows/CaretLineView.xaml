@@ -1,16 +1,16 @@
-﻿<ct:Window x:Class="XsltEditor.Views.Windows.CaretLineView"
-           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+﻿<Window x:Class="XsltEditor.Views.Windows.CaretLineView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 
-           xmlns:ct="clr-namespace:XsltEditor.Views.UserControls"
+        xmlns:ct="clr-namespace:XsltEditor.Views.UserControls"
 
-           Height="130"
-           Width="300"
-           Title="Go To Line"
+        Height="130"
+        Width="300"
+        Title="Go To Line"
 
-           ResizeMode="NoResize"
-           WindowStartupLocation="CenterScreen"
-           Style="{StaticResource WindowStyle}" AcrylicEffect="False" FocusManager.FocusedElement="{Binding ElementName=TextBoxLine}">
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Style="{StaticResource WindowStyle}" FocusManager.FocusedElement="{Binding ElementName=TextBoxLine}">
 
    <Border Style="{StaticResource BorderWindow}">
       <Grid>
@@ -46,4 +46,4 @@
          </Grid>
       </Grid>
    </Border>
-</ct:Window> 
+</Window> 

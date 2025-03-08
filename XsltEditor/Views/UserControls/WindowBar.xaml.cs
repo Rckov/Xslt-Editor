@@ -19,13 +19,16 @@ public partial class WindowBar
         DependencyProperty.Register(nameof(LeftContent), typeof(object), typeof(WindowBar), new PropertyMetadata(null));
 
     public static readonly DependencyProperty RightContentProperty =
-        DependencyProperty.Register(nameof(RightContent), typeof(object), typeof(WindowBar), new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(RightContent), typeof(object), typeof(WindowBar),
+            new PropertyMetadata(null));
 
     public static readonly DependencyProperty CanMaximizedProperty =
-        DependencyProperty.Register(nameof(CanMaximized), typeof(bool), typeof(WindowBar), new PropertyMetadata(true, null));
+        DependencyProperty.Register(nameof(CanMaximized), typeof(bool), typeof(WindowBar),
+            new PropertyMetadata(true, null));
 
     public static readonly DependencyProperty CanMinimizedProperty =
-        DependencyProperty.Register(nameof(CanMinimized), typeof(bool), typeof(WindowBar), new PropertyMetadata(true, null));
+        DependencyProperty.Register(nameof(CanMinimized), typeof(bool), typeof(WindowBar),
+            new PropertyMetadata(true, null));
 
     public WindowBar()
     {

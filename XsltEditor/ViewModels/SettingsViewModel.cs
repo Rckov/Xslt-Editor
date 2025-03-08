@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 
 using XsltEditor.Models;
 using XsltEditor.Models.Messages;
@@ -10,15 +11,12 @@ using XsltEditor.ViewModels.Base;
 
 namespace XsltEditor.ViewModels;
 
+[SupportedOSPlatform("windows")]
 public class SettingsViewModel : BaseViewModel
 {
-    private readonly ISettingsService _settingsService;
     private readonly IMessenger _messenger;
+    private readonly ISettingsService _settingsService;
     private readonly IThemeManager _themeManager;
-
-    public Settings Settings { get; }
-    public ObservableCollection<ThemeType> Themes { get; } = [];
-    public ObservableCollection<EngineType> Engines { get; } = [];
 
     public SettingsViewModel(
         ISettingsService settingsService,
@@ -33,6 +31,10 @@ public class SettingsViewModel : BaseViewModel
 
         Settings = settingsService.Settings;
     }
+
+    public Settings Settings { get; }
+    public ObservableCollection<ThemeType> Themes { get; } = [];
+    public ObservableCollection<EngineType> Engines { get; } = [];
 
     public ThemeType SelectedTheme
     {

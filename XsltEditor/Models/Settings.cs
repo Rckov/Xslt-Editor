@@ -1,8 +1,11 @@
-﻿using XsltEditor.Services.Implementation;
+﻿using System.Runtime.Versioning;
+
+using XsltEditor.Services.Implementation;
 using XsltEditor.Transform.Enums;
 
 namespace XsltEditor.Models;
 
+[SupportedOSPlatform("windows")]
 public class Settings
 {
     public Settings()

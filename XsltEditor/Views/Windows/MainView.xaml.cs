@@ -1,6 +1,7 @@
 ﻿using Microsoft.Web.WebView2.Core;
 
 using System.ComponentModel;
+using System.Runtime.Versioning;
 
 using XsltEditor.Models.Messages;
 using XsltEditor.Services.Interfaces;
@@ -8,6 +9,7 @@ using XsltEditor.ViewModels;
 
 namespace XsltEditor.Views.Windows;
 
+[SupportedOSPlatform("windows")]
 public partial class MainView
 {
     private readonly IMessenger _messenger;
@@ -25,10 +27,11 @@ public partial class MainView
 
     private async void InitializeWebView()
     {
-        var webView2Environment = await CoreWebView2Environment.CreateAsync(null, null, new CoreWebView2EnvironmentOptions
-        {
-            AreBrowserExtensionsEnabled = false
-        });
+        var webView2Environment = await CoreWebView2Environment.CreateAsync(null, null,
+            new CoreWebView2EnvironmentOptions
+            {
+                AreBrowserExtensionsEnabled = false
+            });
 
         await WebView.EnsureCoreWebView2Async(webView2Environment);
 
@@ -85,7 +88,13 @@ public partial class MainView
 
     protected override void OnClosed(EventArgs e)
     {
-        _messenger?.Unsubscribe<ThemeMessage>(OnThemeChanged);
+        _messenger.Unsubscribe<ThemeMessage>(OnThemeChanged);
+
+        if (DataContext is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
+
         base.OnClosed(e);
     }
 }

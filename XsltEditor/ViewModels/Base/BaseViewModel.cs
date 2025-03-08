@@ -13,9 +13,10 @@ public abstract class BaseViewModel : ObservableObject
     }
 
     protected virtual void InitializeCommands()
-    { }
+    {
+    }
 
-    protected virtual void LogInfo(string message, [CallerMemberName] string? method = null)
+    protected void LogInfo(string message, [CallerMemberName] string? method = null)
     {
         Debug.WriteLine(
             $"Method: {method}\r\n" +
@@ -23,7 +24,7 @@ public abstract class BaseViewModel : ObservableObject
         );
     }
 
-    protected virtual void LogError(string message, Exception? exception = null, [CallerMemberName] string? method = null)
+    protected void LogError(string message, Exception? exception = null, [CallerMemberName] string? method = null)
     {
         Debug.WriteLine(
             $"Method: {method}\r\n" +

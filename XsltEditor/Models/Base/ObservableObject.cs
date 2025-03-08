@@ -12,7 +12,7 @@ public abstract class ObservableObject : INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected virtual bool Set<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    protected bool Set<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value))
         {

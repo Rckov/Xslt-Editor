@@ -12,7 +12,7 @@ public partial class CaretLineView
         InitializeComponent();
         DataContext = viewModel;
 
-        viewModel.CloseWindow = new Action(Close);
+        viewModel.CloseWindow = Close;
     }
 
     [GeneratedRegex("[^0-9]+")]
