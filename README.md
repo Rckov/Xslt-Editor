@@ -21,6 +21,7 @@ A lightweight XSLT editor with real-time compilation
 - [ ] Saxon-HE Integration  
 - [x] Dynamic Color Adaptation *(Implemented)*
 - [ ] Enhanced Snippets
+- [ ] Code correction Service
 
 ### Installation
 1. Download the latest release from [Releases](https://github.com/Rckov/Xslt-Editor/releases/latest).
