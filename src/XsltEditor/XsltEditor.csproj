@@ -13,7 +13,6 @@
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <Platforms>x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
