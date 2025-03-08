@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  PROJECT_PATH: XsltEditor/XsltEditor.csproj
+  PROJECT_PATH: src/XsltEditor/XsltEditor.csproj
 
 jobs:
   build:
@@ -32,7 +32,7 @@ jobs:
       - name: Zip x64 artifacts
         shell: pwsh
         run: |
-          Compress-Archive -Path XsltEditor/bin/Release/net8.0-windows7.0/x64/* -DestinationPath x64_release.zip
+          Compress-Archive -Path src/XsltEditor/bin/Release/net8.0-windows7.0/x64/* -DestinationPath x64_release.zip
 
       - name: Generate commit log
         id: commit_log
