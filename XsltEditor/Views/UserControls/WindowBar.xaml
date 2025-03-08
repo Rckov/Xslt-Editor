@@ -28,12 +28,14 @@
                  Style="{StaticResource CaptionButton}"
                  Command="{Binding MinimizeCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                 IsEnabled="{Binding CanMinimized, RelativeSource={RelativeSource AncestorType=UserControl}}"
                  ToolTip="Minimize" />
 
          <Button Content="&#xE739;"
                  Style="{StaticResource CaptionButton}"
                  Command="{Binding MaximizeCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                 IsEnabled="{Binding CanMaximized, RelativeSource={RelativeSource AncestorType=UserControl}}"
                  ToolTip="Maximize" />
 
          <Button Content="&#xE106;"

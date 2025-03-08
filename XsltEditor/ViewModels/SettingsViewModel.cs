@@ -1,31 +1,37 @@
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows.Media;
+﻿using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 
-using XsltEditor.Helpers;
 using XsltEditor.Models;
-using XsltEditor.Models.Base;
+using XsltEditor.Models.Messages;
+using XsltEditor.Services.Implementation;
 using XsltEditor.Services.Interfaces;
 using XsltEditor.Transform.Enums;
+using XsltEditor.ViewModels.Base;
 
 namespace XsltEditor.ViewModels;
 
-public class SettingsViewModel : ObservableObject
+public class SettingsViewModel : BaseViewModel
 {
     private readonly ISettingsService _settingsService;
+    private readonly IMessenger _messenger;
+    private readonly IThemeManager _themeManager;
 
     public Settings Settings { get; }
     public ObservableCollection<ThemeType> Themes { get; } = [];
     public ObservableCollection<EngineType> Engines { get; } = [];
 
-    public FontFamily? FontFamily
+    public SettingsViewModel(
+        ISettingsService settingsService,
+        IThemeManager themeManager,
+        IMessenger messenger)
     {
-        get => new(Settings.FontFamily);
-        set
-        {
-            Settings.FontFamily = value?.Source;
-            SaveSettings();
-        }
+        _themeManager = themeManager;
+        _settingsService = settingsService;
+        _messenger = messenger;
+
+        InitializeCollections();
+
+        Settings = settingsService.Settings;
     }
 
     public ThemeType SelectedTheme
@@ -34,31 +40,25 @@ public class SettingsViewModel : ObservableObject
         set
         {
             Settings.Theme = value;
-            ThemeManager.Apply(value);
-
             SaveSettings();
+
+            _themeManager.Apply(value);
         }
     }
 
-    public SettingsViewModel(ISettingsService settingsService)
+    public EngineType SelectedEngine
     {
-        _settingsService = settingsService;
-        Settings = settingsService.Settings;
-
-        InitializeCollections();
-    }
-
-    private void InitializeCollections()
-    {
-        Engines.Add(EngineType.XslCompiledTransform);
-
-        foreach (ThemeType theme in Enum.GetValues<ThemeType>())
+        get => Settings.Engine;
+        set
         {
-            Themes.Add(theme);
+            Settings.Engine = value;
+            SaveSettings();
+
+            _messenger.Send(new EngineMessage(value));
         }
     }
 
-    private void SaveSettings()
+    private void SaveSettings([CallerMemberName] string? propertyName = null)
     {
         try
         {
@@ -66,7 +66,21 @@ public class SettingsViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Error save settings: {ex.Message}");
+            LogError("Error save settings: " + propertyName, ex);
+        }
+    }
+
+    private void InitializeCollections()
+    {
+        LoadValues(Themes);
+        LoadValues(Engines);
+
+        static void LoadValues<T>(ICollection<T> collection) where T : struct, Enum
+        {
+            foreach (var item in Enum.GetValues<T>())
+            {
+                collection.Add(item);
+            }
         }
     }
 }

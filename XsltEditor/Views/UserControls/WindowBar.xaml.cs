@@ -19,8 +19,13 @@ public partial class WindowBar
         DependencyProperty.Register(nameof(LeftContent), typeof(object), typeof(WindowBar), new PropertyMetadata(null));
 
     public static readonly DependencyProperty RightContentProperty =
-        DependencyProperty.Register(nameof(RightContent), typeof(object), typeof(WindowBar),
-            new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(RightContent), typeof(object), typeof(WindowBar), new PropertyMetadata(null));
+
+    public static readonly DependencyProperty CanMaximizedProperty =
+        DependencyProperty.Register(nameof(CanMaximized), typeof(bool), typeof(WindowBar), new PropertyMetadata(true, null));
+
+    public static readonly DependencyProperty CanMinimizedProperty =
+        DependencyProperty.Register(nameof(CanMinimized), typeof(bool), typeof(WindowBar), new PropertyMetadata(true, null));
 
     public WindowBar()
     {
@@ -50,6 +55,18 @@ public partial class WindowBar
     {
         get => GetValue(RightContentProperty);
         set => SetValue(RightContentProperty, value);
+    }
+
+    public bool CanMaximized
+    {
+        get => (bool)GetValue(CanMaximizedProperty);
+        set => SetValue(CanMaximizedProperty, value);
+    }
+
+    public bool CanMinimized
+    {
+        get => (bool)GetValue(CanMinimizedProperty);
+        set => SetValue(CanMinimizedProperty, value);
     }
 
     public ICommand? CloseCommand { get; private set; }

@@ -341,44 +341,6 @@
       </Setter>
    </Style>
 
-   <Style x:Key="SettingsCheckBox" TargetType="CheckBox">
-      <Setter Property="Background" Value="Transparent" />
-      <Setter Property="Foreground" Value="{DynamicResource TextForeground}" />
-      <Setter Property="Template">
-         <Setter.Value>
-            <ControlTemplate TargetType="CheckBox">
-               <Grid>
-                  <Grid.ColumnDefinitions>
-                     <ColumnDefinition Width="Auto" />
-                     <ColumnDefinition />
-                  </Grid.ColumnDefinitions>
-
-                  <Border x:Name="Bd" Width="16" Height="16" Background="{DynamicResource GeneralPanelBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1">
-                     <TextBlock x:Name="State" Width="10" Height="10"
-                                FontSize="10"
-                                VerticalAlignment="Center" HorizontalAlignment="Center"
-                                FontFamily="{StaticResource FontIcon}"
-                                Foreground="{DynamicResource TextForeground}" />
-                  </Border>
-
-                  <ContentPresenter Grid.Column="1" Margin="5,0,0,0"  Content="{TemplateBinding Content}" VerticalAlignment="Center" />
-               </Grid>
-               <ControlTemplate.Triggers>
-                  <Trigger Property="IsChecked" Value="True">
-                     <Setter TargetName="State" Property="TextBlock.Text" Value="&#xE73E;" />
-                  </Trigger>
-                  <Trigger Property="IsChecked" Value="False">
-                     <Setter TargetName="State" Property="TextBlock.Text" Value="" />
-                  </Trigger>
-                  <Trigger Property="IsMouseOver" Value="True">
-                     <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ButtonHoverBackground}" />
-                  </Trigger>
-               </ControlTemplate.Triggers>
-            </ControlTemplate>
-         </Setter.Value>
-      </Setter>
-   </Style>
-
    <Style TargetType="ComboBox">
       <Setter Property="Background" Value="{DynamicResource GeneralPanelBackground}" />
       <Setter Property="Foreground" Value="{DynamicResource TextForeground}" />
@@ -423,6 +385,44 @@
                   </Trigger>
                   <Trigger Property="IsEnabled" Value="False">
                      <Setter Property="Opacity" Value="0.5" />
+                  </Trigger>
+               </ControlTemplate.Triggers>
+            </ControlTemplate>
+         </Setter.Value>
+      </Setter>
+   </Style>
+
+   <Style x:Key="SettingsCheckBox" TargetType="CheckBox">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="{DynamicResource TextForeground}" />
+      <Setter Property="Template">
+         <Setter.Value>
+            <ControlTemplate TargetType="CheckBox">
+               <Grid>
+                  <Grid.ColumnDefinitions>
+                     <ColumnDefinition Width="Auto" />
+                     <ColumnDefinition />
+                  </Grid.ColumnDefinitions>
+
+                  <Border x:Name="Bd" Width="16" Height="16" Background="{DynamicResource GeneralPanelBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1">
+                     <TextBlock x:Name="State" Width="10" Height="10"
+                                FontSize="10"
+                                VerticalAlignment="Center" HorizontalAlignment="Center"
+                                FontFamily="{StaticResource FontIcon}"
+                                Foreground="{DynamicResource TextForeground}" />
+                  </Border>
+
+                  <ContentPresenter Grid.Column="1" Margin="5,0,0,0"  Content="{TemplateBinding Content}" VerticalAlignment="Center" />
+               </Grid>
+               <ControlTemplate.Triggers>
+                  <Trigger Property="IsChecked" Value="True">
+                     <Setter TargetName="State" Property="TextBlock.Text" Value="&#xE73E;" />
+                  </Trigger>
+                  <Trigger Property="IsChecked" Value="False">
+                     <Setter TargetName="State" Property="TextBlock.Text" Value="" />
+                  </Trigger>
+                  <Trigger Property="IsMouseOver" Value="True">
+                     <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ButtonHoverBackground}" />
                   </Trigger>
                </ControlTemplate.Triggers>
             </ControlTemplate>

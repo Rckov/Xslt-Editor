@@ -1,23 +1,37 @@
 ﻿using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 
 using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Windows;
+using System.Xml;
 
-using XsltEditor.Helpers;
-using XsltEditor.Models;
-using XsltEditor.Models.Base;
+using XsltEditor.Models.Messages;
+using XsltEditor.Services.Implementation;
 using XsltEditor.Services.Interfaces;
+using XsltEditor.ViewModels.Base;
 
 namespace XsltEditor.ViewModels;
 
-public class DocumentViewModel : ObservableObject
+public class DocumentViewModel : BaseViewModel, IDisposable
 {
-    public string Name { get; init; }
-    public Settings Settings { get; init; }
+    private readonly IMessenger _messenger;
+    private readonly Dictionary<ThemeType, string> _highlightingPaths = [];
+
+    public string? Name
+    {
+        get;
+        set => Set(ref field, value);
+    }
 
     public string? FilePath
+    {
+        get;
+        set => Set(ref field, value);
+    }
+
+    public string? Text
     {
         get;
         set => Set(ref field, value);
@@ -47,12 +61,6 @@ public class DocumentViewModel : ObservableObject
         set => Set(ref field, value);
     }
 
-    public string? Text
-    {
-        get;
-        set => Set(ref field, value);
-    }
-
     public Encoding? Encoding
     {
         get;
@@ -65,21 +73,18 @@ public class DocumentViewModel : ObservableObject
         set => Set(ref field, value);
     }
 
-    public DocumentViewModel(string name, ISettingsService settingsService)
+    public DocumentViewModel(IMessenger messenger)
     {
-        Name = name;
-        Settings = settingsService.Settings;
+        _messenger = messenger;
+        _messenger.Subscribe<ThemeMessage>(OnThemeChanged);
+        _messenger.Subscribe<CaretLineMessage>(OnScrollToLine);
 
-        ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
+        AddHighlighting(ThemeType.Dark, "XsltEditor.Resources.Highlighting.DarkMode.xshd");
+        AddHighlighting(ThemeType.Light, "XsltEditor.Resources.Highlighting.LightMode.xshd");
     }
 
     public async Task OpenDocument(string path)
     {
-        if (string.IsNullOrEmpty(path))
-        {
-            return;
-        }
-
         try
         {
             await using var fileStream = new FileStream(path, FileMode.Open);
@@ -87,21 +92,19 @@ public class DocumentViewModel : ObservableObject
 
             FilePath = path;
             Encoding = streamReader.CurrentEncoding;
+
             Text = await streamReader.ReadToEndAsync();
+            LogInfo($"File opened successfully: {path}");
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            LogError($"Error opening file: {path}", ex);
+            throw;
         }
     }
 
     public async Task SaveDocument(string path)
     {
-        if (string.IsNullOrEmpty(path))
-        {
-            return;
-        }
-
         try
         {
             await using var fileStream = new FileStream(path, FileMode.Create);
@@ -116,19 +119,37 @@ public class DocumentViewModel : ObservableObject
             }
 
             IsDirty = false;
+            LogInfo($"File saved successfully: {path}");
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            LogError($"Error saving file: {path}", ex);
+            throw;
         }
     }
 
-    private void ThemeManager_ThemeChanged(ThemeType obj)
+    private void OnThemeChanged(ThemeMessage message)
     {
-        if (ThemeManager.CurrentHighlighting is { } highlighting)
+        var highlighting = _highlightingPaths[message.ThemeType];
+        using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(highlighting);
+
+        if (stream == null)
         {
-            Highlighting = highlighting;
+            return;
         }
+
+        using var reader = XmlReader.Create(stream);
+        Highlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+    }
+
+    private void OnScrollToLine(CaretLineMessage message)
+    {
+        Line = message.Line;
+    }
+
+    private void AddHighlighting(ThemeType type, string path)
+    {
+        _highlightingPaths.Add(type, path);
     }
 
     protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -139,5 +160,11 @@ public class DocumentViewModel : ObservableObject
         {
             IsDirty = true;
         }
+    }
+
+    public void Dispose()
+    {
+        _messenger.Unsubscribe<CaretLineMessage>(OnScrollToLine);
+        GC.SuppressFinalize(this);
     }
 }

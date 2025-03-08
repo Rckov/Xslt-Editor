@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Runtime.Versioning;
 using System.Xml;
 
 using XsltEditor.Services.Interfaces;
@@ -7,9 +6,8 @@ using XsltEditor.Transform;
 using XsltEditor.Transform.Enums;
 using XsltEditor.Transform.Tools;
 
-namespace XsltEditor.Services;
+namespace XsltEditor.Services.Implementation;
 
-[SupportedOSPlatform("windows")]
 internal sealed class XmlTransformService : IXmlTransformService
 {
     private readonly Transformer _transformer;

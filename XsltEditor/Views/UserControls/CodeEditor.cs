@@ -1,4 +1,5 @@
-﻿using ICSharpCode.AvalonEdit.Editing;
+﻿using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Search;
 
@@ -7,11 +8,11 @@ using System.Windows.Input;
 
 namespace XsltEditor.Views.UserControls;
 
-public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
+public class CodeEditor : TextEditor
 {
     private FoldingManager? _foldingManager;
 
-    public TextEditor()
+    public CodeEditor()
     {
         Install();
 
@@ -25,13 +26,13 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
     }
 
     public static readonly DependencyProperty LineProperty =
-        DependencyProperty.Register(nameof(Line), typeof(int), typeof(TextEditor), new PropertyMetadata(1, LineChanged));
+        DependencyProperty.Register(nameof(Line), typeof(int), typeof(CodeEditor), new PropertyMetadata(1, LineChanged));
 
     public static readonly DependencyProperty ColumnProperty =
-        DependencyProperty.Register(nameof(Column), typeof(int), typeof(TextEditor), new PropertyMetadata(1, ColumnChanged));
+        DependencyProperty.Register(nameof(Column), typeof(int), typeof(CodeEditor), new PropertyMetadata(1, ColumnChanged));
 
     public static readonly DependencyProperty TextProperty =
-        DependencyProperty.Register(nameof(Text), typeof(string), typeof(TextEditor), new PropertyMetadata(string.Empty, OnTextChanged));
+        DependencyProperty.Register(nameof(Text), typeof(string), typeof(CodeEditor), new PropertyMetadata(string.Empty, OnTextChanged));
 
     public int Line
     {
@@ -115,7 +116,7 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
 
     private static void LineChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var editor = (TextEditor)d;
+        var editor = (CodeEditor)d;
 
         if (editor.IsLoaded)
         {
@@ -126,7 +127,7 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
 
     private static void ColumnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var editor = (TextEditor)d;
+        var editor = (CodeEditor)d;
 
         if (editor.IsLoaded)
         {
@@ -136,7 +137,7 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
 
     private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var editor = (TextEditor)d;
+        var editor = (CodeEditor)d;
 
         if (editor.BaseText != (string)e.NewValue)
         {
@@ -152,7 +153,7 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
 
     private static void CollapseAllFolds(object sender, ExecutedRoutedEventArgs e)
     {
-        if (sender is not TextEditor editor)
+        if (sender is not CodeEditor editor)
         {
             return;
         }
@@ -162,7 +163,7 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
 
     private static void ExpandAllFolds(object sender, ExecutedRoutedEventArgs e)
     {
-        if (sender is not TextEditor editor)
+        if (sender is not CodeEditor editor)
         {
             return;
         }
@@ -175,7 +176,7 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
         e.CanExecute = false;
         e.Handled = true;
 
-        if (sender is not TextEditor editor || editor._foldingManager?.AllFoldings == null)
+        if (sender is not CodeEditor editor || editor._foldingManager?.AllFoldings == null)
         {
             return;
         }
@@ -218,6 +219,6 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
 
 public static class TextEditorCommands
 {
-    public static readonly RoutedCommand ExpandAllFolds = new("ExpandAllFolds", typeof(TextEditor));
-    public static readonly RoutedCommand CollapseAllFolds = new("CollapseAllFolds", typeof(TextEditor));
+    public static readonly RoutedCommand ExpandAllFolds = new("ExpandAllFolds", typeof(CodeEditor));
+    public static readonly RoutedCommand CollapseAllFolds = new("CollapseAllFolds", typeof(CodeEditor));
 }

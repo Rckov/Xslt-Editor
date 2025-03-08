@@ -1,13 +1,12 @@
 ﻿using System.IO;
-using System.Runtime.Versioning;
 using System.Text.Json;
 
 using XsltEditor.Models;
+
 using XsltEditor.Services.Interfaces;
 
-namespace XsltEditor.Services;
+namespace XsltEditor.Services.Implementation;
 
-[SupportedOSPlatform("windows")]
 internal class CompletionDataService : ICompletionDataService
 {
     private const string FilePath = "Resources/completions.json";

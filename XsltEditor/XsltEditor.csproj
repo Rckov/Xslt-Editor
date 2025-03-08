@@ -19,12 +19,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Remove="Resources\Themes\DarkBrushes.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Resources\Highlighting\DarkMode.xshd" />
     <EmbeddedResource Include="Resources\Highlighting\LightMode.xshd" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resources\appicon.ico" />
+    <Resource Include="Resources\Themes\DarkBrushes.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,6 +47,10 @@
     <None Update="Resources\completions.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Styles\" />
   </ItemGroup>
 
 </Project>

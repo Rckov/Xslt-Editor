@@ -3,12 +3,10 @@
 using System.Runtime.Versioning;
 using System.Windows;
 
-using XsltEditor.Services;
+using XsltEditor.Services.Implementation;
 using XsltEditor.Services.Interfaces;
 using XsltEditor.ViewModels;
-using XsltEditor.ViewModels.Dialogs;
 using XsltEditor.Views.Windows;
-using XsltEditor.Views.Windows.Dialogs;
 
 namespace XsltEditor;
 
@@ -24,9 +22,11 @@ public partial class App
 
     private static ServiceProvider ConfigureServices(IServiceCollection services)
     {
-        services.AddSingleton<ISettingsService, SettingsService>();
-        services.AddSingleton<ICompletionDataService, CompletionDataService>();
+        services.AddSingleton<IMessenger, Messanger>();
         services.AddSingleton<IWindowService, WindowService>();
+        services.AddSingleton<IThemeManager, ThemeManager>();
+        services.AddSingleton<ICompletionDataService, CompletionDataService>();
+        services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<IXmlTransformService, XmlTransformService>();
 
         services.AddSingleton<MainViewModel>();
@@ -35,8 +35,8 @@ public partial class App
         services.AddTransient<CompletionViewModel>();
         services.AddTransient<CompletionView>();
 
-        services.AddTransient<GoToLineViewModel>();
-        services.AddTransient<GoToLineView>();
+        services.AddTransient<CaretLineViewModel>();
+        services.AddTransient<CaretLineView>();
 
         services.AddTransient<SettingsViewModel>();
         services.AddTransient<SettingsView>();

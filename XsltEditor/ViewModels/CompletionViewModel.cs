@@ -1,17 +1,15 @@
 ﻿using System.Collections.ObjectModel;
-using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Input;
 
 using XsltEditor.Infrastructure;
 using XsltEditor.Models;
-using XsltEditor.Models.Base;
 using XsltEditor.Services.Interfaces;
+using XsltEditor.ViewModels.Base;
 
-namespace XsltEditor.ViewModels.Dialogs;
+namespace XsltEditor.ViewModels;
 
-[SupportedOSPlatform("windows")]
-public class CompletionViewModel : ObservableObject
+public class CompletionViewModel : BaseViewModel
 {
     private readonly ICompletionDataService _dataService;
 
@@ -29,25 +27,24 @@ public class CompletionViewModel : ObservableObject
 
     public ObservableCollection<CompletionData> CompletionData { get; }
 
-    public ICommand AddCommand { get; private set; } = null!;
-    public ICommand DeleteCommand { get; private set; } = null!;
-    public ICommand SaveCommand { get; private set; } = null!;
+    public ICommand? AddCommand { get; private set; }
+    public ICommand? DeleteCommand { get; private set; }
+    public ICommand? SaveCommand { get; private set; }
 
     public CompletionViewModel(ICompletionDataService dataService)
     {
         _dataService = dataService;
         CompletionData = new(dataService.LoadCompletionData());
-        InitCommands();
     }
 
-    private void InitCommands()
+    protected override void InitializeCommands()
     {
         AddCommand = new RelayCommand(AddCompletionData);
         DeleteCommand = new RelayCommand(DeleteCompletionData, CanDeleteCompletionData);
         SaveCommand = new RelayCommand(SaveCompletionData);
     }
 
-    private void AddCompletionData(object? parameter)
+    private void AddCompletionData()
     {
         if (string.IsNullOrEmpty(NameData))
         {
@@ -56,12 +53,7 @@ public class CompletionViewModel : ObservableObject
 
         if (CompletionData.Any(x => x.Text == NameData))
         {
-            MessageBox.Show(
-                "Item already exists.",
-                "Duplicate Item",
-                MessageBoxButton.OK,
-                MessageBoxImage.Warning
-            );
+            MessageBox.Show("Item already exists.", "Duplicate Item", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 
@@ -92,21 +84,12 @@ public class CompletionViewModel : ObservableObject
         try
         {
             _dataService.SaveCompletionData(CompletionData);
-            MessageBox.Show(
-                "Data saved successfully. Please restart the application.",
-                "Success",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information
-            );
+            MessageBox.Show("Data saved successfully. Please restart the application.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            MessageBox.Show(
-                e.Message,
-                "Error",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error
-            );
+            LogError("Error saving completion data", ex);
+            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

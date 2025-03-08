@@ -1,22 +1,25 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.Windows;
 using System.Windows.Input;
 
 using XsltEditor.Helpers;
 using XsltEditor.Infrastructure;
-using XsltEditor.Models.Base;
+using XsltEditor.Models.Messages;
 using XsltEditor.Services.Interfaces;
 using XsltEditor.Transform.Enums;
+using XsltEditor.ViewModels.Base;
 using XsltEditor.Views.Windows;
-using XsltEditor.Views.Windows.Dialogs;
 
 namespace XsltEditor.ViewModels;
 
-public class MainViewModel : ObservableObject
+public class MainViewModel : BaseViewModel, IDisposable
 {
-    private readonly IWindowService _windowService;
+    private readonly IMessenger _messenger;
     private readonly IXmlTransformService _transformService;
+    private readonly IWindowService _windowService;
 
     public ObservableCollection<DocumentViewModel> Documents { get; set; }
 
@@ -34,45 +37,43 @@ public class MainViewModel : ObservableObject
 
     public EngineType Engine
     {
-        get;
         set
         {
-            if (Set(ref field, value))
-            {
-                _transformService.Create(value);
-            }
+            _transformService.Create(value);
         }
     }
 
     public ICommand? OpenFileCommand { get; private set; }
-    public ICommand? SaveCommand { get; private set; }
+    public ICommand? SaveFileCommand { get; private set; }
     public ICommand? OpenCompletionWindowCommand { get; private set; }
-    public ICommand? OpenGoToLineWindowCommand { get; private set; }
+    public ICommand? OpenCaretLineWindowCommand { get; private set; }
+    public ICommand? OpenFileExplorerCommand { get; private set; }
     public ICommand? OpenSettingsWindowCommand { get; private set; }
-    public ICommand? OpenFileInExplorerCommand { get; private set; }
 
     public MainViewModel(
+        IMessenger messenger,
         IWindowService windowService,
+        IThemeManager themeManager,
         IXmlTransformService transformService,
         ISettingsService settingsService)
     {
+        _messenger = messenger;
+        _messenger.Subscribe<EngineMessage>(OnEngineChanged);
         _windowService = windowService;
         _transformService = transformService;
 
+        Engine = settingsService.Settings.Engine;
+
         Documents = [
-            new DocumentViewModel("XSL", settingsService),
-            new DocumentViewModel("XML", settingsService) { IsReadOnly = true }
+            new DocumentViewModel(messenger) { Name = "XSL" },
+            new DocumentViewModel(messenger) { Name = "XML" }
         ];
 
-        Engine = EngineType.XslCompiledTransform;
-
-        InitCommands();
-        SubscribeEvents();
-
-        ThemeManager.Apply(settingsService.Settings.Theme);
+        themeManager.Apply(settingsService.Settings.Theme);
+        InitializeEvents();
     }
 
-    private void SubscribeEvents()
+    private void InitializeEvents()
     {
         foreach (var item in Documents)
         {
@@ -80,33 +81,42 @@ public class MainViewModel : ObservableObject
         }
     }
 
-    private void InitCommands()
+    protected override void InitializeCommands()
     {
         OpenFileCommand = new RelayCommand(OpenFile);
-        SaveCommand = new RelayCommand(SaveFile);
+        SaveFileCommand = new RelayCommand(SaveFile);
         OpenCompletionWindowCommand = new RelayCommand(OpenCompletionWindow);
-        OpenGoToLineWindowCommand = new RelayCommand(OpenGoToLineWindow);
+        OpenCaretLineWindowCommand = new RelayCommand(OpenCaretLineWindow);
+        OpenFileExplorerCommand = new RelayCommand(OpenFileExplorer);
         OpenSettingsWindowCommand = new RelayCommand(OpenSettingWindow);
-        OpenFileInExplorerCommand = new RelayCommand(OpenFileInExplorer);
     }
 
-    private async void OpenFile(object? parameter)
+    private async void OpenFile()
     {
-        var filePath = Dialog.OpenFile("Open File", ".xsl", ".xslt", ".xml");
-        if (string.IsNullOrEmpty(filePath))
+        var path = Dialog.OpenFile("Open File", ".xsl", ".xslt", ".xml");
+
+        if (string.IsNullOrEmpty(path))
         {
             return;
         }
 
-        var document = GetDocumentByExtension(filePath);
-        if (document is not null)
+        var document = GetDocumentByExtension(path);
+
+        try
         {
-            await document.OpenDocument(filePath);
-            ActiveDocument = document;
+            if (document != null)
+            {
+                await document.OpenDocument(path);
+                ActiveDocument = document;
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
-    private async void SaveFile(object? parameter)
+    private async void SaveFile()
     {
         if (ActiveDocument is null)
         {
@@ -117,7 +127,7 @@ public class MainViewModel : ObservableObject
 
         if (string.IsNullOrEmpty(path))
         {
-            path = Dialog.SaveFile("Save File", ".xsl", ".xslt", ".xml");
+            path = Dialog.SaveFile("Save File " + ActiveDocument.Name, ".xsl", ".xslt", ".xml");
 
             if (string.IsNullOrEmpty(path))
             {
@@ -125,7 +135,14 @@ public class MainViewModel : ObservableObject
             }
         }
 
-        await ActiveDocument.SaveDocument(path);
+        try
+        {
+            await ActiveDocument.SaveDocument(path);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     private async void OnTextPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -135,8 +152,14 @@ public class MainViewModel : ObservableObject
             return;
         }
 
-        var xsl = Documents[0];
-        var xml = Documents[1];
+        var xsl = GetDocumentByExtension(".xsl");
+        var xml = GetDocumentByExtension(".xml");
+
+        if (xsl == null || xml == null)
+        {
+            LogInfo("Transformation skipped: XSL or XML document not found");
+            return;
+        }
 
         if (string.IsNullOrWhiteSpace(xsl.Text) || string.IsNullOrWhiteSpace(xml.Text))
         {
@@ -147,22 +170,14 @@ public class MainViewModel : ObservableObject
         HtmlContent = await _transformService.TransformAsync(xsl.Text, xml.Text, xsl.FilePath);
     }
 
-    private void OpenFileInExplorer(object? parameter)
-    {
-        if (ActiveDocument?.FilePath is not null)
-        {
-            Process.Start("explorer.exe", $"/select,\"{ActiveDocument.FilePath}\"");
-        }
-    }
-
-    private void OpenCompletionWindow(object? parameter)
+    private void OpenCompletionWindow()
     {
         _windowService.ShowDialogWindow<CompletionView>();
     }
 
-    private void OpenGoToLineWindow(object? parameter)
+    private void OpenCaretLineWindow()
     {
-        _windowService.ShowDialogWindow<GoToLineView>();
+        _windowService.ShowDialogWindow<CaretLineView>();
     }
 
     private void OpenSettingWindow(object? parameter)
@@ -170,9 +185,22 @@ public class MainViewModel : ObservableObject
         _windowService.ShowDialogWindow<SettingsView>();
     }
 
+    private void OpenFileExplorer()
+    {
+        if (ActiveDocument?.FilePath is not null)
+        {
+            Process.Start("explorer.exe", $"/select,\"{ActiveDocument.FilePath}\"");
+        }
+    }
+
+    private void OnEngineChanged(EngineMessage message)
+    {
+        Engine = message.EngineType;
+    }
+
     private DocumentViewModel? GetDocumentByExtension(string filePath)
     {
-        var extension = System.IO.Path.GetExtension(filePath).ToLower();
+        var extension = Path.GetExtension(filePath).ToLower();
 
         return extension switch
         {
@@ -180,5 +208,18 @@ public class MainViewModel : ObservableObject
             ".xml" => Documents.FirstOrDefault(d => d.Name == "XML"),
             _ => null
         };
+    }
+
+    public void Dispose()
+    {
+        _messenger.Unsubscribe<EngineMessage>(OnEngineChanged);
+
+        foreach (var item in Documents)
+        {
+            item.Dispose();
+        }
+
+        Documents.Clear();
+        GC.SuppressFinalize(this);
     }
 }

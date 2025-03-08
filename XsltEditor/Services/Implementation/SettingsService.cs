@@ -2,16 +2,22 @@
 using System.Text.Json;
 
 using XsltEditor.Models;
+
 using XsltEditor.Services.Interfaces;
 
-namespace XsltEditor.Services;
+namespace XsltEditor.Services.Implementation;
 
 internal class SettingsService : ISettingsService
 {
     private const string SettingsFileName = "settings.json";
 
-    private static readonly string _settingsPath =
+    private static readonly string SettingsPath =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "XsltEditor", SettingsFileName);
+
+    private readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        WriteIndented = true
+    };
 
     public SettingsService()
     {
@@ -24,15 +30,13 @@ internal class SettingsService : ISettingsService
     {
         try
         {
-            if (File.Exists(_settingsPath))
-            {
-                var json = File.ReadAllText(_settingsPath);
-                return JsonSerializer.Deserialize<Settings>(json) ?? new Settings();
-            }
-            else
+            if (!File.Exists(SettingsPath))
             {
                 return new Settings();
             }
+
+            var json = File.ReadAllText(SettingsPath);
+            return JsonSerializer.Deserialize<Settings>(json) ?? new Settings();
         }
         catch
         {
@@ -42,18 +46,14 @@ internal class SettingsService : ISettingsService
 
     public void SaveSettings()
     {
-        var directory = Path.GetDirectoryName(_settingsPath) ?? throw new InvalidOperationException("Invalid path");
+        var directory = Path.GetDirectoryName(SettingsPath) ?? throw new InvalidOperationException("Invalid path settings");
 
         if (!Directory.Exists(directory))
         {
             Directory.CreateDirectory(directory);
         }
 
-        var json = JsonSerializer.Serialize(Settings, new JsonSerializerOptions
-        {
-            WriteIndented = true
-        });
-
-        File.WriteAllText(_settingsPath, json);
+        var json = JsonSerializer.Serialize(Settings, _jsonOptions);
+        File.WriteAllText(SettingsPath, json);
     }
 }

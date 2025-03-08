@@ -1,4 +1,4 @@
-using XsltEditor.ViewModels;
+﻿using XsltEditor.ViewModels;
 
 namespace XsltEditor.Views.Windows;
 

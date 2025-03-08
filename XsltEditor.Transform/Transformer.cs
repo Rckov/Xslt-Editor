@@ -14,7 +14,7 @@ public class Transformer
     {
         Engine = engineType switch
         {
-            EngineType.Saxon => new SaxonEngine(),
+            //EngineType.Saxon => new SaxonEngine(),
             EngineType.XslCompiledTransform => new XslCompiledEngine(),
             _ => throw new NotImplementedException()
         };
