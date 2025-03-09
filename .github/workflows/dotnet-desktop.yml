@@ -35,7 +35,7 @@ jobs:
       - name: Zip single file artifacts
         shell: pwsh
         run: |
-          Compress-Archive -Path XsltEditor/bin/Release(net8.0-windows7.0)/x64/* -DestinationPath x64_single_release.zip
+          Compress-Archive -Path XsltEditor/bin/Release/net8.0-windows7.0/x64/* -DestinationPath x64_single_release.zip
 
       # Build and publish for non-single file
       - name: Build and Publish for x64 (non-single file)
@@ -47,7 +47,7 @@ jobs:
       - name: Zip non-single file artifacts
         shell: pwsh
         run: |
-          Compress-Archive -Path XsltEditor/bin/Release_non_single(net8.0-windows7.0)/x64/* -DestinationPath x64_non_single_release.zip
+          Compress-Archive -Path XsltEditor/bin/Release_non_single/net8.0-windows7.0//x64/* -DestinationPath x64_non_single_release.zip
 
       - name: Generate commit log
         id: commit_log
