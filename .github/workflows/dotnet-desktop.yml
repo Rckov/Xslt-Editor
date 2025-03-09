@@ -29,8 +29,8 @@ jobs:
       - name: Build and Publish for x64 (single file)
         shell: pwsh
         run: |
-          New-Item -Path XsltEditor/bin/Release(net8.0-windows7.0)/x64 -ItemType Directory -Force
-          dotnet publish "${{ env.PROJECT_PATH }}" --configuration Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false -p:PublishReadyToRun=true -p:PublishTrimmed=false -p:WindowsPackageType=None -o XsltEditor/bin/Release(net8.0-windows7.0)/x64
+          New-Item -Path XsltEditor/bin/Release/net8.0-windows7.0//x64 -ItemType Directory -Force
+          dotnet publish "${{ env.PROJECT_PATH }}" --configuration Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false -p:PublishReadyToRun=true -p:PublishTrimmed=false -p:WindowsPackageType=None -o XsltEditor/bin/Release/net8.0-windows7.0//x64
 
       - name: Zip single file artifacts
         shell: pwsh
@@ -41,8 +41,8 @@ jobs:
       - name: Build and Publish for x64 (non-single file)
         shell: pwsh
         run: |
-          New-Item -Path XsltEditor/bin/Release_non_single(net8.0-windows7.0)/x64 -ItemType Directory -Force
-          dotnet publish "${{ env.PROJECT_PATH }}" --configuration Release -r win-x64 --self-contained true -p:PublishSingleFile=false -p:DebugType=None -p:DebugSymbols=false -p:PublishReadyToRun=true -p:PublishTrimmed=false -p:WindowsPackageType=None -o XsltEditor/bin/Release_non_single(net8.0-windows7.0)/x64
+          New-Item -Path XsltEditor/bin/Release_non_single/net8.0-windows7.0//x64 -ItemType Directory -Force
+          dotnet publish "${{ env.PROJECT_PATH }}" --configuration Release -r win-x64 --self-contained true -p:PublishSingleFile=false -p:DebugType=None -p:DebugSymbols=false -p:PublishReadyToRun=true -p:PublishTrimmed=false -p:WindowsPackageType=None -o XsltEditor/bin/Release_non_single/net8.0-windows7.0//x64
 
       - name: Zip non-single file artifacts
         shell: pwsh
