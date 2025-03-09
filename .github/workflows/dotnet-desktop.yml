@@ -23,16 +23,31 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore ${{ env.PROJECT_PATH }}
+        run: dotnet restore "${{ env.PROJECT_PATH }}"
 
-      # Build and publish for win-x64
-      - name: Build and Publish for x64
-        run: dotnet publish ${{ env.PROJECT_PATH }} --configuration Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false -p:PublishReadyToRun=true -p:PublishTrimmed=false -p:WindowsPackageType=None -o XsltEditor/bin/Release/net8.0-windows7.0/x64
-
-      - name: Zip x64 artifacts
+      # Build and publish for single file
+      - name: Build and Publish for x64 (single file)
         shell: pwsh
         run: |
-          Compress-Archive -Path XsltEditor/bin/Release/net8.0-windows7.0/x64/* -DestinationPath x64_release.zip
+          New-Item -Path XsltEditor/bin/Release(net8.0-windows7.0)/x64 -ItemType Directory -Force
+          dotnet publish "${{ env.PROJECT_PATH }}" --configuration Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false -p:PublishReadyToRun=true -p:PublishTrimmed=false -p:WindowsPackageType=None -o XsltEditor/bin/Release(net8.0-windows7.0)/x64
+
+      - name: Zip single file artifacts
+        shell: pwsh
+        run: |
+          Compress-Archive -Path XsltEditor/bin/Release(net8.0-windows7.0)/x64/* -DestinationPath x64_single_release.zip
+
+      # Build and publish for non-single file
+      - name: Build and Publish for x64 (non-single file)
+        shell: pwsh
+        run: |
+          New-Item -Path XsltEditor/bin/Release_non_single(net8.0-windows7.0)/x64 -ItemType Directory -Force
+          dotnet publish "${{ env.PROJECT_PATH }}" --configuration Release -r win-x64 --self-contained true -p:PublishSingleFile=false -p:DebugType=None -p:DebugSymbols=false -p:PublishReadyToRun=true -p:PublishTrimmed=false -p:WindowsPackageType=None -o XsltEditor/bin/Release_non_single(net8.0-windows7.0)/x64
+
+      - name: Zip non-single file artifacts
+        shell: pwsh
+        run: |
+          Compress-Archive -Path XsltEditor/bin/Release_non_single(net8.0-windows7.0)/x64/* -DestinationPath x64_non_single_release.zip
 
       - name: Generate commit log
         id: commit_log
@@ -44,7 +59,8 @@ jobs:
         with:
           generate_release_notes: true
           files: |
-            x64_release.zip
+            x64_single_release.zip
+            x64_non_single_release.zip
           body: |
             ## Commits
             ${{ env.commits }}
