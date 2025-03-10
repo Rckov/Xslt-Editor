@@ -1,6 +1,7 @@
 ﻿using Microsoft.Web.WebView2.Core;
 
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.Versioning;
 
 using XsltEditor.Models.Messages;
@@ -14,23 +15,24 @@ public partial class MainView
 {
     private readonly IMessenger _messenger;
 
-    public MainView(MainViewModel viewModel, IMessenger messenger)
+    public MainView(MainViewModel viewModel, IMessenger messenger, IThemeManager themeManager)
     {
         DataContext = viewModel;
 
-        InitializeComponent();
-        InitializeWebView();
-
         _messenger = messenger;
         _messenger.Subscribe<ThemeMessage>(OnThemeChanged);
+
+        InitializeComponent();
+        InitializeWebView(themeManager);
     }
 
-    private async void InitializeWebView()
+    private async void InitializeWebView(IThemeManager themeManager)
     {
-        var webView2Environment = await CoreWebView2Environment.CreateAsync(null, null,
+        var webView2Environment = await CoreWebView2Environment.CreateAsync(null, Path.GetTempPath(),
             new CoreWebView2EnvironmentOptions
             {
-                AreBrowserExtensionsEnabled = false
+                AreBrowserExtensionsEnabled = false,
+                AdditionalBrowserArguments = "--edge-webview-is-background --single-process --disable-site-isolation-trials --disable-gpu"
             });
 
         await WebView.EnsureCoreWebView2Async(webView2Environment);
@@ -38,6 +40,11 @@ public partial class MainView
         if (WebView.DataContext is MainViewModel viewModel)
         {
             viewModel.PropertyChanged += ViewModel_PropertyChanged;
+
+            /// Ensures the theme change is applied reliably.
+            /// Since theme change message registration happens later, WebView might not subscribe to
+            /// <see cref="CoreWebView2_NavigationCompleted"/> in time. This guarantees the theme is applied correctly.
+            OnThemeChanged(new ThemeMessage(themeManager.CurrentTheme));
         }
     }
 
@@ -58,7 +65,13 @@ public partial class MainView
             WebView.CoreWebView2.NavigationCompleted += CoreWebView2_NavigationCompleted;
         }
 
-        WebView.CoreWebView2.Reload();
+        /// During WebView initialization, if no Source is set, calling Reload() may throw an exception.
+        /// Exception: "CoreWebView2 members cannot be accessed after the WebView2 control is disposed"
+        /// https://github.com/MicrosoftEdge/WebView2Feedback/issues/2872
+        if (WebView.CanGoBack)
+        {
+            WebView.CoreWebView2.Reload();
+        }
     }
 
     private async void CoreWebView2_NavigationCompleted(object? sender, CoreWebView2NavigationCompletedEventArgs e)

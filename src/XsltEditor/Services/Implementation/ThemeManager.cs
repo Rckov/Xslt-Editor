@@ -18,6 +18,8 @@ internal class ThemeManager : IThemeManager
         AddTheme(ThemeType.Light, "Resources/Themes/LightBrushes.xaml");
     }
 
+    public ThemeType CurrentTheme { get; private set; }
+
     public void Apply(ThemeType themeType)
     {
         var dictionaries = Application.Current.Resources.MergedDictionaries;
@@ -30,6 +32,8 @@ internal class ThemeManager : IThemeManager
 
         if (_themePaths.TryGetValue(themeType, out var path))
         {
+            CurrentTheme = themeType;
+
             var newTheme = new ResourceDictionary
             {
                 Source = new Uri(path, UriKind.Relative)

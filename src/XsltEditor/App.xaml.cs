@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
+using System.IO;
 using System.Runtime.Versioning;
 using System.Windows;
 
@@ -19,6 +20,8 @@ public partial class App
     }
 
     public static IServiceProvider Services { get; private set; } = null!;
+
+    public static readonly string SpecialFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "XsltEditor");
 
     private static ServiceProvider ConfigureServices(IServiceCollection services)
     {

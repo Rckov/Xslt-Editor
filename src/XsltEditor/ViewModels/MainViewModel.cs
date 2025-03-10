@@ -24,7 +24,7 @@ public class MainViewModel : BaseViewModel, IDisposable
     private readonly IXmlTransformService _transformService;
     private readonly IWindowService _windowService;
 
-    private DispatcherTimer _debounceTimer;
+    private DispatcherTimer? _debounceTimer;
 
     public MainViewModel(
         IMessenger messenger,
@@ -34,12 +34,11 @@ public class MainViewModel : BaseViewModel, IDisposable
         ISettingsService settingsService,
         ICompletionDataService completionDataService)
     {
-        _messenger = messenger;
-        _messenger.Subscribe<EngineMessage>(OnEngineChanged);
         _windowService = windowService;
         _transformService = transformService;
 
-        Engine = settingsService.Settings.Engine;
+        _messenger = messenger;
+        _messenger.Subscribe<EngineMessage>(OnEngineChanged);
 
         Documents =
         [
@@ -47,15 +46,11 @@ public class MainViewModel : BaseViewModel, IDisposable
             new DocumentViewModel(messenger) { Name = "XML" }
         ];
 
+        Engine = settingsService.Settings.Engine;
         themeManager.Apply(settingsService.Settings.Theme);
 
-        _debounceTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromSeconds(1),
-        }; 
-        _debounceTimer.Tick += DebounceTimer_Tick;
-
         InitializeEvents();
+        InitializeDebounceTimer();
     }
 
     public ObservableCollection<DocumentViewModel> Documents { get; set; }
@@ -86,7 +81,7 @@ public class MainViewModel : BaseViewModel, IDisposable
 
     public void Dispose()
     {
-        _debounceTimer.Stop();
+        _debounceTimer?.Stop();
         _messenger.Unsubscribe<EngineMessage>(OnEngineChanged);
 
         foreach (var doc in Documents.ToList())
@@ -105,6 +100,15 @@ public class MainViewModel : BaseViewModel, IDisposable
         {
             item.PropertyChanged += OnTextPropertyChanged;
         }
+    }
+
+    private void InitializeDebounceTimer()
+    {
+        _debounceTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(1),
+        };
+        _debounceTimer.Tick += DebounceTimer_Tick;
     }
 
     protected override void InitializeCommands()
@@ -200,8 +204,8 @@ public class MainViewModel : BaseViewModel, IDisposable
             return;
         }
 
-        _debounceTimer.Stop();
-        _debounceTimer.Start();
+        _debounceTimer?.Stop();
+        _debounceTimer?.Start();
     }
 
     private void OpenCompletionWindow()

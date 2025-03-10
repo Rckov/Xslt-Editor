@@ -18,15 +18,10 @@
   <ItemGroup>
     <Resource Include="Resources\appicon.ico" />
 
+    <EmbeddedResource Include="Resources\completions.json" />
     <EmbeddedResource Include="Resources\Highlighting\DarkMode.xshd" />
     <EmbeddedResource Include="Resources\Highlighting\LightMode.xshd" />
   </ItemGroup>
-
-   <ItemGroup>
-     <None Update="Resources\completions.json">
-       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-     </None>
-   </ItemGroup>
 
    <ItemGroup>
      <ProjectReference Include="..\XsltEditor.Transform\XsltEditor.Transform.csproj" />

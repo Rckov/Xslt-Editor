@@ -11,9 +11,7 @@ namespace XsltEditor.Services.Implementation;
 internal class SettingsService : ISettingsService
 {
     private const string SettingsFileName = "settings.json";
-
-    private static readonly string SettingsPath =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "XsltEditor", SettingsFileName);
+    private static readonly string SettingsPath = Path.Combine(App.SpecialFolder, SettingsFileName);
 
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
