@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  WORK_DIRECTORY: src/XsltEditor
+  PROJECT_PATH: src/XsltEditor/XsltEditor.csproj
 
 jobs:
   build:
@@ -23,17 +23,14 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        working-directory: ${{ env.WORK_DIRECTORY }}
-        run: dotnet restore "Xslt Editor.sln"
+        run: dotnet restore ${{ env.PROJECT_PATH }}
 
       - name: Build
-        working-directory: ${{ env.WORK_DIRECTORY }}
-        run: dotnet build "Xslt Editor.sln" --configuration Release --no-restore
+        run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
 
       - name: Publish
-        working-directory: ${{ env.WORK_DIRECTORY }}
         run: |
-          dotnet publish "XsltEditor/XsltEditor.csproj" -c Release -r win-x64 `
+          dotnet publish ${{ env.PROJECT_PATH }} -c Release -r win-x64 `
             --self-contained true `
             -p:PublishSingleFile=true `
             -p:EnableCompressionInSingleFile=true `
@@ -44,22 +41,17 @@ jobs:
             -p:PublishTrimmed=false `
             -p:WindowsPackageType=None `
             -p:IncludeAllContentForSelfExtract=true `
-            -o ../publish
-
-      - name: Copy exe to release
-        shell: pwsh
-        run: Copy-Item -Path "${{ env.WORK_DIRECTORY }}/../publish/XsltEditor.exe" -Destination "XsltEditor.exe"
-
+            -o XsltEditor/bin/Release/net8.0-windows7.0/x64
+            
       - name: Zip Release
         shell: pwsh
-        run: Compress-Archive -Path "${{ env.WORK_DIRECTORY }}/../publish/*" -DestinationPath "XsltEditor-Release.zip"
+        run: Compress-Archive -Path XsltEditor/bin/Release/net8.0-windows7.0/x64/* -DestinationPath x64_release.zip
           
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            XsltEditor.exe
-            XsltEditor-Release.zip
+            x64_release.zip
           draft: false
           prerelease: false
           generate_release_notes: true
