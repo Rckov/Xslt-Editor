@@ -37,16 +37,21 @@
 
                <GroupBox Header="Xslt Transformation">
                   <StackPanel Margin="5">
-                     <!--<CheckBox Content="Runtime compile" Margin="0,0,0,5" Style="{StaticResource SettingsCheckBox}" />-->
-
                      <Grid>
                         <Grid.ColumnDefinitions>
                            <ColumnDefinition Width="70" />
                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                           <RowDefinition />
+                           <RowDefinition />
+                        </Grid.RowDefinitions>
 
-                        <TextBlock Text="Engine:" Grid.Column="0" VerticalAlignment="Center" Foreground="{DynamicResource TextForeground}" />
-                        <ComboBox Grid.Column="1" ItemsSource="{Binding Engines}" SelectedItem="{Binding SelectedEngine}" />
+                        <TextBlock Text="Engine:" VerticalAlignment="Center" Margin="0,0,0,10" Foreground="{DynamicResource TextForeground}" />
+                        <ComboBox Grid.Column="1" ItemsSource="{Binding Engines}" Margin="0,0,0,10" SelectedItem="{Binding SelectedEngine}" />
+
+                        <TextBlock Text="Compile:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Foreground="{DynamicResource TextForeground}" />
+                        <CheckBox Content="Runtime" Grid.Column="1" Grid.Row="1" IsChecked="{Binding IsRuntimeCompile}" Style="{StaticResource SettingsCheckBox}" />
                      </Grid>
                   </StackPanel>
                </GroupBox>

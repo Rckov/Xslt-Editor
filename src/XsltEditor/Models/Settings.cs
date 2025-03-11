@@ -12,8 +12,10 @@ public class Settings
     {
         Theme = ThemeType.Dark;
         Engine = EngineType.XslCompiledTransform;
+        IsRuntimeCompile = true;
     }
 
     public ThemeType Theme { get; set; }
     public EngineType Engine { get; set; }
+    public bool IsRuntimeCompile { get; set; }
 }

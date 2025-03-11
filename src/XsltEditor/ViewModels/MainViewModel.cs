@@ -39,6 +39,7 @@ public class MainViewModel : BaseViewModel, IDisposable
 
         _messenger = messenger;
         _messenger.Subscribe<EngineMessage>(OnEngineChanged);
+        _messenger.Subscribe<RuntimeCompileMessage>(OnCompileChanged);
 
         Documents =
         [
@@ -47,10 +48,11 @@ public class MainViewModel : BaseViewModel, IDisposable
         ];
 
         Engine = settingsService.Settings.Engine;
+        IsRuntimeCompile = settingsService.Settings.IsRuntimeCompile;
+
         themeManager.Apply(settingsService.Settings.Theme);
 
         InitializeEvents();
-        InitializeDebounceTimer();
     }
 
     public ObservableCollection<DocumentViewModel> Documents { get; set; }
@@ -72,12 +74,25 @@ public class MainViewModel : BaseViewModel, IDisposable
         set => _transformService.Create(value);
     }
 
+    public bool IsRuntimeCompile
+    {
+        get => !field;
+        set
+        {
+            if (Set(ref field, value))
+            {
+                InitializeDebounceTimer(value);
+            }
+        }
+    }
+
     public ICommand? OpenFileCommand { get; private set; }
     public ICommand? SaveFileCommand { get; private set; }
     public ICommand? OpenCompletionWindowCommand { get; private set; }
     public ICommand? OpenCaretLineWindowCommand { get; private set; }
     public ICommand? OpenFileExplorerCommand { get; private set; }
     public ICommand? OpenSettingsWindowCommand { get; private set; }
+    public ICommand? CompileCommand { get; private set; }
 
     public void Dispose()
     {
@@ -102,13 +117,25 @@ public class MainViewModel : BaseViewModel, IDisposable
         }
     }
 
-    private void InitializeDebounceTimer()
+    private void InitializeDebounceTimer(bool isEnable)
     {
-        _debounceTimer = new DispatcherTimer
+        if (isEnable)
         {
-            Interval = TimeSpan.FromSeconds(1),
-        };
-        _debounceTimer.Tick += DebounceTimer_Tick;
+            _debounceTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1),
+            };
+
+            _debounceTimer.Tick += DebounceTimer_Tick;
+        }
+        else
+        {
+            if (_debounceTimer != null)
+            {
+                _debounceTimer.Stop();
+                _debounceTimer.Tick -= DebounceTimer_Tick;
+            }
+        }
     }
 
     protected override void InitializeCommands()
@@ -119,6 +146,7 @@ public class MainViewModel : BaseViewModel, IDisposable
         OpenCaretLineWindowCommand = new RelayCommand(OpenCaretLineWindow);
         OpenFileExplorerCommand = new RelayCommand(OpenFileExplorer);
         OpenSettingsWindowCommand = new RelayCommand(OpenSettingWindow);
+        CompileCommand = new RelayCommand(async () => await Compile());
     }
 
     private async void OpenFile()
@@ -177,7 +205,7 @@ public class MainViewModel : BaseViewModel, IDisposable
         }
     }
 
-    private async void DebounceTimer_Tick(object? sender, EventArgs e)
+    private async Task Compile()
     {
         var xsl = GetDocumentByExtension(".xsl");
         var xml = GetDocumentByExtension(".xml");
@@ -195,6 +223,16 @@ public class MainViewModel : BaseViewModel, IDisposable
         }
 
         HtmlContent = await _transformService.TransformAsync(xsl.Text, xml.Text, xsl.FilePath);
+    }
+
+    private async void DebounceTimer_Tick(object? sender, EventArgs e)
+    {
+        if (_debounceTimer != null && _debounceTimer.IsEnabled)
+        {
+            _debounceTimer.Stop();
+        }
+
+        await Compile();
     }
 
     private void OnTextPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -234,6 +272,11 @@ public class MainViewModel : BaseViewModel, IDisposable
     private void OnEngineChanged(EngineMessage message)
     {
         Engine = message.EngineType;
+    }
+
+    private void OnCompileChanged(RuntimeCompileMessage message)
+    {
+        IsRuntimeCompile = message.IsRuntime;
     }
 
     private DocumentViewModel? GetDocumentByExtension(string filePath)
