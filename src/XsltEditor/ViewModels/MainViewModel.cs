@@ -98,6 +98,7 @@ public class MainViewModel : BaseViewModel, IDisposable
     {
         _debounceTimer?.Stop();
         _messenger.Unsubscribe<EngineMessage>(OnEngineChanged);
+        _messenger.Unsubscribe<RuntimeCompileMessage>(OnCompileChanged);
 
         foreach (var doc in Documents.ToList())
         {
@@ -242,8 +243,11 @@ public class MainViewModel : BaseViewModel, IDisposable
             return;
         }
 
-        _debounceTimer?.Stop();
-        _debounceTimer?.Start();
+        if (_debounceTimer != null)
+        {
+            _debounceTimer.Stop();
+            _debounceTimer.Start();
+        }
     }
 
     private void OpenCompletionWindow()
