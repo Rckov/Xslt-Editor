@@ -7,28 +7,31 @@ on:
   workflow_dispatch:
 
 env:
-  WORK_DIRECTORY: ./src/XsltEditor
+  WORK_DIRECTORY: src/XsltEditor
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        working-directory: "${{ env.WORK_DIRECTORY }}"
+        working-directory: ${{ env.WORK_DIRECTORY }}
         run: dotnet restore "Xslt Editor.sln"
 
       - name: Build
-        working-directory: "${{ env.WORK_DIRECTORY }}"
+        working-directory: ${{ env.WORK_DIRECTORY }}
         run: dotnet build "Xslt Editor.sln" --configuration Release --no-restore
 
       - name: Publish
-        working-directory: "${{ env.WORK_DIRECTORY }}"
+        working-directory: ${{ env.WORK_DIRECTORY }}
         run: |
           dotnet publish "XsltEditor/XsltEditor.csproj" -c Release -r win-x64 `
             --self-contained true `
@@ -44,10 +47,12 @@ jobs:
             -o ../publish
 
       - name: Copy exe to release
-        run: Copy-Item "publish/XsltEditor.exe" -Destination "XsltEditor.exe"
+        shell: pwsh
+        run: Copy-Item -Path "${{ env.WORK_DIRECTORY }}/../publish/XsltEditor.exe" -Destination "XsltEditor.exe"
 
       - name: Zip Release
-        run: Compress-Archive -Path "publish/*" -DestinationPath "XsltEditor-Release.zip"
+        shell: pwsh
+        run: Compress-Archive -Path "${{ env.WORK_DIRECTORY }}/../publish/*" -DestinationPath "XsltEditor-Release.zip"
           
       - name: Create Release
         uses: softprops/action-gh-release@v1
