@@ -47,7 +47,7 @@ public class SettingsViewModel : BaseViewModel
             _themeManager.Apply(value);
         }
     }
-
+    
     public EngineType SelectedEngine
     {
         get => Settings.Engine;
@@ -57,6 +57,18 @@ public class SettingsViewModel : BaseViewModel
             SaveSettings();
 
             _messenger.Send(new EngineMessage(value));
+        }
+    }
+
+    public bool IsRuntimeCompile
+    {
+        get => Settings.IsRuntimeCompile;
+        set
+        {
+            Settings.IsRuntimeCompile = value;
+            SaveSettings();
+
+            _messenger.Send(new RuntimeCompileMessage(value));
         }
     }
 

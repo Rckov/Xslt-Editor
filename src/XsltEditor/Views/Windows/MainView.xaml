@@ -138,7 +138,8 @@
 
                   <MenuItem Header="Compile"
                             Icon="&#xE768;"
-                            Visibility="Collapsed" />
+                            Command="{Binding CompileCommand}"
+                            IsEnabled="{Binding IsRuntimeCompile}" />
                </Menu>
             </ct:WindowBar.LeftContent>
 
