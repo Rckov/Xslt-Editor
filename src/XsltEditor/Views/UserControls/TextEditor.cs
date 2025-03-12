@@ -30,8 +30,8 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
     private readonly KeyEventHandler _previewKeyDownHandler;
     private readonly TextCompositionEventHandler _textEnteredHandler;
 
-    private CompletionWindow? _completionWindow;
     private FoldingManager? _foldingManager;
+    private CompletionWindow? _completionWindow;
 
     public TextEditor()
     {
@@ -177,8 +177,14 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
             return;
         }
 
-        editor.TextArea.Caret.Line = (int)e.NewValue;
-        editor.ScrollToLine(editor.Line);
+        int newLine = (int)e.NewValue;
+        if (editor.TextArea.Caret.Line == newLine)
+        {
+            return;
+        }
+
+        editor.ScrollTo(newLine, editor.Column);
+        editor.TextArea.Caret.Line = newLine;
     }
 
     private static void ColumnChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
