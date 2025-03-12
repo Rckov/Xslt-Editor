@@ -46,6 +46,14 @@ internal class CompletionDataService : ICompletionDataService
 
     private void CopyCompletionsFromResources()
     {
+        var directory = Path.GetDirectoryName(СompletionsPath) ?? throw new InvalidOperationException("Invalid path settings");
+
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+
         using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(СompletionResource)
             ?? throw new FileNotFoundException("Resource not found: completions.json");
 
