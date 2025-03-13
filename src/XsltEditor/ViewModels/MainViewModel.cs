@@ -122,7 +122,7 @@ public class MainViewModel : BaseViewModel, IDisposable
     {
         if (isEnable)
         {
-            _debounceTimer = new DispatcherTimer
+            _debounceTimer ??= new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(1),
             };
