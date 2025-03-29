@@ -287,21 +287,35 @@ public class CompletionData : ICompletionData
         Text = text;
     }
 
-    [JsonIgnore] public ImageSource? Image => null;
+    [JsonIgnore]
+    public ImageSource? Image => null;
 
     public string Text { get; }
 
-    [JsonIgnore] public object Content => Text;
+    [JsonIgnore]
+    public object Content => Text;
 
-    [JsonIgnore] public object Description => $"Insert {Text}";
+    [JsonIgnore]
+    public object Description => $"Insert {Text}";
 
-    [JsonIgnore] public double Priority => 0;
+    [JsonIgnore]
+    public double Priority => 0;
+
+    [JsonIgnore]
+    public string OpenTag => $"<{Text}>";
+
+    [JsonIgnore]
+    public string CloseTag => $"</{Text}>";
 
     public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
     {
-        textArea.Document.Replace(completionSegment, Text);
+        textArea.Document.Replace(completionSegment.Offset - 1, 1, string.Empty);
+        textArea.Document.Replace(completionSegment, $"{OpenTag}{CloseTag}");
+
+        textArea.Caret.Offset -= CloseTag.Length;
     }
 }
+
 
 public static class TextEditorCommands
 {
