@@ -81,12 +81,12 @@
                      </TextBox>
 
                      <Button Grid.Column="1" Content="&#xE973;" Width="30" Height="30"
-                             Command="ae:SearchCommands.FindNext"
+                             Command="ae:SearchCommands.FindPrevious"
                              ToolTip="{Binding Localization.FindNextText, RelativeSource={RelativeSource TemplatedParent}}"
                              Style="{StaticResource CaptionButton}" BorderThickness="0" />
 
                      <Button Grid.Column="2" Content="&#xE974;" Width="30" Height="30"
-                             Command="ae:SearchCommands.FindPrevious"
+                             Command="ae:SearchCommands.FindNext"
                              ToolTip="{Binding Localization.FindPreviousText, RelativeSource={RelativeSource TemplatedParent}}"
                              Style="{StaticResource CaptionButton}" BorderThickness="0" />
 
