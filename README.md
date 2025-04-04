@@ -3,7 +3,7 @@
 [![.NET Version](https://img.shields.io/badge/.NET-8.0-blue)]()
 [![Build and Release](https://github.com/Rckov/Xslt-Editor/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/Rckov/Xslt-Editor/actions/workflows/dotnet-desktop.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/Rckov/Xslt-Editor)](https://github.com/Rckov/Xslt-Editor/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/Rckov/Xslt-Editor/total.svg)](https://github.com/Rckov/Xslt-Editor/releases/latest)
+<!--[![Downloads](https://img.shields.io/github/downloads/Rckov/Xslt-Editor/total.svg)](https://github.com/Rckov/Xslt-Editor/releases/latest)-->
 
 A lightweight XSLT editor with real-time compilation
 
