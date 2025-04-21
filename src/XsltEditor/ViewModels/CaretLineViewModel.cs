@@ -16,8 +16,6 @@ public class CaretLineViewModel : BaseViewModel
         _messenger = messenger;
     }
 
-    public Action? CloseWindow { get; set; }
-
     public string? Line
     {
         get;
@@ -25,6 +23,7 @@ public class CaretLineViewModel : BaseViewModel
     }
 
     public ICommand? GoToCommand { get; private set; }
+    public ICommand? CloseCommand { get; set; }
 
     protected override void InitializeCommands()
     {
@@ -40,7 +39,7 @@ public class CaretLineViewModel : BaseViewModel
                 _messenger.Send(new CaretLineMessage(lineNumber));
             }
 
-            CloseWindow?.Invoke();
+            CloseCommand?.Execute(null);
         }
         catch (Exception ex)
         {

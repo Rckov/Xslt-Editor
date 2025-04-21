@@ -146,32 +146,29 @@
       <Setter Property="Background" Value="{DynamicResource BorderColor}" />
    </Style>
 
-   <Style TargetType="MenuItem">
+   <Style TargetType="{x:Type MenuItem}">
       <Setter Property="Margin" Value="0" />
       <Setter Property="Padding" Value="6,2" />
-      <Setter Property="BorderThickness" Value="1" />
       <Setter Property="Background" Value="Transparent" />
       <Setter Property="Foreground" Value="{DynamicResource TextForeground}" />
+      <Setter Property="SnapsToDevicePixels" Value="True" />
       <Setter Property="Template">
          <Setter.Value>
-            <ControlTemplate TargetType="MenuItem">
-               <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+            <ControlTemplate TargetType="{x:Type MenuItem}">
+               <Border x:Name="Border" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
                   <Grid>
                      <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                      </Grid.ColumnDefinitions>
 
-                     <TextBlock x:Name="Icon" Text="{TemplateBinding Icon}" Grid.Column="0" Margin="5" VerticalAlignment="Center" FontFamily="{StaticResource FontIcon}" />
+                     <TextBlock x:Name="Icon" Text="{TemplateBinding Icon}" Margin="5" VerticalAlignment="Center" FontFamily="{StaticResource FontIcon}" />
                      <ContentPresenter x:Name="Header" ContentSource="Header" Grid.Column="1" Margin="5" VerticalAlignment="Center" RecognizesAccessKey="True" />
 
-                     <Popup x:Name="PART_Popup" Grid.Column="0" IsOpen="{TemplateBinding IsSubmenuOpen}" Placement="Bottom" HorizontalOffset="-6" VerticalOffset="1" PopupAnimation="Fade">
-                        <Border BorderThickness="1" BorderBrush="{DynamicResource BorderColor}" Background="{DynamicResource GeneralPopupBackground}">
-                           <ItemsPresenter x:Name="ItemsPresenter" Margin="0" KeyboardNavigation.TabNavigation="Cycle" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                     <Popup x:Name="PART_Popup" IsOpen="{TemplateBinding IsSubmenuOpen}" Placement="Right" HorizontalOffset="6" VerticalOffset="-3" PopupAnimation="Fade">
+                        <Border BorderThickness="1" MinWidth="140" BorderBrush="{DynamicResource BorderColor}" Background="{DynamicResource GeneralPopupBackground}">
+                           <ItemsPresenter x:Name="ItemsPresenter" Margin="0" />
                         </Border>
-                        <Popup.Effect>
-                           <DropShadowEffect Color="#B3C7E5" Direction="-60" ShadowDepth="5" Opacity="0.8" />
-                        </Popup.Effect>
                      </Popup>
                   </Grid>
                </Border>
@@ -186,6 +183,11 @@
                   <Trigger Property="IsEnabled" Value="False">
                      <Setter TargetName="Icon" Property="Opacity" Value="0.5" />
                      <Setter Property="Foreground" Value="Gray" />
+                  </Trigger>
+                  <Trigger Property="Role" Value="TopLevelHeader">
+                     <Setter TargetName="PART_Popup" Property="Placement" Value="Bottom" />
+                     <Setter TargetName="PART_Popup" Property="HorizontalOffset" Value="-6" />
+                     <Setter TargetName="PART_Popup" Property="VerticalOffset" Value="1" />
                   </Trigger>
                </ControlTemplate.Triggers>
             </ControlTemplate>
