@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows.Input;
 
+using XsltEditor.Infrastructure;
 using XsltEditor.ViewModels;
 
 namespace XsltEditor.Views.Windows;
@@ -12,7 +13,7 @@ public partial class CaretLineView
         InitializeComponent();
         DataContext = viewModel;
 
-        viewModel.CloseWindow = Close;
+        viewModel.CloseCommand = new RelayCommand(() => Close());
     }
 
     [GeneratedRegex("[^0-9]+")]
