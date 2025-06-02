@@ -1,21 +1,20 @@
 ﻿using System.Runtime.Versioning;
 
 using XsltEditor.Services;
+using XsltEditor.Transform.Enums;
 
 namespace XsltEditor.Models;
 
 [SupportedOSPlatform("windows")]
-public class Settings
+internal class Settings
 {
     public Settings()
     {
         Theme = ThemeType.Dark;
-        //Engine = EngineType.XslCompiledTransform;
-        IsRuntimeCompile = true;
+        Engine = EngineType.XslCompiledTransform;
     }
 
     public ThemeType Theme { get; set; }
 
-    //public EngineType Engine { get; set; }
-    public bool IsRuntimeCompile { get; set; }
+    public EngineType Engine { get; set; }
 }

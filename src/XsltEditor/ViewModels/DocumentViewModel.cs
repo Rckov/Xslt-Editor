@@ -15,28 +15,16 @@ internal partial class DocumentViewModel : ObservableRecipient
 {
     private readonly IFileService _fileService = App.Services.GetRequiredService<IFileService>();
 
-    #region Document properties
-
     [ObservableProperty] private string? _name;
     [ObservableProperty] private string? _text;
     [ObservableProperty] private string? _filePath;
     [ObservableProperty] private bool _isDirty;
     [ObservableProperty] private bool _isReadOnly;
 
-    #endregion Document properties
-
-    #region Caret position
-
     [ObservableProperty] private int _line;
     [ObservableProperty] private int _column;
 
-    #endregion Caret position
-
-    #region Syntax highlighting
-
     [ObservableProperty] private IHighlightingDefinition? _highlighting;
-
-    #endregion Syntax highlighting
 
     public DocumentType DocumentType { get; set; }
 
@@ -78,6 +66,6 @@ internal partial class DocumentViewModel : ObservableRecipient
 
 internal enum DocumentType
 {
-    Xsl,
-    Xml
+    XSL,
+    XML
 }

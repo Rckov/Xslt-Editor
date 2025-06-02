@@ -12,10 +12,18 @@ internal static class Extensions
 
         return extension switch
         {
-            ".xsl" => DocumentType.Xsl,
-            ".xml" => DocumentType.Xml,
+            ".xsl" => DocumentType.XSL,
+            ".xml" => DocumentType.XML,
 
             _ => default
         };
+    }
+
+    public static void LoadFromEnum<T>(this ICollection<T> collection) where T : struct, Enum
+    {
+        foreach (var item in Enum.GetValues<T>())
+        {
+            collection.Add(item);
+        }
     }
 }
