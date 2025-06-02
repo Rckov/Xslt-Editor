@@ -16,26 +16,16 @@
 
   <ItemGroup>
      <Resource Include="Resources\appicon.ico" />
-
-     <EmbeddedResource Include="Resources\completions.json" />
-     <EmbeddedResource Include="Resources\Highlighting\DarkMode.xshd" />
-     <EmbeddedResource Include="Resources\Highlighting\LightMode.xshd" />
   </ItemGroup>
 
   <ItemGroup>
      <ProjectReference Include="..\XsltEditor.Transform\XsltEditor.Transform.csproj" />
 
-     <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
+     <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
+
+     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
      <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
-     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
-     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3065.39" />
+     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
+     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3240.44" />
   </ItemGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-     <DebugType>none</DebugType>
-     <GenerateDocumentationFile>false</GenerateDocumentationFile>
-     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-     <AllowedReferenceRelatedFileExtensions>.pdb</AllowedReferenceRelatedFileExtensions>
-   </PropertyGroup>
-
 </Project>

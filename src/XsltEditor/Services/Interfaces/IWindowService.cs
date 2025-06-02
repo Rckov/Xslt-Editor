@@ -2,9 +2,19 @@
 
 namespace XsltEditor.Services.Interfaces;
 
-public interface IWindowService
+internal interface IWindowService
 {
-    void ShowWindow<TWindow>() where TWindow : Window;
+    void Show<TViewModel>(object? parameter = null) where TViewModel : class;
 
-    void ShowDialogWindow<TWindow>() where TWindow : Window;
+    bool? ShowDialog<TViewModel>(object? parameter = null) where TViewModel : class;
+}
+
+internal interface IWindowFactory
+{
+    Window CreateWindow<TViewModel>(TViewModel viewModel) where TViewModel : class;
+}
+
+internal interface IParameterReceiver
+{
+    void SetParameter(object? parameter = null);
 }
