@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.ObjectModel;
+using System.IO;
 
 using XsltEditor.ViewModels;
 
@@ -17,6 +18,11 @@ internal static class Extensions
 
             _ => default
         };
+    }
+
+    public static DocumentViewModel? GetDocument(this ObservableCollection<DocumentViewModel> documents, DocumentType documentType)
+    {
+        return documents.FirstOrDefault(x => x.DocumentType == documentType);
     }
 
     public static void LoadFromEnum<T>(this ICollection<T> collection) where T : struct, Enum

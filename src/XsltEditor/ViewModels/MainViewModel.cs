@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Threading;
 
+using XsltEditor.Extensions;
 using XsltEditor.Services.Interfaces;
 
 namespace XsltEditor.ViewModels;
@@ -123,15 +124,11 @@ internal partial class MainViewModel : ObservableObject
 
     private void InitializeSettings()
     {
-        var settings = _settingsService.Settings;
+        var theme = _settingsService.GetTheme();
+        _themeService.ChangeTheme(theme);
 
-        if (settings is null)
-        {
-            return;
-        }
-
-        _themeService.ChangeTheme(settings.Theme);
-        _transformService.CreateEngine(settings.Engine);
+        var engine = _settingsService.GetEngine();
+        _transformService.CreateEngine(engine);
     }
 
     private void InitializeDebounceTimer()
@@ -156,8 +153,8 @@ internal partial class MainViewModel : ObservableObject
     {
         _debounceTimer?.Stop();
 
-        var xsl = Documents.FirstOrDefault(x => x.DocumentType == DocumentType.XSL);
-        var xml = Documents.FirstOrDefault(x => x.DocumentType == DocumentType.XML);
+        var xsl = Documents.GetDocument(DocumentType.XSL);
+        var xml = Documents.GetDocument(DocumentType.XML);
 
         if (xsl == null || xml == null || string.IsNullOrWhiteSpace(xsl.Text) || string.IsNullOrWhiteSpace(xml.Text))
         {

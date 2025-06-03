@@ -28,4 +28,17 @@
      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
      <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3240.44" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\Styles\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\Highlighting\DarkMode.xshd">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Resources\Highlighting\LightMode.xshd">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
 </Project>

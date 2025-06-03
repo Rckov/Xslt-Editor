@@ -3,40 +3,87 @@ using System.Text.Json;
 
 using XsltEditor.Models;
 using XsltEditor.Services.Interfaces;
+using XsltEditor.Transform.Enums;
 
 namespace XsltEditor.Services;
 
-internal class SettingsService(string filePath) : ISettingsService
+internal sealed class SettingsService : ISettingsService
 {
+    private readonly string _filePath;
+
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
         WriteIndented = true
     };
 
-    public Settings? Settings { get; private set; }
+    private Settings _settings;
 
-    public async Task LoadSettings()
+    public SettingsService(string filePath)
     {
-        if (!File.Exists(filePath))
-        {
-            Settings = new();
-            return;
-        }
+        _filePath = filePath;
+        _settings = LoadSettings();
+    }
 
+    public Settings Settings => _settings;
+
+    public Settings LoadSettings()
+    {
         try
         {
-            var data = await File.ReadAllTextAsync(filePath);
-            Settings = JsonSerializer.Deserialize<Settings>(data) ?? new();
+            if (!File.Exists(_filePath))
+            {
+                _settings = GetDefaultSettings();
+                SaveSettings(_settings);
+                return _settings;
+            }
+
+            var json = File.ReadAllText(_filePath);
+            _settings = JsonSerializer.Deserialize<Settings>(json, _jsonOptions) ?? GetDefaultSettings();
         }
         catch
         {
-            Settings = new();
+            _settings = GetDefaultSettings();
         }
+
+        return _settings;
     }
 
-    public async Task SaveSettings()
+    public void SaveSettings()
     {
-        var data = JsonSerializer.Serialize(Settings, _jsonOptions);
-        await File.WriteAllTextAsync(filePath, data);
+        SaveSettings(_settings);
     }
+
+    public void SaveSettings(Settings settings)
+    {
+        _settings = settings;
+
+        var json = JsonSerializer.Serialize(_settings, _jsonOptions);
+        File.WriteAllText(_filePath, json);
+    }
+
+    public ThemeType GetTheme()
+    {
+        return _settings.Theme;
+    }
+
+    public void SetTheme(ThemeType theme)
+    {
+        _settings.Theme = theme;
+    }
+
+    public EngineType GetEngine()
+    {
+        return _settings.Engine;
+    }
+
+    public void SetEngine(EngineType engine)
+    {
+        _settings.Engine = engine;
+    }
+
+    private static Settings GetDefaultSettings() => new()
+    {
+        Theme = ThemeType.Dark,
+        Engine = EngineType.XslCompiledTransform
+    };
 }

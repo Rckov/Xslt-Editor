@@ -7,7 +7,7 @@ using XsltEditor.Services.Interfaces;
 
 namespace XsltEditor.Services;
 
-internal class FileService : IFileService
+internal class FileDialogService : IFileService
 {
     public string? ShowOpenFileDialog(string title, params string[]? allowedExtensions)
     {

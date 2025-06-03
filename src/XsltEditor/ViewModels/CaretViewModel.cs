@@ -2,16 +2,13 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 
-using System.ComponentModel.DataAnnotations;
-
 using XsltEditor.Models.Messages;
 
 namespace XsltEditor.ViewModels;
 
 internal partial class CaretViewModel : ObservableRecipient
 {
-    [ObservableProperty] 
-    private string? _line;
+    [ObservableProperty] private string? _line;
 
     public event Action<bool>? CloseRequest;
 

@@ -18,8 +18,11 @@ internal partial class SettingsViewModel : ObservableRecipient
     private readonly IXmlTransformService _transformService;
     private readonly IWindowService _windowService;
 
-    [ObservableProperty] private ThemeType _selectedTheme;
-    [ObservableProperty] private EngineType _selectedEngine;
+    [ObservableProperty]
+    private ThemeType _selectedTheme;
+
+    [ObservableProperty]
+    private EngineType _selectedEngine;
 
     public SettingsViewModel(
         IThemeService themeService,
@@ -32,38 +35,19 @@ internal partial class SettingsViewModel : ObservableRecipient
         _transformService = transformService;
         _windowService = windowService;
 
-        InitializeSettings();
+        Settings = _settingsService.Settings;
+
+        SelectedTheme = Settings.Theme;
+        SelectedEngine = Settings.Engine;
+
         InitializeCollections();
     }
 
-    public Settings? Settings { get; private set; }
+    public event Action<bool>? CloseRequest;
+
+    public Settings Settings { get; }
     public ObservableCollection<ThemeType> Themes { get; } = [];
     public ObservableCollection<EngineType> Engines { get; } = [];
-
-    [RelayCommand]
-    private void SaveSettings()
-    {
-        try
-        {
-            if (Settings != null)
-            {
-                _settingsService.SaveSettings();
-            }
-            else
-            {
-                _windowService.ShowMessage("Settings are not initialized.", "Error");
-            }
-        }
-        catch (Exception ex)
-        {
-            _windowService.ShowMessage($"Failed to save settings: {ex.Message}", "Error");
-        }
-    }
-
-    private void InitializeSettings()
-    {
-        Settings = _settingsService.Settings;
-    }
 
     private void InitializeCollections()
     {
@@ -71,34 +55,33 @@ internal partial class SettingsViewModel : ObservableRecipient
         Engines.LoadFromEnum();
     }
 
-    partial void OnSelectedThemeChanged(ThemeType value)
-    {
-        UpdateSetting(
-            s => s.Theme = value, 
-            () => _themeService.ChangeTheme(value));
-    }
-
-    partial void OnSelectedEngineChanged(EngineType value)
-    {
-        UpdateSetting(
-            s => s.Engine = value, 
-            () => _transformService.CreateEngine(value));
-    }
-
-    private void UpdateSetting(Action<Settings> updateAction, Action? action = null)
+    [RelayCommand]
+    private void SaveSettings()
     {
         try
         {
-            action?.Invoke();
+            ApplyTheme();
+            ApplyEngine();
 
-            if (Settings != null && updateAction != null)
-            {
-                updateAction(Settings);
-            }
+            _settingsService.SaveSettings();
         }
         catch (Exception ex)
         {
-            _windowService.ShowMessage($"Error applying setting: {ex.Message}", "Error");
+            _windowService.ShowMessage($"Failed to save settings: {ex.Message}", "Error");
         }
+
+        CloseRequest?.Invoke(true);
+    }
+
+    private void ApplyTheme()
+    {
+        _settingsService.SetTheme(SelectedTheme);
+        _themeService.ChangeTheme(SelectedTheme);
+    }
+
+    private void ApplyEngine()
+    {
+        _settingsService.SetEngine(SelectedEngine);
+        _transformService.CreateEngine(SelectedEngine);
     }
 }
