@@ -2,6 +2,4 @@
 
 namespace XsltEditor.Models.Messages;
 
-internal class CaretChangedMessage(int value) : ValueChangedMessage<int>(value)
-{
-}
+internal class CaretChangedMessage(int value) : ValueChangedMessage<int>(value);

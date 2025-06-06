@@ -15,7 +15,7 @@ internal static class DependencyInjection
     {
         var views = new Dictionary<Type, Type>();
 
-        services.RegisterDialog<MainViewModel, MainWindow>(views);
+        services.RegisterDialog<MainViewModel, MainWindow>(viewMap: views);
 
         services.AddSingleton<IDictionary<Type, Type>>(views);
     }
@@ -28,13 +28,15 @@ internal static class DependencyInjection
         services.AddSingleton<IThemeService, ThemeService>();
         services.AddTransient<IFileService, FileDialogService>();
         services.AddTransient<IXmlTransformService, XmlTransformService>();
-        services.AddTransient<ISettingsService>(sp => new SettingsService("settings.json"));
+        services.AddTransient<ISettingsService>(_ => new SettingsService("settings.json"));
     }
 
-    private static void RegisterDialog<TViewModel, TDialog>(this IServiceCollection services, IDictionary<Type, Type> viewMap)
+    private static void RegisterDialog<TViewModel, TDialog>(this IServiceCollection services, Dictionary<Type, Type> viewMap)
         where TViewModel : class
         where TDialog : class
     {
+        ArgumentNullException.ThrowIfNull(viewMap);
+        
         services.AddTransient<TViewModel>();
         services.AddTransient<TDialog>();
 

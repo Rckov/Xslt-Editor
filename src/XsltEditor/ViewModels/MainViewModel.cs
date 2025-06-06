@@ -12,7 +12,7 @@ namespace XsltEditor.ViewModels;
 
 internal partial class MainViewModel : ObservableObject
 {
-    private const int DEBOUNCE_MILLISECONDS = 500;
+    private const int DebounceMilliseconds = 500;
 
     private readonly IWindowService _windowService;
     private readonly ISettingsService _settingsService;
@@ -37,8 +37,8 @@ internal partial class MainViewModel : ObservableObject
 
         Documents =
         [
-            CreateDocument("XSL", DocumentType.XSL),
-            CreateDocument("XML", DocumentType.XML)
+            CreateDocument("XSL", DocumentType.Xsl),
+            CreateDocument("XML", DocumentType.Xml)
         ];
 
         InitializeSettings();
@@ -117,11 +117,6 @@ internal partial class MainViewModel : ObservableObject
         document.PropertyChanged += Document_PropertyChanged;
     }
 
-    private void DetachDocumentEvents(DocumentViewModel document)
-    {
-        document.PropertyChanged -= Document_PropertyChanged;
-    }
-
     private void InitializeSettings()
     {
         var theme = _settingsService.GetTheme();
@@ -135,26 +130,28 @@ internal partial class MainViewModel : ObservableObject
     {
         _debounceTimer = new DispatcherTimer
         {
-            Interval = TimeSpan.FromMilliseconds(DEBOUNCE_MILLISECONDS)
+            Interval = TimeSpan.FromMilliseconds(DebounceMilliseconds)
         };
         _debounceTimer.Tick += OnDebounceTimerTick;
     }
 
     private void Document_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(DocumentViewModel.Text) && _debounceTimer != null)
+        if (e.PropertyName != nameof(DocumentViewModel.Text) || _debounceTimer == null)
         {
-            _debounceTimer.Stop();
-            _debounceTimer.Start();
+            return;
         }
+        
+        _debounceTimer.Stop();
+        _debounceTimer.Start();
     }
 
     private async void OnDebounceTimerTick(object? sender, EventArgs e)
     {
         _debounceTimer?.Stop();
 
-        var xsl = Documents.GetDocument(DocumentType.XSL);
-        var xml = Documents.GetDocument(DocumentType.XML);
+        var xsl = Documents.GetDocument(DocumentType.Xsl);
+        var xml = Documents.GetDocument(DocumentType.Xml);
 
         if (xsl == null || xml == null || string.IsNullOrWhiteSpace(xsl.Text) || string.IsNullOrWhiteSpace(xml.Text))
         {

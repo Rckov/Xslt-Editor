@@ -46,13 +46,13 @@ internal class FileDialogService : IFileService
     {
         ArgumentNullException.ThrowIfNull(filePath);
 
-        using var writer = new StreamWriter(filePath, false, Encoding.UTF8);
+        await using var writer = new StreamWriter(filePath, false, Encoding.UTF8);
         await writer.WriteAsync(content ?? string.Empty);
     }
 
     public bool IsExists(string filePath) => File.Exists(filePath);
 
-    private string BuildFilter(string title, string[]? extensions)
+    private static string BuildFilter(string title, string[]? extensions)
     {
         if (extensions == null || extensions.Length == 0)
         {

@@ -26,16 +26,16 @@ internal partial class DocumentViewModel : ObservableRecipient
 
     [ObservableProperty] private IHighlightingDefinition? _highlighting;
 
-    public DocumentType DocumentType { get; set; }
+    public DocumentType DocumentType { get; init; }
 
     protected override void OnActivated()
     {
-        Messenger.Register<DocumentViewModel, CaretChangedMessage>(this, (r, m) => Line = m.Value);
-        Messenger.Register<DocumentViewModel, ThemeChangedMessage>(this, (r, m) => Highlighting = m.Highlighting);
+        Messenger.Register<DocumentViewModel, CaretChangedMessage>(this, (_, m) => Line = m.Value);
+        Messenger.Register<DocumentViewModel, ThemeChangedMessage>(this, (_, m) => Highlighting = m.Highlighting);
     }
 
     [RelayCommand]
-    public async Task SaveDocument()
+    private async Task SaveDocument()
     {
         FilePath ??= _fileService.ShowSaveFileDialog($"Save {Name}", $".{DocumentType}".ToLower());
 
@@ -49,7 +49,7 @@ internal partial class DocumentViewModel : ObservableRecipient
     }
 
     [RelayCommand]
-    public async Task OpenDocument()
+    private async Task OpenDocument()
     {
         FilePath = _fileService.ShowOpenFileDialog("Open " + Name, $".{DocumentType}".ToLower());
 
@@ -66,6 +66,6 @@ internal partial class DocumentViewModel : ObservableRecipient
 
 internal enum DocumentType
 {
-    XSL,
-    XML
+    Xsl,
+    Xml
 }

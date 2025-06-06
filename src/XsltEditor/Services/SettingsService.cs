@@ -16,15 +16,13 @@ internal sealed class SettingsService : ISettingsService
         WriteIndented = true
     };
 
-    private Settings _settings;
-
     public SettingsService(string filePath)
     {
         _filePath = filePath;
-        _settings = LoadSettings();
+        Settings = LoadSettings();
     }
 
-    public Settings Settings => _settings;
+    public Settings Settings { get; private set; }
 
     public Settings LoadSettings()
     {
@@ -32,53 +30,53 @@ internal sealed class SettingsService : ISettingsService
         {
             if (!File.Exists(_filePath))
             {
-                _settings = GetDefaultSettings();
-                SaveSettings(_settings);
-                return _settings;
+                Settings = GetDefaultSettings();
+                SaveSettings(Settings);
+                return Settings;
             }
 
             var json = File.ReadAllText(_filePath);
-            _settings = JsonSerializer.Deserialize<Settings>(json, _jsonOptions) ?? GetDefaultSettings();
+            Settings = JsonSerializer.Deserialize<Settings>(json, _jsonOptions) ?? GetDefaultSettings();
         }
         catch
         {
-            _settings = GetDefaultSettings();
+            Settings = GetDefaultSettings();
         }
 
-        return _settings;
+        return Settings;
     }
 
     public void SaveSettings()
     {
-        SaveSettings(_settings);
+        SaveSettings(Settings);
     }
 
     public void SaveSettings(Settings settings)
     {
-        _settings = settings;
+        Settings = settings;
 
-        var json = JsonSerializer.Serialize(_settings, _jsonOptions);
+        var json = JsonSerializer.Serialize(Settings, _jsonOptions);
         File.WriteAllText(_filePath, json);
     }
 
     public ThemeType GetTheme()
     {
-        return _settings.Theme;
+        return Settings.Theme;
     }
 
     public void SetTheme(ThemeType theme)
     {
-        _settings.Theme = theme;
+        Settings.Theme = theme;
     }
 
     public EngineType GetEngine()
     {
-        return _settings.Engine;
+        return Settings.Engine;
     }
 
     public void SetEngine(EngineType engine)
     {
-        _settings.Engine = engine;
+        Settings.Engine = engine;
     }
 
     private static Settings GetDefaultSettings() => new()

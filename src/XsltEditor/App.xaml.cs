@@ -9,7 +9,7 @@ using XsltEditor.ViewModels;
 namespace XsltEditor;
 
 [SupportedOSPlatform("windows")]
-public partial class App : Application
+public partial class App
 {
     static App()
     {

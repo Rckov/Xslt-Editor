@@ -59,7 +59,7 @@ internal class ThemeService : IThemeService
         _messenger.Send(new ThemeChangedMessage(themeType, LoadHighlightingDefinition(info.HighlightingPath)));
     }
 
-    private IHighlightingDefinition? LoadHighlightingDefinition(string? resourcePath)
+    private static IHighlightingDefinition? LoadHighlightingDefinition(string? resourcePath)
     {
         if (string.IsNullOrWhiteSpace(resourcePath))
         {
