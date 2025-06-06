@@ -2,13 +2,8 @@
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Versioning;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace XsltEditor.Models;
@@ -44,5 +39,3 @@ internal class CompletionData(string text) : ICompletionData
         textArea.Caret.Offset -= CloseTag.Length;
     }
 }
-
-

@@ -6,5 +6,5 @@ internal interface IXmlTransformService
 {
     void CreateEngine(EngineType engineType);
 
-    Task<string> TransformAsync(string xml, string xsl, string? rootPath);
+    Task<string> TransformAsync(string xmlContent, string xslContent, string? rootPath);
 }

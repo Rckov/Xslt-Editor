@@ -15,8 +15,6 @@ internal partial class MainViewModel : ObservableObject
     private const int DebounceMilliseconds = 500;
 
     private readonly IWindowService _windowService;
-    private readonly ISettingsService _settingsService;
-    private readonly IThemeService _themeService;
     private readonly IXmlTransformService _transformService;
 
     private DispatcherTimer? _debounceTimer;
@@ -30,10 +28,13 @@ internal partial class MainViewModel : ObservableObject
         IThemeService themeService,
         IWindowService windowService)
     {
-        _settingsService = settingsService;
         _transformService = transformService;
-        _themeService = themeService;
         _windowService = windowService;
+
+        var settings = settingsService.Settings;
+
+        themeService.ChangeTheme(settings.Theme);
+        transformService.CreateEngine(settings.Engine);
 
         Documents =
         [
@@ -41,7 +42,6 @@ internal partial class MainViewModel : ObservableObject
             CreateDocument("XML", DocumentType.Xml)
         ];
 
-        InitializeSettings();
         InitializeDebounceTimer();
     }
 
@@ -117,15 +117,6 @@ internal partial class MainViewModel : ObservableObject
         document.PropertyChanged += Document_PropertyChanged;
     }
 
-    private void InitializeSettings()
-    {
-        var theme = _settingsService.GetTheme();
-        _themeService.ChangeTheme(theme);
-
-        var engine = _settingsService.GetEngine();
-        _transformService.CreateEngine(engine);
-    }
-
     private void InitializeDebounceTimer()
     {
         _debounceTimer = new DispatcherTimer
@@ -141,7 +132,7 @@ internal partial class MainViewModel : ObservableObject
         {
             return;
         }
-        
+
         _debounceTimer.Stop();
         _debounceTimer.Start();
     }

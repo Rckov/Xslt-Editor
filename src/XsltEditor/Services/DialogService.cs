@@ -1,13 +1,10 @@
 ﻿using Microsoft.Win32;
 
-using System.IO;
-using System.Text;
-
 using XsltEditor.Services.Interfaces;
 
 namespace XsltEditor.Services;
 
-internal class FileDialogService : IFileService
+internal class DialogService : IDialogService
 {
     public string? ShowOpenFileDialog(string title, params string[]? allowedExtensions)
     {
@@ -30,27 +27,6 @@ internal class FileDialogService : IFileService
 
         return dialog.ShowDialog() == true ? dialog.FileName : null;
     }
-
-    public async Task<string?> ReadFileContentAsync(string filePath)
-    {
-        if (!File.Exists(filePath))
-        {
-            return null;
-        }
-
-        using var reader = new StreamReader(filePath, Encoding.UTF8);
-        return await reader.ReadToEndAsync();
-    }
-
-    public async Task SaveFileContentAsync(string filePath, string? content)
-    {
-        ArgumentNullException.ThrowIfNull(filePath);
-
-        await using var writer = new StreamWriter(filePath, false, Encoding.UTF8);
-        await writer.WriteAsync(content ?? string.Empty);
-    }
-
-    public bool IsExists(string filePath) => File.Exists(filePath);
 
     private static string BuildFilter(string title, string[]? extensions)
     {

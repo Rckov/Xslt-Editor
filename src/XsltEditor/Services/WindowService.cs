@@ -8,32 +8,24 @@ namespace XsltEditor.Services;
 
 internal class WindowService(IWindowFactory factory, IServiceProvider provider) : IWindowService
 {
-    public void Show<TViewModel>(object? parameter = null) where TViewModel : class
+    public void ShowWindow<TViewModel>() where TViewModel : class
     {
-        var window = GetWindow<TViewModel>(parameter);
-        window.Show();
+        GetWindow<TViewModel>().Show();
     }
 
-    public bool? ShowDialog<TViewModel>(object? parameter = null) where TViewModel : class
+    public bool? ShowDialog<TViewModel>() where TViewModel : class
     {
-        var window = GetWindow<TViewModel>(parameter);
-        return window.ShowDialog();
+        return GetWindow<TViewModel>().ShowDialog();
     }
 
-    public void ShowMessage(string message, string caption)
+    public MessageBoxResult ShowMessage(string message, string caption)
     {
-        MessageBox.Show(message, caption);
+        return MessageBox.Show(message, caption);
     }
 
-    private Window GetWindow<TViewModel>(object? parameter = null) where TViewModel : class
+    private Window GetWindow<TViewModel>() where TViewModel : class
     {
         var viewModel = provider.GetRequiredService(typeof(TViewModel));
-
-        if (parameter != null && viewModel is IParameterReceiver receiver)
-        {
-            receiver.SetParameter(parameter);
-        }
-
         return factory.CreateWindow(viewModel);
     }
 }

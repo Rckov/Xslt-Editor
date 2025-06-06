@@ -3,7 +3,6 @@
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 
-using System.Reflection;
 using System.Windows;
 using System.Xml;
 
@@ -15,21 +14,16 @@ namespace XsltEditor.Services;
 internal class ThemeService : IThemeService
 {
     private readonly IMessenger _messenger;
+    private readonly IResourceOperationsService _resourceService;
+
     private readonly Dictionary<ThemeType, ThemeInfo> _themes = [];
 
-    public ThemeService(IMessenger messenger)
+    public ThemeService(IMessenger messenger, IResourceOperationsService resourceService)
     {
         _messenger = messenger;
+        _resourceService = resourceService;
 
-        AddTheme(
-            ThemeType.Dark,
-            "Resources/Themes/DarkBrushes.xaml",
-            "XsltEditor.Resources.Highlighting.DarkMode.xshd");
-
-        AddTheme(
-            ThemeType.Light,
-            "Resources/Themes/LightBrushes.xaml",
-            "XsltEditor.Resources.Highlighting.LightMode.xshd");
+        LoadThemes();
     }
 
     public ThemeType CurrentTheme { get; private set; }
@@ -41,33 +35,40 @@ internal class ThemeService : IThemeService
             throw new InvalidOperationException($"Theme '{themeType}' is not registered.");
         }
 
+        ReplaceXamlTheme(info.XamlPath);
+        var highlighting = LoadHighlighting(info.HighlightingResource);
+
+        CurrentTheme = themeType;
+
+        _messenger.Send(new ThemeChangedMessage(themeType, highlighting));
+    }
+
+    private void ReplaceXamlTheme(string xamlPath)
+    {
         var dictionaries = Application.Current.Resources.MergedDictionaries;
-        var currentTheme = dictionaries.FirstOrDefault(d => _themes.Values.Any(t => t.XamlPath == d.Source.OriginalString));
+        var currentTheme = dictionaries.FirstOrDefault(d => _themes.Values.Any(t => t.XamlPath == d.Source?.OriginalString));
 
         if (currentTheme != null)
         {
             dictionaries.Remove(currentTheme);
         }
 
-        CurrentTheme = themeType;
-
         dictionaries.Add(new ResourceDictionary
         {
-            Source = new Uri(info.XamlPath, UriKind.Relative)
+            Source = new Uri(xamlPath, UriKind.Relative)
         });
-
-        _messenger.Send(new ThemeChangedMessage(themeType, LoadHighlightingDefinition(info.HighlightingPath)));
     }
 
-    private static IHighlightingDefinition? LoadHighlightingDefinition(string? resourcePath)
+    private IHighlightingDefinition? LoadHighlighting(string? resourcePath)
     {
         if (string.IsNullOrWhiteSpace(resourcePath))
         {
             return null;
         }
 
-        using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcePath);
-        if (stream is null)
+        using var stream = _resourceService.GetResourceStream(resourcePath);
+
+        if (stream == null)
         {
             return null;
         }
@@ -76,12 +77,23 @@ internal class ThemeService : IThemeService
         return HighlightingLoader.Load(reader, HighlightingManager.Instance);
     }
 
-    private void AddTheme(ThemeType themeType, string xamlPath, string highlightingPath)
+    private void LoadThemes()
     {
-        _themes[themeType] = new ThemeInfo(xamlPath, highlightingPath);
+        AddTheme(ThemeType.Dark,
+            xamlPath: "Resources/Themes/DarkBrushes.xaml",
+            highlightingResource: "XsltEditor.Resources.Highlighting.DarkMode.xshd");
+
+        AddTheme(ThemeType.Light,
+            xamlPath: "Resources/Themes/LightBrushes.xaml",
+            highlightingResource: "XsltEditor.Resources.Highlighting.LightMode.xshd");
     }
 
-    private sealed record ThemeInfo(string XamlPath, string HighlightingPath);
+    private void AddTheme(ThemeType type, string xamlPath, string highlightingResource)
+    {
+        _themes[type] = new ThemeInfo(xamlPath, highlightingResource);
+    }
+
+    private record ThemeInfo(string XamlPath, string HighlightingResource);
 }
 
 public enum ThemeType

@@ -1,87 +1,58 @@
-﻿using System.IO;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 using XsltEditor.Models;
 using XsltEditor.Services.Interfaces;
-using XsltEditor.Transform.Enums;
 
 namespace XsltEditor.Services;
 
-internal sealed class SettingsService : ISettingsService
+internal class SettingsService(IFileOperationsService fileService) : ISettingsService
 {
-    private readonly string _filePath;
+    private readonly string _filePath = fileService.GetPath("settings\\settings.json");
 
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
         WriteIndented = true
     };
 
-    public SettingsService(string filePath)
-    {
-        _filePath = filePath;
-        Settings = LoadSettings();
-    }
+    public Settings Settings { get; private set; } = new();
 
-    public Settings Settings { get; private set; }
-
-    public Settings LoadSettings()
+    public async Task LoadSettings()
     {
         try
         {
-            if (!File.Exists(_filePath))
+            if (!fileService.Exists(_filePath))
             {
-                Settings = GetDefaultSettings();
-                SaveSettings(Settings);
-                return Settings;
+                await SaveSettings();
+                return;
             }
 
-            var json = File.ReadAllText(_filePath);
-            Settings = JsonSerializer.Deserialize<Settings>(json, _jsonOptions) ?? GetDefaultSettings();
+            var json = await fileService.ReadAsync(_filePath);
+
+            var deserializeSettings = JsonSerializer.Deserialize<Settings>(json, _jsonOptions);
+
+            if (deserializeSettings != null)
+            {
+                Settings = deserializeSettings;
+            }
+            else
+            {
+                await SaveSettings();
+            }
         }
         catch
         {
-            Settings = GetDefaultSettings();
+            await SaveSettings();
+        }
+    }
+
+    public async Task SaveSettings()
+    {
+        if (Settings == null)
+        {
+            throw new InvalidOperationException("Cannot save settings because Settings is null.");
         }
 
-        return Settings;
-    }
-
-    public void SaveSettings()
-    {
-        SaveSettings(Settings);
-    }
-
-    public void SaveSettings(Settings settings)
-    {
-        Settings = settings;
-
         var json = JsonSerializer.Serialize(Settings, _jsonOptions);
-        File.WriteAllText(_filePath, json);
+        await fileService.SaveAsync(_filePath, json);
     }
-
-    public ThemeType GetTheme()
-    {
-        return Settings.Theme;
-    }
-
-    public void SetTheme(ThemeType theme)
-    {
-        Settings.Theme = theme;
-    }
-
-    public EngineType GetEngine()
-    {
-        return Settings.Engine;
-    }
-
-    public void SetEngine(EngineType engine)
-    {
-        Settings.Engine = engine;
-    }
-
-    private static Settings GetDefaultSettings() => new()
-    {
-        Theme = ThemeType.Dark,
-        Engine = EngineType.XslCompiledTransform
-    };
 }

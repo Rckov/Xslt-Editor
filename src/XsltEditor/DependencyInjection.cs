@@ -22,13 +22,18 @@ internal static class DependencyInjection
 
     public static void RegisterServices(this IServiceCollection services)
     {
-        services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
         services.AddSingleton<IWindowFactory, WindowFactory>();
         services.AddSingleton<IWindowService, WindowService>();
-        services.AddSingleton<IThemeService, ThemeService>();
-        services.AddTransient<IFileService, FileDialogService>();
-        services.AddTransient<IXmlTransformService, XmlTransformService>();
-        services.AddTransient<ISettingsService>(_ => new SettingsService("settings.json"));
+        services.AddSingleton<IXmlTransformService, XmlTransformService>();
+        services.AddSingleton<ICompletionDataService, CompletionDataService>();
+
+        services.AddTransient<IFileOperationsService, FileOperationsService>();
+        services.AddTransient<IResourceOperationsService, ResourceOperationsService>();
+        services.AddTransient<ISettingsService, SettingsService>();
+        services.AddTransient<IThemeService, ThemeService>();
+        services.AddTransient<IDialogService, DialogService>();
+
+        services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
     }
 
     private static void RegisterDialog<TViewModel, TDialog>(this IServiceCollection services, Dictionary<Type, Type> viewMap)
@@ -36,7 +41,7 @@ internal static class DependencyInjection
         where TDialog : class
     {
         ArgumentNullException.ThrowIfNull(viewMap);
-        
+
         services.AddTransient<TViewModel>();
         services.AddTransient<TDialog>();
 

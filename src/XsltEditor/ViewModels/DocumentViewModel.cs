@@ -13,7 +13,8 @@ namespace XsltEditor.ViewModels;
 
 internal partial class DocumentViewModel : ObservableRecipient
 {
-    private readonly IFileService _fileService = App.Services.GetRequiredService<IFileService>();
+    private readonly IDialogService _dialogService = App.Services.GetRequiredService<IDialogService>();
+    private readonly IFileOperationsService _fileService = App.Services.GetRequiredService<IFileOperationsService>();
 
     [ObservableProperty] private string? _name;
     [ObservableProperty] private string? _text;
@@ -37,28 +38,28 @@ internal partial class DocumentViewModel : ObservableRecipient
     [RelayCommand]
     private async Task SaveDocument()
     {
-        FilePath ??= _fileService.ShowSaveFileDialog($"Save {Name}", $".{DocumentType}".ToLower());
+        FilePath ??= _dialogService.ShowSaveFileDialog($"Save {Name}", $".{DocumentType}".ToLower());
 
         if (string.IsNullOrWhiteSpace(FilePath))
         {
             return;
         }
 
-        await _fileService.SaveFileContentAsync(FilePath, Text);
+        await _fileService.SaveAsync(FilePath, Text);
         IsDirty = false;
     }
 
     [RelayCommand]
     private async Task OpenDocument()
     {
-        FilePath = _fileService.ShowOpenFileDialog("Open " + Name, $".{DocumentType}".ToLower());
+        FilePath = _dialogService.ShowOpenFileDialog("Open " + Name, $".{DocumentType}".ToLower());
 
         if (string.IsNullOrWhiteSpace(FilePath))
         {
             return;
         }
 
-        Text = await _fileService.ReadFileContentAsync(FilePath);
+        Text = await _fileService.ReadAsync(FilePath);
     }
 
     partial void OnTextChanged(string? value) => IsDirty = true;

@@ -7,6 +7,9 @@ namespace XsltEditor.Services;
 
 internal class CompletionDataService : ICompletionDataService
 {
+    private readonly IFileOperationsService _fileService;
+    private readonly IResourceOperationsService _resourceService;
+
     private readonly string _filePath;
 
     private readonly JsonSerializerOptions _jsonOptions = new()
@@ -14,20 +17,22 @@ internal class CompletionDataService : ICompletionDataService
         WriteIndented = true
     };
 
-    public CompletionDataService(string filePath)
+    public CompletionDataService(IFileOperationsService fileService, IResourceOperationsService resourceService)
     {
-        _filePath = filePath;
-        Data = LoadCompletionData();
+        _fileService = fileService;
+        _resourceService = resourceService;
+
+        _filePath = _fileService.GetPath("completions.json");
     }
 
     public IList<CompletionData> Data { get; }
-    
-    public IList<CompletionData> LoadCompletionData()
+
+    public Task LoadCompletionData()
     {
         throw new NotImplementedException();
     }
 
-    public void SaveCompletionData(IList<CompletionData> completions)
+    public Task SaveCompletionData()
     {
         throw new NotImplementedException();
     }
@@ -40,5 +45,9 @@ internal class CompletionDataService : ICompletionDataService
     public void Remove(CompletionData data)
     {
         throw new NotImplementedException();
+    }
+
+    private void RestoreDefaultCompletionData()
+    {
     }
 }

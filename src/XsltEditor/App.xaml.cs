@@ -31,7 +31,13 @@ public partial class App
 
     protected override void OnStartup(StartupEventArgs e)
     {
-        var service = Services.GetRequiredService<IWindowService>();
-        service.Show<MainViewModel>();
+        var settingsService = Services.GetRequiredService<ISettingsService>();
+        var task = settingsService.LoadSettings();
+
+        task.GetAwaiter().OnCompleted(() =>
+        {
+            var windowService = Services.GetRequiredService<IWindowService>();
+            windowService.ShowWindow<MainViewModel>();
+        });
     }
 }

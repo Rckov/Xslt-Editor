@@ -18,11 +18,10 @@ internal partial class SettingsViewModel : ObservableRecipient
     private readonly IXmlTransformService _transformService;
     private readonly IWindowService _windowService;
 
-    [ObservableProperty]
-    private ThemeType _selectedTheme;
+    [ObservableProperty] private ThemeType _selectedTheme;
+    [ObservableProperty] private EngineType _selectedEngine;
 
-    [ObservableProperty]
-    private EngineType _selectedEngine;
+    private readonly Settings _settings;
 
     public SettingsViewModel(
         IThemeService themeService,
@@ -35,17 +34,16 @@ internal partial class SettingsViewModel : ObservableRecipient
         _transformService = transformService;
         _windowService = windowService;
 
-        Settings = _settingsService.Settings;
+        _settings = _settingsService.Settings;
 
-        SelectedTheme = Settings.Theme;
-        SelectedEngine = Settings.Engine;
+        SelectedTheme = _settings.Theme;
+        SelectedEngine = _settings.Engine;
 
         InitializeCollections();
     }
 
     public event Action<bool>? CloseRequest;
 
-    public Settings Settings { get; }
     public ObservableCollection<ThemeType> Themes { get; } = [];
     public ObservableCollection<EngineType> Engines { get; } = [];
 
@@ -56,14 +54,14 @@ internal partial class SettingsViewModel : ObservableRecipient
     }
 
     [RelayCommand]
-    private void SaveSettings()
+    private async Task SaveSettings()
     {
         try
         {
             ApplyTheme();
             ApplyEngine();
 
-            _settingsService.SaveSettings();
+            await _settingsService.SaveSettings();
         }
         catch (Exception ex)
         {
@@ -75,13 +73,13 @@ internal partial class SettingsViewModel : ObservableRecipient
 
     private void ApplyTheme()
     {
-        _settingsService.SetTheme(SelectedTheme);
+        _settings.Theme = SelectedTheme;
         _themeService.ChangeTheme(SelectedTheme);
     }
 
     private void ApplyEngine()
     {
-        _settingsService.SetEngine(SelectedEngine);
+        _settings.Engine = SelectedEngine;
         _transformService.CreateEngine(SelectedEngine);
     }
 }

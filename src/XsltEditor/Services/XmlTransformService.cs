@@ -9,7 +9,7 @@ internal class XmlTransformService : IXmlTransformService
     {
     }
 
-    public async Task<string> TransformAsync(string xml, string xsl, string? rootPath)
+    public async Task<string> TransformAsync(string xmlContent, string xslContent, string? rootPath)
     {
         await Task.CompletedTask;
         return string.Empty;

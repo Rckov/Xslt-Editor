@@ -5,10 +5,12 @@ namespace XsltEditor.Services.Interfaces;
 internal interface ICompletionDataService
 {
     IList<CompletionData> Data { get; }
-    IList<CompletionData> LoadCompletionData();
 
-    void SaveCompletionData(IList<CompletionData> completions);
+    Task LoadCompletionData();
+
+    Task SaveCompletionData();
 
     void Add(CompletionData data);
+
     void Remove(CompletionData data);
 }
