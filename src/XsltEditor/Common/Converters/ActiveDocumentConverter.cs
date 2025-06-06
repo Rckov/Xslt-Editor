@@ -3,7 +3,7 @@ using System.Windows.Data;
 
 using XsltEditor.ViewModels;
 
-namespace XsltEditor.Converters;
+namespace XsltEditor.Common.Converters;
 
 internal class ActiveDocumentConverter : IValueConverter
 {
