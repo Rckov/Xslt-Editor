@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 using XsltEditor.Extensions;
 using XsltEditor.Models;
-using XsltEditor.Services;
+using XsltEditor.Models.Enums;
 using XsltEditor.Services.Interfaces;
 using XsltEditor.Transform.Enums;
 

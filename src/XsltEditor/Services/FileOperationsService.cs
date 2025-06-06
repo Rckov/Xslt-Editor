@@ -17,13 +17,13 @@ internal class FileOperationsService : IFileOperationsService
 
     public string BasePath { get; }
 
-    public bool Exists(string filePath) 
+    public bool Exists(string filePath)
         => File.Exists(filePath);
 
-    public string GetPath(string nameFile) 
+    public string GetPath(string nameFile)
         => Path.Combine(BasePath, nameFile);
 
-    public async Task<string> ReadAsync(string filePath) 
+    public async Task<string> ReadAsync(string filePath)
         => await File.ReadAllTextAsync(filePath);
 
     public async Task SaveAsync(string filePath, string? content)

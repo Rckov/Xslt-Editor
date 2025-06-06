@@ -1,4 +1,6 @@
-﻿namespace XsltEditor.Services.Interfaces;
+﻿using XsltEditor.Models.Enums;
+
+namespace XsltEditor.Services.Interfaces;
 
 internal interface IThemeService
 {

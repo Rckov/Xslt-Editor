@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Versioning;
 
-using XsltEditor.Services;
+using XsltEditor.Models.Enums;
 using XsltEditor.Transform.Enums;
 
 namespace XsltEditor.Models;

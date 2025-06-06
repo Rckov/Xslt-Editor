@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
+using XsltEditor.Models.Enums;
 using XsltEditor.ViewModels;
 
 namespace XsltEditor.Extensions;

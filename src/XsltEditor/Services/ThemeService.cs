@@ -6,6 +6,7 @@ using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using System.Windows;
 using System.Xml;
 
+using XsltEditor.Models.Enums;
 using XsltEditor.Models.Messages;
 using XsltEditor.Services.Interfaces;
 
@@ -94,10 +95,4 @@ internal class ThemeService : IThemeService
     }
 
     private record ThemeInfo(string XamlPath, string HighlightingResource);
-}
-
-public enum ThemeType
-{
-    Dark,
-    Light
 }

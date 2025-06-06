@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Windows.Threading;
 
 using XsltEditor.Extensions;
+using XsltEditor.Models.Enums;
 using XsltEditor.Services.Interfaces;
 
 namespace XsltEditor.ViewModels;

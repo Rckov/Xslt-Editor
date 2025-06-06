@@ -2,7 +2,7 @@
 
 using ICSharpCode.AvalonEdit.Highlighting;
 
-using XsltEditor.Services;
+using XsltEditor.Models.Enums;
 
 namespace XsltEditor.Models.Messages;
 

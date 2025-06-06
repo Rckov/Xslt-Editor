@@ -6,6 +6,7 @@ using ICSharpCode.AvalonEdit.Highlighting;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using XsltEditor.Models.Enums;
 using XsltEditor.Models.Messages;
 using XsltEditor.Services.Interfaces;
 
@@ -63,10 +64,4 @@ internal partial class DocumentViewModel : ObservableRecipient
     }
 
     partial void OnTextChanged(string? value) => IsDirty = true;
-}
-
-internal enum DocumentType
-{
-    Xsl,
-    Xml
 }
