@@ -1,12 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Threading;
 
 using XsltEditor.Extensions;
 using XsltEditor.Models.Enums;
+using XsltEditor.Services;
 using XsltEditor.Services.Interfaces;
 
 namespace XsltEditor.ViewModels;
@@ -15,13 +18,15 @@ internal partial class MainViewModel : ObservableObject
 {
     private const int DebounceMilliseconds = 500;
 
-    private readonly IWindowService _windowService;
+    private readonly ISettingsService _settingsService;
     private readonly IXmlTransformService _transformService;
-
-    private DispatcherTimer? _debounceTimer;
+    private readonly IThemeService _themeService;
+    private readonly IWindowService _windowService;
 
     [ObservableProperty] private string? _htmlContent;
     [ObservableProperty] private DocumentViewModel? _activeDocument;
+
+    private DispatcherTimer? _debounceTimer;
 
     public MainViewModel(
         ISettingsService settingsService,
@@ -29,7 +34,9 @@ internal partial class MainViewModel : ObservableObject
         IThemeService themeService,
         IWindowService windowService)
     {
+        _settingsService = settingsService;
         _transformService = transformService;
+        _themeService = themeService;
         _windowService = windowService;
 
         var settings = settingsService.Settings;
@@ -101,9 +108,23 @@ internal partial class MainViewModel : ObservableObject
         }
     }
 
+    [RelayCommand]
+    private async Task ChangeTheme()
+    {
+        var curTheme = _themeService.CurrentTheme;
+        var newTheme = curTheme == ThemeType.Light ? ThemeType.Dark : ThemeType.Light;
+
+        _themeService.ChangeTheme(newTheme);
+
+        _settingsService.Settings.Theme = newTheme;
+        await _settingsService.SaveSettings();
+    }
+
     private DocumentViewModel CreateDocument(string name, DocumentType documentType)
     {
-        var document = new DocumentViewModel
+        var document = new DocumentViewModel(
+            App.Services.GetRequiredService<IDialogService>(),
+            App.Services.GetRequiredService<IFileOperationsService>())
         {
             Name = name,
             DocumentType = documentType
@@ -140,19 +161,19 @@ internal partial class MainViewModel : ObservableObject
 
     private async void OnDebounceTimerTick(object? sender, EventArgs e)
     {
-        _debounceTimer?.Stop();
-
-        var xsl = Documents.GetDocument(DocumentType.Xsl);
-        var xml = Documents.GetDocument(DocumentType.Xml);
-
-        if (xsl == null || xml == null || string.IsNullOrWhiteSpace(xsl.Text) || string.IsNullOrWhiteSpace(xml.Text))
-        {
-            HtmlContent = string.Empty;
-            return;
-        }
-
         try
         {
+            _debounceTimer?.Stop();
+
+            var xsl = Documents.GetDocument(DocumentType.Xsl);
+            var xml = Documents.GetDocument(DocumentType.Xml);
+
+            if (xsl == null || xml == null || string.IsNullOrWhiteSpace(xsl.Text) || string.IsNullOrWhiteSpace(xml.Text))
+            {
+                HtmlContent = string.Empty;
+                return;
+            }
+
             HtmlContent = await _transformService.TransformAsync(xsl.Text, xml.Text, xsl.FilePath);
         }
         catch

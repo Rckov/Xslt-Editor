@@ -11,31 +11,24 @@ namespace XsltEditor.Models;
 [SupportedOSPlatform("windows")]
 internal class CompletionData(string text) : ICompletionData
 {
-    [JsonIgnore]
-    public ImageSource? Image => null;
+    private string _openTag => $"<{Text}>";
+    private string _closeTag => $"</{Text}>";
+
+    [JsonIgnore] public ImageSource? Image => null;
 
     public string Text { get; } = text;
 
-    [JsonIgnore]
-    public object Content => Text;
+    [JsonIgnore] public object Content => Text;
 
-    [JsonIgnore]
-    public object Description => $"Insert {Text}";
+    [JsonIgnore] public object Description => $"Insert {Text}";
 
-    [JsonIgnore]
-    public double Priority => 0;
-
-    [JsonIgnore]
-    public string OpenTag => $"<{Text}>";
-
-    [JsonIgnore]
-    public string CloseTag => $"</{Text}>";
+    [JsonIgnore] public double Priority => 0;
 
     public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
     {
         textArea.Document.Replace(completionSegment.Offset - 1, 1, string.Empty);
-        textArea.Document.Replace(completionSegment, $"{OpenTag}{CloseTag}");
+        textArea.Document.Replace(completionSegment, $"{_openTag}{_closeTag}");
 
-        textArea.Caret.Offset -= CloseTag.Length;
+        textArea.Caret.Offset -= _closeTag.Length;
     }
 }

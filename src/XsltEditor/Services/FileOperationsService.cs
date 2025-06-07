@@ -7,24 +7,31 @@ namespace XsltEditor.Services;
 
 internal class FileOperationsService : IFileOperationsService
 {
+    private readonly string _basePath;
+
     public FileOperationsService()
     {
-        BasePath = Path.Combine(
+        _basePath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "Xslt Editor");
-        EnsureDirectory(BasePath);
+
+        EnsureDirectory(_basePath);
     }
 
-    public string BasePath { get; }
-
     public bool Exists(string filePath)
-        => File.Exists(filePath);
+    {
+        return File.Exists(filePath);
+    }
 
     public string GetPath(string nameFile)
-        => Path.Combine(BasePath, nameFile);
+    {
+        return Path.Combine(_basePath, nameFile);
+    }
 
     public async Task<string> ReadAsync(string filePath)
-        => await File.ReadAllTextAsync(filePath);
+    {
+        return await File.ReadAllTextAsync(filePath);
+    }
 
     public async Task SaveAsync(string filePath, string? content)
     {

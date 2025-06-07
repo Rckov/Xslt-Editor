@@ -1,44 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows7.0</TargetFramework>
-    <LangVersion>preview</LangVersion>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
-    <ApplicationIcon>Resources\appicon.ico</ApplicationIcon>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0-windows7.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UseWPF>true</UseWPF>
+        <ApplicationIcon>Resources\appicon.ico</ApplicationIcon>
 
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
-  </PropertyGroup>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    </PropertyGroup>
 
-  <ItemGroup>
-     <Resource Include="Resources\appicon.ico" />
-  </ItemGroup>
+    <ItemGroup>
+        <Resource Include="Resources\appicon.ico" />
+    </ItemGroup>
 
-  <ItemGroup>
-     <ProjectReference Include="..\XsltEditor.Transform\XsltEditor.Transform.csproj" />
+    <ItemGroup>
+        <ProjectReference Include="..\XsltEditor.Transform\XsltEditor.Transform.csproj" />
 
-     <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
+        <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
 
-     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-     <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
-     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
-     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3240.44" />
-  </ItemGroup>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+        <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3240.44" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Resources\Styles\" />
-  </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Views\Dialogs\" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Resources\Highlighting\DarkMode.xshd">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Resources\Highlighting\LightMode.xshd">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Update="Resources\Highlighting\DarkMode.xshd">
+            <Generator>MSBuild:Compile</Generator>
+        </None>
+        <None Update="Resources\Highlighting\LightMode.xshd">
+            <Generator>MSBuild:Compile</Generator>
+        </None>
+    </ItemGroup>
 </Project>

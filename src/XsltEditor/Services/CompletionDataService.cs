@@ -5,49 +5,80 @@ using XsltEditor.Services.Interfaces;
 
 namespace XsltEditor.Services;
 
-internal class CompletionDataService : ICompletionDataService
+internal class CompletionDataService(IFileOperationsService fileService, IResourceOperationsService resourceService) : ICompletionDataService
 {
-    private readonly IFileOperationsService _fileService;
-    private readonly IResourceOperationsService _resourceService;
-
-    private readonly string _filePath;
+    private readonly List<CompletionData> _data = [];
+    private readonly string _filePath = fileService.GetPath("completions.json");
 
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
         WriteIndented = true
     };
 
-    public CompletionDataService(IFileOperationsService fileService, IResourceOperationsService resourceService)
-    {
-        _fileService = fileService;
-        _resourceService = resourceService;
+    public IReadOnlyList<CompletionData> Data => _data;
 
-        _filePath = _fileService.GetPath("completions.json");
+    public async Task LoadCompletionData()
+    {
+        if (!fileService.Exists(_filePath))
+        {
+            await RestoreDefaults();
+            return;
+        }
+
+        var json = await fileService.ReadAsync(_filePath);
+        LoadFromJson(json);
     }
 
-    public IList<CompletionData> Data { get; }
-
-    public Task LoadCompletionData()
+    public async Task SaveCompletionData()
     {
-        throw new NotImplementedException();
-    }
-
-    public Task SaveCompletionData()
-    {
-        throw new NotImplementedException();
+        var json = JsonSerializer.Serialize(Data, _jsonOptions);
+        await fileService.SaveAsync(_filePath, json);
     }
 
     public void Add(CompletionData data)
     {
-        throw new NotImplementedException();
+        if (Data.Contains(data))
+        {
+            return;
+        }
+
+        _data.Add(data);
     }
 
     public void Remove(CompletionData data)
     {
-        throw new NotImplementedException();
+        _data.Remove(data);
     }
 
-    private void RestoreDefaultCompletionData()
+    private async Task RestoreDefaults()
     {
+        const string defaultResource = "XsltEditor.Resources.completions.json";
+
+        var json = await resourceService.ReadResourceAsStringAsync(defaultResource);
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return;
+        }
+
+        await fileService.SaveAsync(_filePath, json);
+        LoadFromJson(json);
+    }
+
+    private void LoadFromJson(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return;
+        }
+
+        var items = JsonSerializer.Deserialize<List<CompletionData>>(json, _jsonOptions);
+
+        if (items is null)
+        {
+            return;
+        }
+
+        _data.Clear();
+        _data.AddRange(items);
     }
 }

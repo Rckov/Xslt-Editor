@@ -15,7 +15,8 @@ internal static class DependencyInjection
     {
         var views = new Dictionary<Type, Type>();
 
-        services.RegisterDialog<MainViewModel, MainWindow>(viewMap: views);
+        services.RegisterDialog<MainViewModel, MainWindow>(views);
+        services.RegisterDialog<CaretViewModel, MainWindow>(views);
 
         services.AddSingleton<IDictionary<Type, Type>>(views);
     }
@@ -40,8 +41,6 @@ internal static class DependencyInjection
         where TViewModel : class
         where TDialog : class
     {
-        ArgumentNullException.ThrowIfNull(viewMap);
-
         services.AddTransient<TViewModel>();
         services.AddTransient<TDialog>();
 

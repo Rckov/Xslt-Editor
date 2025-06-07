@@ -18,9 +18,9 @@ internal class WindowService(IWindowFactory factory, IServiceProvider provider) 
         return GetWindow<TViewModel>().ShowDialog();
     }
 
-    public MessageBoxResult ShowMessage(string message, string caption)
+    public void ShowMessage(string message, string caption)
     {
-        return MessageBox.Show(message, caption);
+        MessageBox.Show(message, caption);
     }
 
     private Window GetWindow<TViewModel>() where TViewModel : class

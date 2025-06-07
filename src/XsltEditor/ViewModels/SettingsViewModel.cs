@@ -13,8 +13,8 @@ namespace XsltEditor.ViewModels;
 
 internal partial class SettingsViewModel : ObservableRecipient
 {
-    private readonly IThemeService _themeService;
     private readonly ISettingsService _settingsService;
+    private readonly IThemeService _themeService;
     private readonly IXmlTransformService _transformService;
     private readonly IWindowService _windowService;
 
@@ -42,10 +42,10 @@ internal partial class SettingsViewModel : ObservableRecipient
         InitializeCollections();
     }
 
-    public event Action<bool>? CloseRequest;
-
     public ObservableCollection<ThemeType> Themes { get; } = [];
     public ObservableCollection<EngineType> Engines { get; } = [];
+
+    public event Action<bool>? CloseRequest;
 
     private void InitializeCollections()
     {

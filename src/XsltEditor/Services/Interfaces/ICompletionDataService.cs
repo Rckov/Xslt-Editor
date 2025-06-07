@@ -4,7 +4,7 @@ namespace XsltEditor.Services.Interfaces;
 
 internal interface ICompletionDataService
 {
-    IList<CompletionData> Data { get; }
+    IReadOnlyList<CompletionData> Data { get; }
 
     Task LoadCompletionData();
 

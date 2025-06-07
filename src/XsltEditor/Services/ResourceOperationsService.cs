@@ -14,8 +14,12 @@ internal class ResourceOperationsService : IResourceOperationsService
 
     public async Task<string> ReadResourceAsStringAsync(string resourceName)
     {
-        using var stream = GetResourceStream(resourceName)
-            ?? throw new FileNotFoundException($"Resource '{resourceName}' not found.");
+        await using var stream = GetResourceStream(resourceName);
+
+        if (stream is null)
+        {
+            throw new FileNotFoundException($"Resource '{resourceName}' not found.");
+        }
 
         using var reader = new StreamReader(stream);
         return await reader.ReadToEndAsync();

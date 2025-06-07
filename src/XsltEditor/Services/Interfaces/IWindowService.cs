@@ -8,7 +8,7 @@ internal interface IWindowService
 
     bool? ShowDialog<TViewModel>() where TViewModel : class;
 
-    MessageBoxResult ShowMessage(string message, string caption);
+    void ShowMessage(string message, string caption);
 }
 
 internal interface IWindowFactory

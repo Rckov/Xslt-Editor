@@ -2,8 +2,6 @@
 
 internal interface IFileOperationsService
 {
-    string BasePath { get; }
-
     string GetPath(string nameFile);
 
     Task<string> ReadAsync(string filePath);

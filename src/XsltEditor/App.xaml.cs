@@ -13,11 +13,10 @@ public partial class App
 {
     static App()
     {
-        Services = ConfigureContainer()!;
+        Services = ConfigureContainer();
     }
 
     public static IServiceProvider Services { get; }
-    public static string BaseDirectory => AppContext.BaseDirectory;
 
     private static ServiceProvider ConfigureContainer()
     {

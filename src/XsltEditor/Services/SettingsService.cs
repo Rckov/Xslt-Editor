@@ -27,7 +27,6 @@ internal class SettingsService(IFileOperationsService fileService) : ISettingsSe
             }
 
             var json = await fileService.ReadAsync(_filePath);
-
             var deserializeSettings = JsonSerializer.Deserialize<Settings>(json, _jsonOptions);
 
             if (deserializeSettings != null)
