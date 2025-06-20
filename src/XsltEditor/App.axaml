@@ -1,0 +1,11 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="XsltEditor.App"
+			 xmlns:semi="https://irihi.tech/semi"
+			 xmlns:u-semi="https://irihi.tech/ursa/themes/semi">
+	
+    <Application.Styles>
+		<semi:SemiTheme Locale="ru-RU" />
+		<u-semi:SemiTheme Locale="ru-RU"/>
+    </Application.Styles>
+</Application>

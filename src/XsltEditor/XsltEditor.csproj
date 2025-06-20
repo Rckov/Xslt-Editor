@@ -1,44 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+	<LangVersion>Preview</LangVersion>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <OutputType>WinExe</OutputType>
-        <TargetFramework>net8.0-windows7.0</TargetFramework>
-        <LangVersion>preview</LangVersion>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <UseWPF>true</UseWPF>
-        <ApplicationIcon>Resources\appicon.ico</ApplicationIcon>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.1" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.1" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.1" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.1" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Irihi.Ursa" Version="1.11.1" />
+    <PackageReference Include="Irihi.Ursa.Themes.Semi" Version="1.11.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
+    <PackageReference Include="Semi.Avalonia" Version="11.2.1.8" />
+    <PackageReference Include="Semi.Avalonia.AvaloniaEdit" Version="11.2.0" />
+    <PackageReference Include="Semi.Avalonia.Dock" Version="11.3.0" />
+  </ItemGroup>
 
-        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-        <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <Resource Include="Resources\appicon.ico" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\XsltEditor.Transform\XsltEditor.Transform.csproj" />
-
-        <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
-
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-        <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
-        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3240.44" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Views\Dialogs\" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Update="Resources\Highlighting\DarkMode.xshd">
-            <Generator>MSBuild:Compile</Generator>
-        </None>
-        <None Update="Resources\Highlighting\LightMode.xshd">
-            <Generator>MSBuild:Compile</Generator>
-        </None>
-    </ItemGroup>
+  <ItemGroup>
+	<AvaloniaResource Include="Resources\**" />
+  </ItemGroup>
 </Project>
