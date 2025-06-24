@@ -6,7 +6,6 @@ using Avalonia.Markup.Xaml;
 using System.Linq;
 
 using XsltEditor.ViewModels;
-using XsltEditor.Views;
 
 namespace XsltEditor;
 
@@ -29,6 +28,10 @@ public partial class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
+
+#if DEBUG
+        base.Atta
+#endif
     }
 
     private void DisableAvaloniaDataAnnotationValidation()

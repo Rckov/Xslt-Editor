@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace XsltEditor.Services.Interfaces;
-internal interface IFileDialogService
+namespace XsltEditor.ViewModels.Tools;
+internal class CompletionViewModel
 {
 }

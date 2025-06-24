@@ -1,88 +1,108 @@
 <u:UrsaWindow xmlns="https://github.com/avaloniaui"
               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-              x:Class="XsltEditor.Views.MainWindow"
-              x:DataType="vm:MainViewModel"
+              x:Class="XsltEditor.MainWindow"
+			  
               xmlns:u="https://irihi.tech/ursa"
-              xmlns:semi="https://irihi.tech/ursa/themes/semi"
-              xmlns:vm="using:XsltEditor.ViewModels"
-			  xmlns:edit="using:AvaloniaEdit"
-			  xmlns:dock="using:Dock.Avalonia.Controls"
-              Icon="avares://XsltEditor/Resources/appicon.ico"
+			  
+			  xmlns:view="using:XsltEditor.Views"
+			  
+              Height="750"
               Width="1200"
-              Height="700"
-              Title="XsltEditor" FontSize="13">
+              Title="Xslt Editor"
+			  
+              WindowStartupLocation="CenterScreen"
+              IsFullScreenButtonVisible="{OnPlatform {x:True}, macOS={x:False}}"
+              IsManagedResizerVisible="{OnPlatform {x:False}, Linux={x:True}}">
 
 	<u:UrsaWindow.LeftContent>
-		<StackPanel Orientation="Horizontal" Spacing="5" Margin="10, 0">
-			<Image Width="16" Height="16" Source="avares://XsltEditor/Resources/appicon.ico"/>
+		<StackPanel  Orientation="Horizontal" Spacing="5" Margin="10, 0">
+			<Image Width="16" Height="16" Source="avares://XsltEditor/Resources/appicon.png"/>
 
-			<Menu>
-				<MenuItem Header="File">
-					<MenuItem Header="Open XSL" />
-					<MenuItem Header="Open XML" />
-
-					<Separator />
-
-					<MenuItem Header="Save" InputGesture="CTRL + S">
+			<Menu FontSize="12">
+				<MenuItem Header="File" CornerRadius="0">
+					<MenuItem Header="Open XSL">
 						<MenuItem.Icon>
-							<PathIcon Data="{StaticResource SemiIconSave}" />
+							<PathIcon Data="{StaticResource icon_open}" />
 						</MenuItem.Icon>
 					</MenuItem>
-					<MenuItem Header="Save As" />
-
+					<MenuItem Header="Open XML">
+						<MenuItem.Icon>
+							<PathIcon Data="{StaticResource icon_open}"/>
+						</MenuItem.Icon>
+					</MenuItem>
 					<Separator />
-
+					<MenuItem Header="Save" InputGesture="CTRL + S">
+						<MenuItem.Icon>
+							<PathIcon Data="{StaticResource icon_save}"/>
+						</MenuItem.Icon>
+					</MenuItem>
+					<MenuItem Header="Save As">
+						<MenuItem.Icon>
+							<PathIcon Data="{StaticResource icon_saveas}"/>
+						</MenuItem.Icon>
+					</MenuItem>
+					<Separator />
 					<MenuItem Header="Exit" InputGesture="ALT + F4">
 						<MenuItem.Icon>
-							<PathIcon Data="{StaticResource SemiIconQuit}" />
+							<PathIcon Data="{StaticResource icon_exit}"/>
 						</MenuItem.Icon>
 					</MenuItem>
 				</MenuItem>
 
-				<MenuItem Header="Edit">
+				<MenuItem Header="Edit" CornerRadius="0">
 					<MenuItem Header="Undo" InputGesture="CTRL + Z">
 						<MenuItem.Icon>
-							<PathIcon Data="{StaticResource SemiIconUndo}" />
+							<PathIcon Data="{StaticResource icon_undo}"/>
 						</MenuItem.Icon>
 					</MenuItem>
 					<MenuItem Header="Redo" InputGesture="CTRL + Y">
 						<MenuItem.Icon>
-							<PathIcon Data="{StaticResource SemiIconRedo}" />
+							<PathIcon Data="{StaticResource icon_redo}"/>
 						</MenuItem.Icon>
 					</MenuItem>
-
 					<Separator />
-
 					<MenuItem Header="Copy" InputGesture="CTRL + C">
 						<MenuItem.Icon>
-							<PathIcon Data="{StaticResource SemiIconCopy}" />
+							<PathIcon Data="{StaticResource icon_copy}"/>
 						</MenuItem.Icon>
 					</MenuItem>
 					<MenuItem Header="Cut" InputGesture="CTRL + X">
 						<MenuItem.Icon>
-							<PathIcon Data="{StaticResource SemiIconScissors}" />
+							<PathIcon Data="{StaticResource icon_cut}"/>
 						</MenuItem.Icon>
 					</MenuItem>
 					<MenuItem Header="Paste" InputGesture="CTRL + V">
 						<MenuItem.Icon>
-							<PathIcon Data="{StaticResource SemiIconCode}" />
+							<PathIcon Data="{StaticResource icon_paste}"/>
 						</MenuItem.Icon>
 					</MenuItem>
-
 					<Separator />
-
-					<MenuItem Header="Delete" />
+					<MenuItem Header="Delete">
+						<MenuItem.Icon>
+							<PathIcon Data="{StaticResource icon_delete}"/>
+						</MenuItem.Icon>
+					</MenuItem>
 				</MenuItem>
 
-				<MenuItem Header="Tools">
-					<MenuItem Header="Go Line" InputGesture="CTRL + G" />
+				<MenuItem Header="Tools" CornerRadius="0">
+					<MenuItem Header="Go Line" InputGesture="CTRL + G">
+						<MenuItem.Icon>
+							<PathIcon Data="{StaticResource icon_goto}"/>
+						</MenuItem.Icon>
+					</MenuItem>
 					<MenuItem Header="Completion">
 						<MenuItem.Icon>
-							<PathIcon Data="{StaticResource SemiIconList}" />
+							<PathIcon Data="{StaticResource icon_completion}"/>
 						</MenuItem.Icon>
 					</MenuItem>
 				</MenuItem>
 			</Menu>
 		</StackPanel>
 	</u:UrsaWindow.LeftContent>
+
+	<u:UrsaWindow.RightContent>
+		<u:ThemeToggleButton IsThreeState="True" Mode="Indicator" />
+	</u:UrsaWindow.RightContent>
+	
+	
 </u:UrsaWindow>

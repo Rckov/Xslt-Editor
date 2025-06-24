@@ -1,6 +1,6 @@
 using Ursa.Controls;
 
-namespace XsltEditor.Views;
+namespace XsltEditor;
 
 public partial class MainWindow : UrsaWindow
 {

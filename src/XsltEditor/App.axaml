@@ -3,9 +3,18 @@
              x:Class="XsltEditor.App"
 			 xmlns:semi="https://irihi.tech/semi"
 			 xmlns:u-semi="https://irihi.tech/ursa/themes/semi">
-	
-    <Application.Styles>
+
+	<Application.Styles>
 		<semi:SemiTheme Locale="ru-RU" />
 		<u-semi:SemiTheme Locale="ru-RU"/>
-    </Application.Styles>
+		
+	</Application.Styles>
+
+	<Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceInclude Source="avares://XsltEditor/Resources/Icons/IconGeometries.axaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Application.Resources>
 </Application>
