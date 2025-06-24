@@ -23,6 +23,9 @@ internal partial class MainViewModel : ObservableObject
     private const int DebounceMilliseconds = 500;
 
     private readonly IWindowService _windowService;
+    private readonly IThemeService _themeService;
+    private readonly ISettingsService _settingsService;
+    private readonly IXmlTransformService _transformService;
 
     [ObservableProperty] private string? _htmlContent;
     [ObservableProperty] private DocumentViewModel? _activeDocument;
@@ -30,9 +33,15 @@ internal partial class MainViewModel : ObservableObject
     private DispatcherTimer? _debounceTimer;
 
     public MainViewModel(
-        IWindowService windowService)
+        IWindowService windowService,
+        IThemeService themeService,
+        ISettingsService settingsService,
+        IXmlTransformService transformService)
     {
         _windowService = windowService;
+        _themeService = themeService;
+        _settingsService = settingsService;
+        _transformService = transformService;
 
         Documents =
         [
@@ -40,21 +49,23 @@ internal partial class MainViewModel : ObservableObject
             CreateDocument("XML", DocumentType.Xml)
         ];
 
+        InitializeSettings();
         InitializeDebounceTimer();
     }
 
     public ObservableCollection<DocumentViewModel> Documents { get; }
 
     [RelayCommand]
-    private async Task SaveDocument(DocumentType documentType)
+    private async Task SaveDocument()
     {
+        if (ActiveDocument is null)
+        {
+            return;
+        }
+
         try
         {
-            var document = Documents.GetDocument(documentType);
-            if (document != null)
-            {
-                await document.SaveDocumentCommand.ExecuteAsync(null);
-            }
+            await ActiveDocument.SaveDocumentCommand.ExecuteAsync(null);
         }
         catch (Exception ex)
         {
@@ -78,6 +89,31 @@ internal partial class MainViewModel : ObservableObject
         {
             MessageBox.Show(ex.Message, "Error Opening the Document");
         }
+    }
+
+    [RelayCommand]
+    private void ChangeTheme()
+    {
+        _themeService.SwitchTheme();
+
+        _settingsService.Settings.Theme = _themeService.CurrentThemeType;
+        _settingsService.SaveSettings(_settingsService.Settings);
+    }
+
+    [RelayCommand]
+    private void ExitApplication()
+    {
+        Environment.Exit(0);
+    }
+
+    private void InitializeSettings()
+    {
+        if (_settingsService.Settings is null)
+        {
+            return;
+        }
+
+        _themeService.SetTheme(_settingsService.Settings.Theme);
     }
 
     private DocumentViewModel CreateDocument(string name, DocumentType documentType)
@@ -136,7 +172,7 @@ internal partial class MainViewModel : ObservableObject
                 return;
             }
 
-            //HtmlContent = await _transformService.TransformAsync(xsl.Content, xml.Content, xsl.FilePath);
+            HtmlContent = await _transformService.TransformAsync(xsl.Content, xml.Content, xsl.FilePath);
         }
         catch
         {

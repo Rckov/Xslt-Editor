@@ -13,7 +13,8 @@
         Style="{StaticResource WindowStyle}">
 
     <Window.Resources>
-        <TextBlock x:Key="IconOpen"       Text="&#xE70B;" FontFamily="{StaticResource FontIcon}" />
+        <TextBlock x:Key="IconOpen"       Text="&#xE943;" FontFamily="{StaticResource FontIcon}" />
+        <TextBlock x:Key="IconOpenXML"    Text="&#xE943;" FontFamily="{StaticResource FontIcon}" />
         <TextBlock x:Key="IconSave"       Text="&#xE74E;" FontFamily="{StaticResource FontIcon}" />
         <TextBlock x:Key="IconUndo"       Text="&#xE7A7;" FontFamily="{StaticResource FontIcon}" />
         <TextBlock x:Key="IconRedo"       Text="&#xE7A6;" FontFamily="{StaticResource FontIcon}" />
@@ -23,7 +24,7 @@
         <TextBlock x:Key="IconDelete"     Text="&#xE74D;" FontFamily="{StaticResource FontIcon}" />
         <TextBlock x:Key="IconGoLine"     Text="&#xE8A3;" FontFamily="{StaticResource FontIcon}" />
         <TextBlock x:Key="IconCompletion" Text="&#xE8A4;" FontFamily="{StaticResource FontIcon}" />
-        <TextBlock x:Key="IconSnippets"   Text="&#xE81E;" FontFamily="{StaticResource FontIcon}" />
+        <TextBlock x:Key="IconExit"       Text="&#xE7E8;" FontFamily="{StaticResource FontIcon}" />
         <TextBlock x:Key="IconSettings"   Text="&#xE713;" FontFamily="{StaticResource FontIcon}" />
         <TextBlock x:Key="IconTheme"      Text="&#xE706;" FontFamily="{StaticResource FontIcon}" />
     </Window.Resources>
@@ -40,15 +41,17 @@
                 <ct:WindowBar.LeftContent>
                     <Menu Background="Transparent" VerticalAlignment="Center">
                         <MenuItem Header="File">
-                            <MenuItem Header="Open" Icon="{StaticResource IconOpen}">
-                                <MenuItem Header="Open XSL" Command="{Binding OpenDocumentCommand}" CommandParameter="{x:Static enums:DocumentType.Xsl}" />
-                                <MenuItem Header="Open XML" Command="{Binding OpenDocumentCommand}" CommandParameter="{x:Static enums:DocumentType.Xml}" />
-                            </MenuItem>
 
-                            <MenuItem Header="Save" Icon="{StaticResource IconSave}">
-                                <MenuItem Header="Save XSL" Command="{Binding SaveDocumentCommand}" CommandParameter="{x:Static enums:DocumentType.Xsl}" />
-                                <MenuItem Header="Save XML" Command="{Binding SaveDocumentCommand}" CommandParameter="{x:Static enums:DocumentType.Xml}" />
-                            </MenuItem>
+                            <MenuItem Header="Open XSL" Icon="{StaticResource IconOpen}" Command="{Binding OpenDocumentCommand}" CommandParameter="{x:Static enums:DocumentType.Xsl}" />
+                            <MenuItem Header="Open XML" Icon="{StaticResource IconOpenXML}" Command="{Binding OpenDocumentCommand}" CommandParameter="{x:Static enums:DocumentType.Xml}" />
+
+                            <Separator Style="{StaticResource SeparatorStyle}" />
+
+                            <MenuItem Header="Save" Icon="{StaticResource IconSave}" Command="{Binding SaveDocumentCommand}" />
+
+                            <Separator Style="{StaticResource SeparatorStyle}" />
+
+                            <MenuItem Header="Exit" Icon="{StaticResource IconExit}" Command="{Binding ExitApplicationCommand}" />
                         </MenuItem>
 
                         <Separator Style="{StaticResource SeparatorStyle}" />

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
+using System.IO;
 using System.Windows;
 
 using XsltEditor.Services.Interfaces;
@@ -12,7 +13,10 @@ public partial class App
     static App()
     {
         Services = ConfigureServices();
+        AppDirectory = GetApplicationDirectory();
     }
+
+    public static string AppDirectory { get; }
 
     public static IServiceProvider Services { get; }
 
@@ -24,6 +28,19 @@ public partial class App
         service.RegisterServices();
 
         return service.BuildServiceProvider();
+    }
+
+    private static string GetApplicationDirectory()
+    {
+        var data = Environment.SpecialFolder.ApplicationData;
+        var directory = Path.Combine(Environment.GetFolderPath(data), "Xslt Editor");
+
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        return directory;
     }
 
     protected override void OnStartup(StartupEventArgs e)

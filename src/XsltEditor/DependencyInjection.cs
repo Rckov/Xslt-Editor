@@ -22,7 +22,9 @@ internal static class DependencyInjection
         services.AddTransient<IResourceOperationsService, ResourceOperationsService>();
         services.AddTransient<IFileDialogService, FileDialogService>();
         services.AddTransient<IDocumentStorageService, DocumentStorageService>();
-        services.AddTransient<IXmlTransformService, XmlTransformService>();
+        services.AddSingleton<IThemeService, ThemeService>();
+        services.AddSingleton<IXmlTransformService, XmlTransformService>();
+        services.AddSingleton<ISettingsService, SettingsService>();
 
         services.AddTransient<IMessenger>(sp => WeakReferenceMessenger.Default);
     }

@@ -5,7 +5,6 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/Themes/DarkBrushes.xaml" />
                 <ResourceDictionary Source="/Resources/Styles/Generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
