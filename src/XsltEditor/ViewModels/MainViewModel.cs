@@ -1,26 +1,27 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
 using Microsoft.Extensions.DependencyInjection;
 
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Threading;
 
+using XsltEditor.Common.Attributes;
 using XsltEditor.Extensions;
 using XsltEditor.Models.Enums;
-using XsltEditor.Services;
 using XsltEditor.Services.Interfaces;
+using XsltEditor.Views;
 
 namespace XsltEditor.ViewModels;
 
+[Window(typeof(MainWindow))]
 internal partial class MainViewModel : ObservableObject
 {
     private const int DebounceMilliseconds = 500;
 
-    private readonly ISettingsService _settingsService;
-    private readonly IXmlTransformService _transformService;
-    private readonly IThemeService _themeService;
     private readonly IWindowService _windowService;
 
     [ObservableProperty] private string? _htmlContent;
@@ -29,20 +30,9 @@ internal partial class MainViewModel : ObservableObject
     private DispatcherTimer? _debounceTimer;
 
     public MainViewModel(
-        ISettingsService settingsService,
-        IXmlTransformService transformService,
-        IThemeService themeService,
         IWindowService windowService)
     {
-        _settingsService = settingsService;
-        _transformService = transformService;
-        _themeService = themeService;
         _windowService = windowService;
-
-        var settings = settingsService.Settings;
-
-        themeService.ChangeTheme(settings.Theme);
-        transformService.CreateEngine(settings.Engine);
 
         Documents =
         [
@@ -56,29 +46,11 @@ internal partial class MainViewModel : ObservableObject
     public ObservableCollection<DocumentViewModel> Documents { get; }
 
     [RelayCommand]
-    private void OpenSettingsView()
-    {
-        _windowService.ShowDialog<SettingsViewModel>();
-    }
-
-    [RelayCommand]
-    private void OpenCaretView()
-    {
-        _windowService.ShowDialog<CaretViewModel>();
-    }
-
-    [RelayCommand]
-    private void OpenCompletionView()
-    {
-        _windowService.ShowDialog<CompletionViewModel>();
-    }
-
-    [RelayCommand]
     private async Task SaveDocument(DocumentType documentType)
     {
         try
         {
-            var document = Documents.FirstOrDefault(x => x.DocumentType == documentType);
+            var document = Documents.GetDocument(documentType);
             if (document != null)
             {
                 await document.SaveDocumentCommand.ExecuteAsync(null);
@@ -86,7 +58,7 @@ internal partial class MainViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            _windowService.ShowMessage(ex.Message, "Error Saving the Document");
+            MessageBox.Show(ex.Message, "Error Saving the Document");
         }
     }
 
@@ -95,7 +67,7 @@ internal partial class MainViewModel : ObservableObject
     {
         try
         {
-            var document = Documents.FirstOrDefault(x => x.DocumentType == documentType);
+            var document = Documents.GetDocument(documentType);
             if (document != null)
             {
                 await document.OpenDocumentCommand.ExecuteAsync(null);
@@ -104,28 +76,18 @@ internal partial class MainViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            _windowService.ShowMessage(ex.Message, "Error Opening the Document");
+            MessageBox.Show(ex.Message, "Error Opening the Document");
         }
-    }
-
-    [RelayCommand]
-    private async Task ChangeTheme()
-    {
-        var curTheme = _themeService.CurrentTheme;
-        var newTheme = curTheme == ThemeType.Light ? ThemeType.Dark : ThemeType.Light;
-
-        _themeService.ChangeTheme(newTheme);
-
-        _settingsService.Settings.Theme = newTheme;
-        await _settingsService.SaveSettings();
     }
 
     private DocumentViewModel CreateDocument(string name, DocumentType documentType)
     {
         var document = new DocumentViewModel(
-            App.Services.GetRequiredService<IDialogService>(),
-            App.Services.GetRequiredService<IFileOperationsService>())
+            App.Services.GetRequiredService<IMessenger>(),
+            App.Services.GetRequiredService<IFileDialogService>(),
+            App.Services.GetRequiredService<IDocumentStorageService>())
         {
+            Id = Guid.NewGuid(),
             Name = name,
             DocumentType = documentType
         };
@@ -150,7 +112,7 @@ internal partial class MainViewModel : ObservableObject
 
     private void Document_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName != nameof(DocumentViewModel.Text) || _debounceTimer == null)
+        if (e.PropertyName != nameof(DocumentViewModel.Content) || _debounceTimer == null)
         {
             return;
         }
@@ -168,13 +130,13 @@ internal partial class MainViewModel : ObservableObject
             var xsl = Documents.GetDocument(DocumentType.Xsl);
             var xml = Documents.GetDocument(DocumentType.Xml);
 
-            if (xsl == null || xml == null || string.IsNullOrWhiteSpace(xsl.Text) || string.IsNullOrWhiteSpace(xml.Text))
+            if (string.IsNullOrWhiteSpace(xsl?.Content) || string.IsNullOrWhiteSpace(xml?.Content))
             {
                 HtmlContent = string.Empty;
                 return;
             }
 
-            HtmlContent = await _transformService.TransformAsync(xsl.Text, xml.Text, xsl.FilePath);
+            //HtmlContent = await _transformService.TransformAsync(xsl.Content, xml.Content, xsl.FilePath);
         }
         catch
         {

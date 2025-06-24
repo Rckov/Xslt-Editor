@@ -8,7 +8,7 @@
         Height="650"
         Width="1200"
         Title="Xslt Editor"
-        ResizeMode="CanResizeWithGrip"
+        ResizeMode="CanResize"
         WindowStartupLocation="CenterScreen"
         Style="{StaticResource WindowStyle}">
 
@@ -68,7 +68,6 @@
                         <MenuItem Header="Tools">
                             <MenuItem Header="Go Line" Icon="{StaticResource IconGoLine}" Command="{Binding OpenCaretViewCommand}" />
                             <MenuItem Header="Completion" Icon="{StaticResource IconCompletion}" />
-                            <MenuItem Header="Snippets" Icon="{StaticResource IconSnippets}" IsEnabled="False" />
                         </MenuItem>
                     </Menu>
                 </ct:WindowBar.LeftContent>
@@ -79,7 +78,6 @@
                             <MenuItem Header="Theme" Icon="{StaticResource IconTheme}" Command="{Binding ChangeThemeCommand}" />
                         </MenuItem>
                     </Menu>
-
                 </ct:WindowBar.RightContent>
             </ct:WindowBar>
         </Grid>

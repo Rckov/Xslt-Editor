@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-using System.Runtime.Versioning;
 using System.Windows;
 
 using XsltEditor.Services.Interfaces;
@@ -8,35 +7,28 @@ using XsltEditor.ViewModels;
 
 namespace XsltEditor;
 
-[SupportedOSPlatform("windows")]
 public partial class App
 {
     static App()
     {
-        Services = ConfigureContainer();
+        Services = ConfigureServices();
     }
 
     public static IServiceProvider Services { get; }
 
-    private static ServiceProvider ConfigureContainer()
+    private static IServiceProvider ConfigureServices()
     {
-        var services = new ServiceCollection();
+        var service = new ServiceCollection();
 
-        services.RegisterViews();
-        services.RegisterServices();
+        service.RegisterViews();
+        service.RegisterServices();
 
-        return services.BuildServiceProvider();
+        return service.BuildServiceProvider();
     }
 
     protected override void OnStartup(StartupEventArgs e)
     {
-        var settingsService = Services.GetRequiredService<ISettingsService>();
-        var task = settingsService.LoadSettings();
-
-        task.GetAwaiter().OnCompleted(() =>
-        {
-            var windowService = Services.GetRequiredService<IWindowService>();
-            windowService.ShowWindow<MainViewModel>();
-        });
+        var windowService = Services.GetRequiredService<IWindowService>();
+        windowService.ShowWindow<MainViewModel>();
     }
 }

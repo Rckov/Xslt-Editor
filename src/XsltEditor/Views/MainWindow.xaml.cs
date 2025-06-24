@@ -1,6 +1,8 @@
-﻿namespace XsltEditor.Views;
+﻿using System.Windows;
 
-public partial class MainWindow
+namespace XsltEditor.Views;
+
+public partial class MainWindow : Window
 {
     public MainWindow()
     {

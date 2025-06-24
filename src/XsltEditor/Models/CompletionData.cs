@@ -11,9 +11,6 @@ namespace XsltEditor.Models;
 [SupportedOSPlatform("windows")]
 internal class CompletionData(string text) : ICompletionData
 {
-    private string _openTag => $"<{Text}>";
-    private string _closeTag => $"</{Text}>";
-
     [JsonIgnore] public ImageSource? Image => null;
 
     public string Text { get; } = text;
@@ -24,11 +21,15 @@ internal class CompletionData(string text) : ICompletionData
 
     [JsonIgnore] public double Priority => 0;
 
+    [JsonIgnore] public string OpenTag => $"<{Text}>";
+
+    [JsonIgnore] public string CloseTag => $"</{Text}>";
+
     public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
     {
         textArea.Document.Replace(completionSegment.Offset - 1, 1, string.Empty);
-        textArea.Document.Replace(completionSegment, $"{_openTag}{_closeTag}");
+        textArea.Document.Replace(completionSegment, $"{OpenTag}{CloseTag}");
 
-        textArea.Caret.Offset -= _closeTag.Length;
+        textArea.Caret.Offset -= CloseTag.Length;
     }
 }

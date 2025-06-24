@@ -4,7 +4,7 @@
     <SolidColorBrush x:Key="TextBrush" Color="#ffffff" />
     <SolidColorBrush x:Key="BackgroundBrush" Color="#18191a" />
     <SolidColorBrush x:Key="RegionBrush" Color="#242526" />
-    <SolidColorBrush x:Key="ButtonHoverBrush" Color="#18191a"/>
-    <SolidColorBrush x:Key="ButtonPressedBrush" Color="#3f3f46"/>
+    <SolidColorBrush x:Key="ButtonHoverBrush" Color="#18191a" />
+    <SolidColorBrush x:Key="ButtonPressedBrush" Color="#3f3f46" />
     <SolidColorBrush x:Key="BorderBrush" Color="#3f3f46" />
 </ResourceDictionary>

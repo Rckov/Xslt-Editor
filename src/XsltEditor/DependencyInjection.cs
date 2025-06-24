@@ -13,37 +13,25 @@ internal static class DependencyInjection
 {
     public static void RegisterViews(this IServiceCollection services)
     {
-        var views = new Dictionary<Type, Type>();
-
-        services.RegisterDialog<MainViewModel, MainWindow>(views);
-        services.RegisterDialog<CaretViewModel, MainWindow>(views);
-
-        services.AddSingleton<IDictionary<Type, Type>>(views);
+        services.RegisterView<MainViewModel, MainWindow>();
     }
 
     public static void RegisterServices(this IServiceCollection services)
     {
-        services.AddSingleton<IWindowFactory, WindowFactory>();
-        services.AddSingleton<IWindowService, WindowService>();
-        services.AddSingleton<IXmlTransformService, XmlTransformService>();
-        services.AddSingleton<ICompletionDataService, CompletionDataService>();
-
-        services.AddTransient<IFileOperationsService, FileOperationsService>();
+        services.AddTransient<IWindowService, WindowService>();
         services.AddTransient<IResourceOperationsService, ResourceOperationsService>();
-        services.AddTransient<ISettingsService, SettingsService>();
-        services.AddTransient<IThemeService, ThemeService>();
-        services.AddTransient<IDialogService, DialogService>();
+        services.AddTransient<IFileDialogService, FileDialogService>();
+        services.AddTransient<IDocumentStorageService, DocumentStorageService>();
+        services.AddTransient<IXmlTransformService, XmlTransformService>();
 
-        services.AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
+        services.AddTransient<IMessenger>(sp => WeakReferenceMessenger.Default);
     }
 
-    private static void RegisterDialog<TViewModel, TDialog>(this IServiceCollection services, Dictionary<Type, Type> viewMap)
+    public static void RegisterView<TViewModel, TView>(this IServiceCollection services)
         where TViewModel : class
-        where TDialog : class
+        where TView : class
     {
         services.AddTransient<TViewModel>();
-        services.AddTransient<TDialog>();
-
-        viewMap[typeof(TViewModel)] = typeof(TDialog);
+        services.AddTransient<TView>();
     }
 }

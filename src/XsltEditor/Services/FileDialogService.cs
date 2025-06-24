@@ -4,25 +4,25 @@ using XsltEditor.Services.Interfaces;
 
 namespace XsltEditor.Services;
 
-internal class DialogService : IDialogService
+internal class FileDialogService : IFileDialogService
 {
-    public string? ShowOpenFileDialog(string title, params string[]? allowedExtensions)
+    public string? OpenFileDialog(string title, params string[] extensions)
     {
         var dialog = new OpenFileDialog
         {
             Title = title,
-            Filter = BuildFilter(title, allowedExtensions)
+            Filter = BuildFilter(title, extensions)
         };
 
         return dialog.ShowDialog() == true ? dialog.FileName : null;
     }
 
-    public string? ShowSaveFileDialog(string title, params string[]? allowedExtensions)
+    public string? OpenSaveDialog(string title, params string[] extensions)
     {
         var dialog = new SaveFileDialog
         {
             Title = title,
-            Filter = BuildFilter(title, allowedExtensions)
+            Filter = BuildFilter(title, extensions)
         };
 
         return dialog.ShowDialog() == true ? dialog.FileName : null;

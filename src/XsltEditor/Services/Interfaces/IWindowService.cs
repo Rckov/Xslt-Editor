@@ -1,17 +1,13 @@
-﻿using System.Windows;
-
-namespace XsltEditor.Services.Interfaces;
+﻿namespace XsltEditor.Services.Interfaces;
 
 internal interface IWindowService
 {
-    void ShowWindow<TViewModel>() where TViewModel : class;
+    void ShowWindow<TViewModel>(object? parameter = null) where TViewModel : class;
 
-    bool? ShowDialog<TViewModel>() where TViewModel : class;
-
-    void ShowMessage(string message, string caption);
+    void ShowDialog<TViewModel>(object? parameter = null) where TViewModel : class;
 }
 
-internal interface IWindowFactory
+internal interface IParameterReceiver
 {
-    Window CreateWindow<TViewModel>(TViewModel viewModel) where TViewModel : class;
+    void SetParameter(object? parameter = null);
 }

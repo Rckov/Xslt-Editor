@@ -4,17 +4,20 @@ using CommunityToolkit.Mvvm.Messaging;
 
 using ICSharpCode.AvalonEdit.Highlighting;
 
+using System.ComponentModel.DataAnnotations;
+
+using XsltEditor.Models;
 using XsltEditor.Models.Enums;
-using XsltEditor.Models.Messages;
-using XsltEditor.Services;
 using XsltEditor.Services.Interfaces;
 
 namespace XsltEditor.ViewModels;
 
-internal partial class DocumentViewModel(IDialogService dialogService, IFileOperationsService fileService) : ObservableRecipient
+internal partial class DocumentViewModel : ObservableObject
 {
-    [ObservableProperty] private string? _name;
-    [ObservableProperty] private string? _text;
+    private readonly IFileDialogService _fileService;
+    private readonly IDocumentStorageService _storageService;
+
+    [ObservableProperty] private string? _content;
     [ObservableProperty] private string? _filePath;
 
     [ObservableProperty] private int _line;
@@ -25,40 +28,52 @@ internal partial class DocumentViewModel(IDialogService dialogService, IFileOper
 
     [ObservableProperty] private IHighlightingDefinition? _highlighting;
 
+    public DocumentViewModel(
+        IMessenger messenger,
+        IFileDialogService fileService,
+        IDocumentStorageService storageService)
+    {
+        _fileService = fileService;
+        _storageService = storageService;
+    }
+
+    [Required]
+    public Guid Id { get; init; }
+
+    [Required]
+    public string? Name { get; init; }
+
+    [Required]
     public DocumentType DocumentType { get; init; }
 
-    protected override void OnActivated()
+    public IReadOnlyList<CompletionData> CompletionData { get; } = [];
+
+    [RelayCommand]
+    private async Task OpenDocument()
     {
-        Messenger.Register<DocumentViewModel, CaretChangedMessage>(this, (_, m) => Line = m.Value);
-        Messenger.Register<DocumentViewModel, ThemeChangedMessage>(this, (_, m) => Highlighting = m.Highlighting);
+        FilePath = _fileService.OpenFileDialog("Open " + Name, $".{DocumentType}".ToLower());
+
+        if (string.IsNullOrWhiteSpace(FilePath))
+        {
+            return;
+        }
+
+        IsDirty = false;
+        Content = await _storageService.ReadContentAsync(FilePath);
     }
 
     [RelayCommand]
     private async Task SaveDocument()
     {
-        FilePath ??= dialogService.ShowSaveFileDialog($"Save {Name}", $".{DocumentType}".ToLower());
+        FilePath ??= _fileService.OpenSaveDialog($"Save {Name}", $".{DocumentType}".ToLower());
 
         if (string.IsNullOrWhiteSpace(FilePath))
         {
             return;
         }
 
-        await fileService.SaveAsync(FilePath, Text);
-        IsDirty = false;
+        await _storageService.WriteContentAsync(FilePath, Content);
     }
 
-    [RelayCommand]
-    private async Task OpenDocument()
-    {
-        FilePath = dialogService.ShowOpenFileDialog("Open " + Name, $".{DocumentType}".ToLower());
-
-        if (string.IsNullOrWhiteSpace(FilePath))
-        {
-            return;
-        }
-
-        Text = await fileService.ReadAsync(FilePath);
-    }
-
-    partial void OnTextChanged(string? value) => IsDirty = true;
+    partial void OnContentChanged(string? value) => IsDirty = true;
 }

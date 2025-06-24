@@ -4,9 +4,7 @@ namespace XsltEditor.Services.Interfaces;
 
 internal interface ISettingsService
 {
-    Settings Settings { get; }
+    Settings LoadSettings();
 
-    Task LoadSettings();
-
-    Task SaveSettings();
+    void SaveSettings(Settings settings);
 }
