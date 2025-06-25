@@ -1,3 +1,7 @@
+using Avalonia.Controls;
+
+using Dock.Avalonia.Controls;
+
 using Ursa.Controls;
 
 namespace XsltEditor;

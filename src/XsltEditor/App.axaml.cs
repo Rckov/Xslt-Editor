@@ -28,10 +28,6 @@ public partial class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
-
-#if DEBUG
-        base.Atta
-#endif
     }
 
     private void DisableAvaloniaDataAnnotationValidation()

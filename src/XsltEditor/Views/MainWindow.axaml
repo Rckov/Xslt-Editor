@@ -3,12 +3,16 @@
               x:Class="XsltEditor.MainWindow"
 			  
               xmlns:u="https://irihi.tech/ursa"
+			  xmlns:s="https://irihi.tech/semi"
 			  
+			  xmlns:vm="using:XsltEditor.ViewModels"
 			  xmlns:view="using:XsltEditor.Views"
 			  
               Height="750"
               Width="1200"
               Title="Xslt Editor"
+			  FontSize="12"
+			  x:DataType="vm:MainViewModel"
 			  
               WindowStartupLocation="CenterScreen"
               IsFullScreenButtonVisible="{OnPlatform {x:True}, macOS={x:False}}"
@@ -18,7 +22,7 @@
 		<StackPanel  Orientation="Horizontal" Spacing="5" Margin="10, 0">
 			<Image Width="16" Height="16" Source="avares://XsltEditor/Resources/appicon.png"/>
 
-			<Menu FontSize="12">
+			<Menu>
 				<MenuItem Header="File" CornerRadius="0">
 					<MenuItem Header="Open XSL">
 						<MenuItem.Icon>
@@ -103,6 +107,8 @@
 	<u:UrsaWindow.RightContent>
 		<u:ThemeToggleButton IsThreeState="True" Mode="Indicator" />
 	</u:UrsaWindow.RightContent>
-	
-	
+
+	<u:UrsaView Margin="5,36,5,5">
+		<DockControl x:Name="DockControl" Layout="{Binding Layout}" FontSize="12" />
+	</u:UrsaView>
 </u:UrsaWindow>

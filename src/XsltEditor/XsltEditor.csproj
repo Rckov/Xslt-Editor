@@ -13,13 +13,14 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.3.1" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.1" />
-    <PackageReference Include="Dock.Avalonia" Version="11.3.0.2" />
     <PackageReference Include="Dock.Model.Mvvm" Version="11.3.0.2" />
     <PackageReference Include="Irihi.Ursa" Version="1.11.1" />
     <PackageReference Include="Irihi.Ursa.Themes.Semi" Version="1.11.1" />
     <PackageReference Include="Semi.Avalonia" Version="11.2.1.8" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
+    <PackageReference Include="Semi.Avalonia.AvaloniaEdit" Version="11.2.0" />
+    <PackageReference Include="Semi.Avalonia.Dock" Version="11.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,7 +28,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Common\" />
-    <Folder Include="ViewModels\Dock\" />
+    <AvaloniaXaml Remove="Common\**" />
+    <AvaloniaXaml Remove="ViewModels\Dock\**" />
+    <Compile Remove="Common\**" />
+    <Compile Remove="ViewModels\Dock\**" />
+    <EmbeddedResource Remove="Common\**" />
+    <EmbeddedResource Remove="ViewModels\Dock\**" />
+    <None Remove="Common\**" />
+    <None Remove="ViewModels\Dock\**" />
   </ItemGroup>
 </Project>
