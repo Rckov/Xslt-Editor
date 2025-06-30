@@ -1,0 +1,44 @@
+﻿<Window x:Class="XsltEditor.Views.Dialogs.CaretDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
+        xmlns:ct="clr-namespace:XsltEditor.Views.UserControls"
+
+        Height="130"
+        Width="300"
+
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Style="{StaticResource WindowStyle}"
+        FocusManager.FocusedElement="{Binding ElementName=TextBoxLine}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <ct:WindowBar ShowTitle="True" Title="Go to line" Background="{DynamicResource RegionBrush}"
+                      CanMaximized="False" CanMinimized="False" />
+
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="Line number:" Margin="0,0,0,5" Foreground="{DynamicResource TextBrush}" />
+
+                <TextBox Name="TextBoxLine" Text="{Binding Line, UpdateSourceTrigger=PropertyChanged}" MaxLength="10"
+                         PreviewTextInput="NumberValidationTextBox">
+                    <TextBox.InputBindings>
+                        <KeyBinding Command="{Binding ChangeCaretLineCommand}" Key="Enter" />
+                    </TextBox.InputBindings>
+                </TextBox>
+            </StackPanel>
+
+            <Button Grid.Row="1" Content="Go To" Command="{Binding ChangeCaretLineCommand}" />
+        </Grid>
+    </Grid>
+</Window>

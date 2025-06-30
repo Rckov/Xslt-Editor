@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="XsltEditor.Views.Views.MainContent"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
+             xmlns:wv="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+             xmlns:ad="https://github.com/Dirkster99/AvalonDock"
+             xmlns:vm="clr-namespace:XsltEditor.ViewModels"
+             xmlns:ct="clr-namespace:XsltEditor.Views.UserControls">
+
+    <UserControl.Resources>
+        <TextBlock x:Key="IconMenuCut" Text="&#xE8C6;" FontFamily="{StaticResource FontIcon}" />
+        <TextBlock x:Key="IconMenuCopy" Text="&#xE8C8;" FontFamily="{StaticResource FontIcon}" />
+        <TextBlock x:Key="IconMenuPaste" Text="&#xE77F;" FontFamily="{StaticResource FontIcon}" />
+        <TextBlock x:Key="IconMenuUndo" Text="&#xE7A7;" FontFamily="{StaticResource FontIcon}" />
+        <TextBlock x:Key="IconMenuRedo" Text="&#xE7A6;" FontFamily="{StaticResource FontIcon}" />
+        <TextBlock x:Key="IconMenuExpand" Text="&#xF166;" FontFamily="{StaticResource FontIcon}" />
+        <TextBlock x:Key="IconMenuCollapse" Text="&#xF164;" FontFamily="{StaticResource FontIcon}" />
+
+        <ContextMenu x:Key="EditorContextMenu">
+            <MenuItem Header="Undo" Icon="{StaticResource IconMenuUndo}" Command="ApplicationCommands.Undo" />
+            <MenuItem Header="Redo" Icon="{StaticResource IconMenuRedo}" Command="ApplicationCommands.Redo" />
+
+            <Separator Style="{StaticResource SeparatorStyle}" />
+
+            <MenuItem Header="Cut" Icon="{StaticResource IconMenuCut}" Command="ApplicationCommands.Cut" />
+            <MenuItem Header="Copy" Icon="{StaticResource IconMenuCopy}" Command="ApplicationCommands.Copy" />
+            <MenuItem Header="Paste" Icon="{StaticResource IconMenuPaste}" Command="ApplicationCommands.Paste" />
+
+            <Separator Style="{StaticResource SeparatorStyle}" />
+
+            <MenuItem Header="Expand All" Icon="{StaticResource IconMenuExpand}"
+                      Command="{x:Static ct:TextEditorCommands.ExpandAllFolds}" />
+            <MenuItem Header="Collapse All" Icon="{StaticResource IconMenuCollapse}"
+                      Command="{x:Static ct:TextEditorCommands.CollapseAllFolds}" />
+        </ContextMenu>
+    </UserControl.Resources>
+
+    <Border Padding="5">
+        <ad:DockingManager DocumentsSource="{Binding Documents}"
+                           ActiveContent="{Binding ActiveDocument, Mode=TwoWay, Converter={StaticResource ActiveDocumentConverter}}">
+            <ad:DockingManager.Resources>
+                <DataTemplate DataType="{x:Type vm:DocumentViewModel}">
+                    <ct:TextEditor Text="{Binding Content, Mode=TwoWay}"
+                                   IsReadOnly="{Binding IsReadOnly, Mode=TwoWay}"
+                                   Line="{Binding Line, Mode=TwoWay}"
+                                   Column="{Binding Column, Mode=TwoWay}"
+                                   SyntaxHighlighting="{Binding Highlighting, Mode=OneWay}"
+                                   CompletionData="{Binding CompletionData}"
+                                   ContextMenu="{StaticResource EditorContextMenu}" />
+                </DataTemplate>
+            </ad:DockingManager.Resources>
+
+            <ad:LayoutRoot>
+                <ad:LayoutPanel Orientation="Horizontal">
+                    <ad:LayoutDocumentPane />
+
+                    <ad:LayoutAnchorablePane DockWidth="300">
+                        <ad:LayoutAnchorable Title="Result" CanHide="False" CanAutoHide="False">
+                            <wv:WebView2 Name="WebView" DefaultBackgroundColor="Transparent" />
+                        </ad:LayoutAnchorable>
+                    </ad:LayoutAnchorablePane>
+                </ad:LayoutPanel>
+            </ad:LayoutRoot>
+        </ad:DockingManager>
+    </Border>
+</UserControl>

@@ -1,0 +1,54 @@
+﻿<Window x:Class="XsltEditor.Views.Dialogs.CompletionDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
+        xmlns:ct="clr-namespace:XsltEditor.Views.UserControls"
+
+        Height="450"
+        Width="500"
+        Title="Completions"
+
+        ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterScreen"
+        Style="{StaticResource WindowStyle}">
+
+    <Border Style="{StaticResource BorderWindow}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <ct:WindowBar Grid.Row="0" Background="{DynamicResource RegionBrush}" Title="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" ShowTitle="True" />
+
+            <Grid Grid.Row="1" Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Background="{DynamicResource BackgroundBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                    <ListBox ItemsSource="{Binding CompletionData}" SelectedItem="{Binding SelectedData}" DisplayMemberPath="Text" Margin="2" Style="{StaticResource ListBoxStyle}" />
+                </Border>
+
+                <StackPanel Grid.Row="1" Margin="0,10">
+                    <TextBlock Text="New completion text:" Margin="0,0,0,5" />
+                    <TextBox Text="{Binding Name}" />
+                </StackPanel>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Content="Add" Command="{Binding AddCommand}" />
+                    <Button Grid.Column="1" Content="Delete" Command="{Binding DeleteCommand}" />
+                    <Button Grid.Column="2" Content="Save" Command="{Binding SaveCommand}" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

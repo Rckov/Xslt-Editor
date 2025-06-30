@@ -2,9 +2,9 @@
 
 namespace XsltEditor.Services.Interfaces;
 
-public interface ISettingsService
+internal interface ISettingsService
 {
     Settings Settings { get; }
 
-    void SaveSettings();
+    void SaveSettings(Settings settings);
 }

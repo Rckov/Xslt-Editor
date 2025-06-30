@@ -1,19 +1,18 @@
 ﻿using ICSharpCode.AvalonEdit.CodeCompletion;
-using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Search;
 
 using System.Runtime.Versioning;
-using System.Text.Json.Serialization;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
+
+using XsltEditor.Models;
 
 namespace XsltEditor.Views.UserControls;
 
 [SupportedOSPlatform("windows")]
-public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
+internal class TextEditor : ICSharpCode.AvalonEdit.TextEditor
 {
     public static readonly DependencyProperty LineProperty =
         DependencyProperty.Register(nameof(Line), typeof(int), typeof(TextEditor), new PropertyMetadata(1, LineChanged));
@@ -25,10 +24,11 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
         DependencyProperty.Register(nameof(Text), typeof(string), typeof(TextEditor), new PropertyMetadata(string.Empty, OnTextChanged));
 
     public static readonly DependencyProperty CompletionDataProperty =
-        DependencyProperty.Register(nameof(CompletionData), typeof(IList<CompletionData>), typeof(TextEditor), new PropertyMetadata(OnCompletionDataChanged));
+        DependencyProperty.Register(nameof(CompletionData), typeof(IReadOnlyList<CompletionData>), typeof(TextEditor), new PropertyMetadata(OnCompletionDataChanged));
 
     private readonly KeyEventHandler _previewKeyDownHandler;
     private readonly TextCompositionEventHandler _textEnteredHandler;
+    private CompletionWindow? _completionWindow;
 
     private FoldingManager? _foldingManager;
     private CompletionWindow? _completionWindow;
@@ -72,9 +72,9 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
         set => base.Text = value;
     }
 
-    public IList<CompletionData> CompletionData
+    public IReadOnlyList<CompletionData> CompletionData
     {
-        get => (IList<CompletionData>)GetValue(CompletionDataProperty);
+        get => (IReadOnlyList<CompletionData>)GetValue(CompletionDataProperty);
         set => SetValue(CompletionDataProperty, value);
     }
 
@@ -177,7 +177,7 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
             return;
         }
 
-        int newLine = (int)e.NewValue;
+        var newLine = (int)e.NewValue;
         if (editor.TextArea.Caret.Line == newLine)
         {
             return;
@@ -265,10 +265,7 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
         }
 
         var firstFolding = _foldingManager.GetNextFolding(0);
-        if (firstFolding != null)
-        {
-            firstFolding.IsFolded = false;
-        }
+        firstFolding?.IsFolded = false;
     }
 
     private void ExpandAllFolds()
@@ -284,44 +281,6 @@ public class TextEditor : ICSharpCode.AvalonEdit.TextEditor
         }
     }
 }
-
-[SupportedOSPlatform("windows")]
-public class CompletionData : ICompletionData
-{
-    public CompletionData(string text)
-    {
-        Text = text;
-    }
-
-    [JsonIgnore]
-    public ImageSource? Image => null;
-
-    public string Text { get; }
-
-    [JsonIgnore]
-    public object Content => Text;
-
-    [JsonIgnore]
-    public object Description => $"Insert {Text}";
-
-    [JsonIgnore]
-    public double Priority => 0;
-
-    [JsonIgnore]
-    public string OpenTag => $"<{Text}>";
-
-    [JsonIgnore]
-    public string CloseTag => $"</{Text}>";
-
-    public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
-    {
-        textArea.Document.Replace(completionSegment.Offset - 1, 1, string.Empty);
-        textArea.Document.Replace(completionSegment, $"{OpenTag}{CloseTag}");
-
-        textArea.Caret.Offset -= CloseTag.Length;
-    }
-}
-
 
 public static class TextEditorCommands
 {

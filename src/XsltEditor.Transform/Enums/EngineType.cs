@@ -1,4 +1,4 @@
-namespace XsltEditor.Transform.Enums;
+﻿namespace XsltEditor.Transform.Enums;
 
 public enum EngineType
 {

@@ -1,181 +1,111 @@
-﻿using ICSharpCode.AvalonEdit.Highlighting;
-using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 
-using System.IO;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.Versioning;
-using System.Text;
-using System.Xml;
+using ICSharpCode.AvalonEdit.Highlighting;
 
+using System.Diagnostics;
+
+using XsltEditor.Models;
+using XsltEditor.Models.Enums;
 using XsltEditor.Models.Messages;
-using XsltEditor.Services.Implementation;
 using XsltEditor.Services.Interfaces;
-using XsltEditor.ViewModels.Base;
-using XsltEditor.Views.UserControls;
 
 namespace XsltEditor.ViewModels;
 
-[SupportedOSPlatform("windows")]
-public class DocumentViewModel : BaseViewModel, IDisposable
+internal partial class DocumentViewModel : ObservableObject
 {
-    private readonly Dictionary<ThemeType, string> _highlightingPaths = [];
-    private readonly IMessenger _messenger;
+    private readonly IFileDialogService _fileService;
+    private readonly IDocumentStorageService _storageService;
+    private readonly IWindowService _windowService;
 
-    public DocumentViewModel(IMessenger messenger, ICompletionDataService? completionDataService = null)
+    [ObservableProperty] private int _line;
+    [ObservableProperty] private int _column;
+
+    [ObservableProperty] private string? _content;
+    [ObservableProperty] private string? _filePath;
+
+    [ObservableProperty] private bool _isDirty;
+    [ObservableProperty] private bool _isReadOnly;
+
+    [ObservableProperty] private IHighlightingDefinition? _highlighting;
+
+    public DocumentViewModel(
+        IMessenger messenger,
+        IFileDialogService fileService,
+        IDocumentStorageService storageService,
+        IWindowService windowService,
+        ICompletionDataService completionData)
     {
-        _messenger = messenger;
-        _messenger.Subscribe<ThemeMessage>(OnThemeChanged);
-        _messenger.Subscribe<CaretLineMessage>(OnScrollToLine);
+        _fileService = fileService;
+        _storageService = storageService;
+        _windowService = windowService;
 
-        AddHighlighting(ThemeType.Dark, "XsltEditor.Resources.Highlighting.DarkMode.xshd");
-        AddHighlighting(ThemeType.Light, "XsltEditor.Resources.Highlighting.LightMode.xshd");
+        completionData.LoadData(DocumentType);
+        CompletionData = completionData.Data;
 
-        if (completionDataService != null)
+        messenger.Register<CaretChangedMessage>(this, (_, m) =>
         {
-            CompletionData = completionDataService.LoadCompletionData();
-        }
-    }
-
-    public string? Name
-    {
-        get;
-        init => Set(ref field, value);
-    }
-
-    public string? FilePath
-    {
-        get;
-        private set => Set(ref field, value);
-    }
-
-    public string? Text
-    {
-        get;
-        set => Set(ref field, value);
-    }
-
-    public bool? IsDirty
-    {
-        get;
-        set => Set(ref field, value);
-    }
-
-    public bool IsReadOnly
-    {
-        get;
-        set => Set(ref field, value);
-    }
-
-    public int Line
-    {
-        get;
-        set => Set(ref field, value);
-    }
-
-    public int Column
-    {
-        get;
-        set => Set(ref field, value);
-    }
-
-    public Encoding? Encoding
-    {
-        get;
-        set => Set(ref field, value);
-    }
-
-    public IHighlightingDefinition? Highlighting
-    {
-        get;
-        private set => Set(ref field, value);
-    }
-
-    public IList<CompletionData>? CompletionData { get; private set; }
-
-    public void Dispose()
-    {
-        _messenger.Unsubscribe<ThemeMessage>(OnThemeChanged);
-        _messenger.Unsubscribe<CaretLineMessage>(OnScrollToLine);
-        GC.SuppressFinalize(this);
-    }
-
-    public async Task OpenDocument(string path)
-    {
-        try
-        {
-            await using var fileStream = new FileStream(path, FileMode.Open);
-            using var streamReader = new StreamReader(fileStream, true);
-
-            FilePath = path;
-            Encoding = streamReader.CurrentEncoding;
-
-            Text = await streamReader.ReadToEndAsync();
-            LogInfo($"File opened successfully: {path}");
-        }
-        catch (Exception ex)
-        {
-            LogError($"Error opening file: {path}", ex);
-            throw;
-        }
-    }
-
-    public async Task SaveDocument(string path)
-    {
-        try
-        {
-            await using var fileStream = new FileStream(path, FileMode.Create);
-            await using var streamWriter = new StreamWriter(fileStream);
-
-            await streamWriter.WriteAsync(Text);
-
-            if (string.IsNullOrEmpty(FilePath))
+            if (m.Id == Id)
             {
-                FilePath = path;
-                Encoding = streamWriter.Encoding;
+                Line = m.Value;
             }
+        });
 
-            IsDirty = false;
-            LogInfo($"File saved successfully: {path}");
-        }
-        catch (Exception ex)
-        {
-            LogError($"Error saving file: {path}", ex);
-            throw;
-        }
+        messenger.Register<ThemeChangedMessage>(this, (_, m) => Highlighting = m.Highlighting);
     }
 
-    private void OnThemeChanged(ThemeMessage message)
-    {
-        var highlighting = _highlightingPaths[message.ThemeType];
-        using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(highlighting);
+    public Guid Id { get; init; }
+    public string? Name { get; init; }
+    public DocumentType DocumentType { get; init; }
+    public IReadOnlyList<CompletionData> CompletionData { get; } = [];
 
-        if (stream == null)
+    [RelayCommand]
+    private void OpenCaretView()
+    {
+        _windowService.ShowDialog<CaretViewModel>(Id);
+    }
+
+    [RelayCommand]
+    private void OpenExplorer()
+    {
+        if (string.IsNullOrWhiteSpace(FilePath))
         {
             return;
         }
 
-        using var reader = XmlReader.Create(stream);
-        Highlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+        Process.Start("explorer.exe", $"/select,\"{FilePath}\"");
     }
 
-    private void OnScrollToLine(CaretLineMessage message)
+    [RelayCommand]
+    private async Task OpenDocument()
     {
-        Line = message.Line;
-    }
+        var pathFile = _fileService.OpenFileDialog("Open " + Name, $".{DocumentType}".ToLower());
 
-    private void AddHighlighting(ThemeType type, string path)
-    {
-        _highlightingPaths.Add(type, path);
-    }
-
-    protected override void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        base.OnPropertyChanged(propertyName);
-
-        if (propertyName is nameof(Text))
+        if (string.IsNullOrWhiteSpace(pathFile))
         {
-            IsDirty = true;
+            return;
         }
+
+        Content = await _storageService.ReadContentAsync(pathFile);
+
+        IsDirty = true;
+        FilePath = pathFile;
     }
+
+    [RelayCommand]
+    private async Task SaveDocument()
+    {
+        FilePath ??= _fileService.OpenSaveDialog($"Save {Name}", $".{DocumentType}".ToLower());
+
+        if (string.IsNullOrWhiteSpace(FilePath))
+        {
+            return;
+        }
+
+        await _storageService.WriteContentAsync(FilePath, Content);
+        IsDirty = false;
+    }
+
+    partial void OnContentChanged(string? value) => IsDirty = true;
 }

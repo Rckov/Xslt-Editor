@@ -1,297 +1,186 @@
-﻿using System.Collections.ObjectModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+
+using Microsoft.Extensions.DependencyInjection;
+
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.Versioning;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Threading;
 
-using XsltEditor.Helpers;
-using XsltEditor.Infrastructure;
-using XsltEditor.Models.Messages;
+using XsltEditor.Common.Attributes;
+using XsltEditor.Extensions;
+using XsltEditor.Models.Enums;
 using XsltEditor.Services.Interfaces;
-using XsltEditor.Transform.Enums;
-using XsltEditor.ViewModels.Base;
-using XsltEditor.Views.Windows;
+using XsltEditor.Views;
 
 namespace XsltEditor.ViewModels;
 
-[SupportedOSPlatform("windows")]
-public class MainViewModel : BaseViewModel, IDisposable
+[Window(typeof(MainWindow))]
+internal partial class MainViewModel : ObservableObject
 {
-    private readonly IMessenger _messenger;
+    private const int DebounceMilliseconds = 500;
+
+    private readonly ISettingsService _settingsService;
+    private readonly IThemeService _themeService;
     private readonly IXmlTransformService _transformService;
     private readonly IWindowService _windowService;
+
+    [ObservableProperty] private string? _htmlContent;
+    [ObservableProperty] private DocumentViewModel? _activeDocument;
 
     private DispatcherTimer? _debounceTimer;
 
     public MainViewModel(
-        IMessenger messenger,
         IWindowService windowService,
-        IThemeManager themeManager,
-        IXmlTransformService transformService,
+        IThemeService themeService,
         ISettingsService settingsService,
-        ICompletionDataService completionDataService)
+        IXmlTransformService transformService)
     {
         _windowService = windowService;
+        _themeService = themeService;
+        _settingsService = settingsService;
         _transformService = transformService;
-
-        _messenger = messenger;
-        _messenger.Subscribe<EngineMessage>(OnEngineChanged);
-        _messenger.Subscribe<RuntimeCompileMessage>(OnCompileChanged);
 
         Documents =
         [
-            new DocumentViewModel(messenger, completionDataService) { Name = "XSL" },
-            new DocumentViewModel(messenger) { Name = "XML" }
+            CreateDocument("XSL", DocumentType.Xsl),
+            CreateDocument("XML", DocumentType.Xml)
         ];
 
-        Engine = settingsService.Settings.Engine;
-        IsRuntimeCompile = settingsService.Settings.IsRuntimeCompile;
-
-        themeManager.Apply(settingsService.Settings.Theme);
-
-        InitializeEvents();
+        InitializeSettings();
+        InitializeDebounceTimer();
     }
 
-    public ObservableCollection<DocumentViewModel> Documents { get; set; }
+    public ObservableCollection<DocumentViewModel> Documents { get; }
 
-    public DocumentViewModel? ActiveDocument
+    [RelayCommand]
+    private void OpenCompletionView()
     {
-        get;
-        set => Set(ref field, value);
+        _windowService.ShowDialog<CompletionViewModel>();
     }
 
-    public string? HtmlContent
-    {
-        get;
-        set => Set(ref field, value);
-    }
-
-    public EngineType Engine
-    {
-        set => _transformService.Create(value);
-    }
-
-    public bool IsRuntimeCompile
-    {
-        get => !field;
-        set
-        {
-            if (Set(ref field, value))
-            {
-                InitializeDebounceTimer(value);
-            }
-        }
-    }
-
-    public ICommand? OpenFileCommand { get; private set; }
-    public ICommand? SaveFileCommand { get; private set; }
-    public ICommand? OpenCompletionWindowCommand { get; private set; }
-    public ICommand? OpenCaretLineWindowCommand { get; private set; }
-    public ICommand? OpenFileExplorerCommand { get; private set; }
-    public ICommand? OpenSettingsWindowCommand { get; private set; }
-    public ICommand? CompileCommand { get; private set; }
-
-    public void Dispose()
-    {
-        _debounceTimer?.Stop();
-        _messenger.Unsubscribe<EngineMessage>(OnEngineChanged);
-        _messenger.Unsubscribe<RuntimeCompileMessage>(OnCompileChanged);
-
-        foreach (var doc in Documents.ToList())
-        {
-            doc.PropertyChanged -= OnTextPropertyChanged;
-            doc.Dispose();
-        }
-
-        Documents.Clear();
-        GC.SuppressFinalize(this);
-    }
-
-    private void InitializeEvents()
-    {
-        foreach (var item in Documents)
-        {
-            item.PropertyChanged += OnTextPropertyChanged;
-        }
-    }
-
-    private void InitializeDebounceTimer(bool isEnable)
-    {
-        if (isEnable)
-        {
-            _debounceTimer ??= new DispatcherTimer
-            {
-                Interval = TimeSpan.FromSeconds(1),
-            };
-
-            _debounceTimer.Tick += DebounceTimer_Tick;
-        }
-        else
-        {
-            if (_debounceTimer != null)
-            {
-                _debounceTimer.Stop();
-                _debounceTimer.Tick -= DebounceTimer_Tick;
-            }
-        }
-    }
-
-    protected override void InitializeCommands()
-    {
-        OpenFileCommand = new RelayCommand(OpenFile);
-        SaveFileCommand = new RelayCommand(SaveFile);
-        OpenCompletionWindowCommand = new RelayCommand(OpenCompletionWindow);
-        OpenCaretLineWindowCommand = new RelayCommand(OpenCaretLineWindow);
-        OpenFileExplorerCommand = new RelayCommand(OpenFileExplorer);
-        OpenSettingsWindowCommand = new RelayCommand(OpenSettingWindow);
-        CompileCommand = new RelayCommand(async () => await Compile());
-    }
-
-    private async void OpenFile()
-    {
-        var path = Dialog.OpenFile("Open File", ".xsl", ".xslt", ".xml");
-
-        if (string.IsNullOrEmpty(path))
-        {
-            return;
-        }
-
-        var document = GetDocumentByExtension(path);
-
-        try
-        {
-            if (document == null)
-            {
-                return;
-            }
-
-            await document.OpenDocument(path);
-            ActiveDocument = document;
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-    }
-
-    private async void SaveFile()
+    [RelayCommand]
+    private async Task SaveDocument()
     {
         if (ActiveDocument is null)
         {
             return;
         }
 
-        var path = ActiveDocument.FilePath;
-
-        if (string.IsNullOrEmpty(path))
-        {
-            path = Dialog.SaveFile("Save File " + ActiveDocument.Name, ".xsl", ".xslt", ".xml");
-
-            if (string.IsNullOrEmpty(path))
-            {
-                return;
-            }
-        }
-
         try
         {
-            await ActiveDocument.SaveDocument(path);
+            await ActiveDocument.SaveDocumentCommand.ExecuteAsync(null);
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(ex.Message, "Error Saving the Document");
         }
     }
 
-    private async Task Compile()
+    [RelayCommand]
+    private async Task OpenDocument(DocumentType documentType)
     {
-        var xsl = GetDocumentByExtension(".xsl");
-        var xml = GetDocumentByExtension(".xml");
-
-        if (xsl == null || xml == null)
+        try
         {
-            LogInfo("Transformation skipped: XSL or XML document not found");
-            return;
+            var document = Documents.GetDocument(documentType);
+            if (document != null)
+            {
+                await document.OpenDocumentCommand.ExecuteAsync(null);
+                ActiveDocument = document;
+            }
         }
-
-        if (string.IsNullOrWhiteSpace(xsl.Text) || string.IsNullOrWhiteSpace(xml.Text))
+        catch (Exception ex)
         {
-            HtmlContent = string.Empty;
-            return;
-        }
-
-        HtmlContent = await _transformService.TransformAsync(xsl.Text, xml.Text, xsl.FilePath);
-    }
-
-    private async void DebounceTimer_Tick(object? sender, EventArgs e)
-    {
-        if (_debounceTimer != null && _debounceTimer.IsEnabled)
-        {
-            _debounceTimer.Stop();
-        }
-
-        await Compile();
-    }
-
-    private void OnTextPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName != nameof(DocumentViewModel.Text))
-        {
-            return;
-        }
-
-        if (_debounceTimer != null)
-        {
-            _debounceTimer.Stop();
-            _debounceTimer.Start();
+            MessageBox.Show(ex.Message, "Error Opening the Document");
         }
     }
 
-    private void OpenCompletionWindow()
+    [RelayCommand]
+    private void ChangeTheme()
     {
-        _windowService.ShowDialogWindow<CompletionView>();
+        _themeService.SwitchTheme();
+
+        _settingsService.Settings.Theme = _themeService.CurrentThemeType;
+        _settingsService.SaveSettings(_settingsService.Settings);
     }
 
-    private void OpenCaretLineWindow()
+    [RelayCommand]
+    private void ExitApplication()
     {
-        _windowService.ShowDialogWindow<CaretLineView>();
+        Environment.Exit(0);
     }
 
-    private void OpenSettingWindow(object? parameter)
+    private void InitializeSettings()
     {
-        _windowService.ShowDialogWindow<SettingsView>();
+        _themeService.SetTheme(_settingsService.Settings.Theme);
     }
 
-    private void OpenFileExplorer()
+    private DocumentViewModel CreateDocument(string name, DocumentType documentType)
     {
-        if (ActiveDocument?.FilePath is not null)
+        // (#a) move to factory
+        var document = new DocumentViewModel(
+            App.Services.GetRequiredService<IMessenger>(),
+            App.Services.GetRequiredService<IFileDialogService>(),
+            App.Services.GetRequiredService<IDocumentStorageService>(),
+            App.Services.GetRequiredService<IWindowService>(),
+            App.Services.GetRequiredService<ICompletionDataService>())
         {
-            Process.Start("explorer.exe", $"/select,\"{ActiveDocument.FilePath}\"");
-        }
-    }
-
-    private void OnEngineChanged(EngineMessage message)
-    {
-        Engine = message.EngineType;
-    }
-
-    private void OnCompileChanged(RuntimeCompileMessage message)
-    {
-        IsRuntimeCompile = message.IsRuntime;
-    }
-
-    private DocumentViewModel? GetDocumentByExtension(string filePath)
-    {
-        var extension = Path.GetExtension(filePath).ToLower();
-
-        return extension switch
-        {
-            ".xsl" or ".xslt" => Documents.FirstOrDefault(d => d.Name == "XSL"),
-            ".xml" => Documents.FirstOrDefault(d => d.Name == "XML"),
-            _ => null
+            Id = Guid.NewGuid(),
+            Name = name,
+            DocumentType = documentType
         };
+
+        AttachDocumentEvents(document);
+        return document;
+    }
+
+    private void AttachDocumentEvents(DocumentViewModel document)
+    {
+        document.PropertyChanged += Document_PropertyChanged;
+    }
+
+    private void InitializeDebounceTimer()
+    {
+        _debounceTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(DebounceMilliseconds)
+        };
+        _debounceTimer.Tick += OnDebounceTimerTick;
+    }
+
+    private void Document_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(DocumentViewModel.Content) || _debounceTimer == null)
+        {
+            return;
+        }
+
+        _debounceTimer.Stop();
+        _debounceTimer.Start();
+    }
+
+    private async void OnDebounceTimerTick(object? sender, EventArgs e)
+    {
+        try
+        {
+            _debounceTimer?.Stop();
+
+            var xsl = Documents.GetDocument(DocumentType.Xsl);
+            var xml = Documents.GetDocument(DocumentType.Xml);
+
+            if (string.IsNullOrWhiteSpace(xsl?.Content) || string.IsNullOrWhiteSpace(xml?.Content))
+            {
+                HtmlContent = string.Empty;
+                return;
+            }
+
+            HtmlContent = await _transformService.TransformAsync(xml.Content, xsl.Content, xsl.FilePath);
+        }
+        catch
+        {
+            HtmlContent = "Error transformation.";
+        }
     }
 }

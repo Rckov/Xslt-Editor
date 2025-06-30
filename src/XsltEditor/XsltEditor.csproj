@@ -1,41 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows7.0</TargetFramework>
-    <LangVersion>preview</LangVersion>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
-    <ApplicationIcon>Resources\appicon.ico</ApplicationIcon>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UseWPF>true</UseWPF>
+        <LangVersion>Preview</LangVersion>
+        <ApplicationIcon>Resources\appicon.ico</ApplicationIcon>
+    </PropertyGroup>
 
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
-  </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+        <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3296.44" />
+		
+		<ProjectReference Include="..\XsltEditor.Transform\XsltEditor.Transform.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-     <Resource Include="Resources\appicon.ico" />
-
-     <EmbeddedResource Include="Resources\completions.json" />
-     <EmbeddedResource Include="Resources\Highlighting\DarkMode.xshd" />
-     <EmbeddedResource Include="Resources\Highlighting\LightMode.xshd" />
-  </ItemGroup>
-
-  <ItemGroup>
-     <ProjectReference Include="..\XsltEditor.Transform\XsltEditor.Transform.csproj" />
-
-     <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
-     <PackageReference Include="Dirkster.AvalonDock" Version="4.72.1" />
-     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
-     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3065.39" />
-  </ItemGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-     <DebugType>none</DebugType>
-     <GenerateDocumentationFile>false</GenerateDocumentationFile>
-     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-     <AllowedReferenceRelatedFileExtensions>.pdb</AllowedReferenceRelatedFileExtensions>
-   </PropertyGroup>
-
+    <ItemGroup>
+        <Resource Include="Resources\appicon.ico" />
+        <EmbeddedResource Include="Resources\Highlighting\DarkMode.xshd" />
+        <EmbeddedResource Include="Resources\Highlighting\LightMode.xshd" />
+        <EmbeddedResource Include="Resources\completions.xsl.json" />
+    </ItemGroup>
 </Project>

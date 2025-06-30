@@ -1,97 +1,75 @@
-﻿using System.Collections.ObjectModel;
-using System.Runtime.Versioning;
-using System.Windows;
-using System.Windows.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
-using XsltEditor.Infrastructure;
+using System.Collections.ObjectModel;
+using System.Windows;
+
+using XsltEditor.Common.Attributes;
+using XsltEditor.Models;
 using XsltEditor.Services.Interfaces;
-using XsltEditor.ViewModels.Base;
-using XsltEditor.Views.UserControls;
+using XsltEditor.Views.Dialogs;
 
 namespace XsltEditor.ViewModels;
 
-[SupportedOSPlatform("windows")]
-public class CompletionViewModel : BaseViewModel
+[Window(typeof(CompletionDialog))]
+internal partial class CompletionViewModel(ICompletionDataService completionService) : ObservableObject
 {
-    private readonly ICompletionDataService _dataService;
+    [ObservableProperty] private string? _name;
+    [ObservableProperty] private CompletionData? _selectedData;
 
-    public CompletionViewModel(ICompletionDataService dataService)
+    public ObservableCollection<CompletionData> CompletionData { get; } = new(completionService.Data);
+
+    [RelayCommand]
+    private void Save()
     {
-        _dataService = dataService;
-        CompletionData = new ObservableCollection<CompletionData>(dataService.LoadCompletionData());
+        try
+        {
+            completionService.SaveData();
+            MessageBox.Show("Data saved successfully.", "Success");
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Error saving " + ex.Message, "Error");
+        }
     }
 
-    public string? NameData
+    [RelayCommand]
+    private void Add()
     {
-        get;
-        set => Set(ref field, value);
-    }
-
-    public CompletionData? SelectedData
-    {
-        get;
-        set => Set(ref field, value);
-    }
-
-    public ObservableCollection<CompletionData> CompletionData { get; }
-
-    public ICommand? AddCommand { get; private set; }
-    public ICommand? DeleteCommand { get; private set; }
-    public ICommand? SaveCommand { get; private set; }
-
-    protected override void InitializeCommands()
-    {
-        AddCommand = new RelayCommand(AddCompletionData);
-        DeleteCommand = new RelayCommand(DeleteCompletionData, CanDeleteCompletionData);
-        SaveCommand = new RelayCommand(SaveCompletionData);
-    }
-
-    private void AddCompletionData()
-    {
-        if (string.IsNullOrEmpty(NameData))
+        if (string.IsNullOrEmpty(Name))
         {
             return;
         }
 
-        if (CompletionData.Any(x => x.Text == NameData))
+        if (CompletionData.Any(x => string.Equals(x.Text, Name, StringComparison.OrdinalIgnoreCase)))
         {
-            MessageBox.Show("Item already exists.", "Duplicate Item", MessageBoxButton.OK, MessageBoxImage.Warning);
+            MessageBox.Show("Item already exists.", "Duplicate Item");
             return;
         }
 
-        CompletionData.Add(new CompletionData(NameData));
-        NameData = null;
+        var newItem = new CompletionData(Name);
+        completionService.Add(newItem);
+        CompletionData.Add(newItem);
+
+        Name = null;
     }
 
-    private void DeleteCompletionData()
+    [RelayCommand]
+    private void Delete()
     {
         if (SelectedData is null)
         {
             return;
         }
 
-        if (CompletionData.Any(x => x.Equals(SelectedData)))
+        if (!CompletionData.Contains(SelectedData))
         {
-            CompletionData.Remove(SelectedData);
+            return;
         }
-    }
 
-    private bool CanDeleteCompletionData()
-    {
-        return SelectedData is not null;
-    }
+        completionService.Remove(SelectedData);
+        CompletionData.Remove(SelectedData);
 
-    private void SaveCompletionData()
-    {
-        try
-        {
-            _dataService.SaveCompletionData(CompletionData);
-            MessageBox.Show("Data saved successfully. Please restart the application.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-        catch (Exception ex)
-        {
-            LogError("Error saving completion data", ex);
-            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
+        SelectedData = null;
     }
 }

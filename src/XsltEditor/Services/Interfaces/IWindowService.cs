@@ -1,10 +1,13 @@
-﻿using System.Windows;
+﻿namespace XsltEditor.Services.Interfaces;
 
-namespace XsltEditor.Services.Interfaces;
-
-public interface IWindowService
+internal interface IWindowService
 {
-    void ShowWindow<TWindow>() where TWindow : Window;
+    void ShowWindow<TViewModel>(object? parameter = null) where TViewModel : class;
 
-    void ShowDialogWindow<TWindow>() where TWindow : Window;
+    void ShowDialog<TViewModel>(object? parameter = null) where TViewModel : class;
+}
+
+internal interface IParameterReceiver
+{
+    void SetParameter(object? parameter = null);
 }

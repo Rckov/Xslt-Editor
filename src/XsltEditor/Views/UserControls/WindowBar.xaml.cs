@@ -1,12 +1,9 @@
-﻿using System.Runtime.Versioning;
-using System.Windows;
-using System.Windows.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 
-using XsltEditor.Infrastructure;
+using System.Windows;
 
 namespace XsltEditor.Views.UserControls;
 
-[SupportedOSPlatform("windows")]
 public partial class WindowBar
 {
     public static readonly DependencyProperty TitleProperty =
@@ -19,21 +16,17 @@ public partial class WindowBar
         DependencyProperty.Register(nameof(LeftContent), typeof(object), typeof(WindowBar), new PropertyMetadata(null));
 
     public static readonly DependencyProperty RightContentProperty =
-        DependencyProperty.Register(nameof(RightContent), typeof(object), typeof(WindowBar),
-            new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(RightContent), typeof(object), typeof(WindowBar), new PropertyMetadata(null));
 
     public static readonly DependencyProperty CanMaximizedProperty =
-        DependencyProperty.Register(nameof(CanMaximized), typeof(bool), typeof(WindowBar),
-            new PropertyMetadata(true, null));
+        DependencyProperty.Register(nameof(CanMaximized), typeof(bool), typeof(WindowBar), new PropertyMetadata(true, null));
 
     public static readonly DependencyProperty CanMinimizedProperty =
-        DependencyProperty.Register(nameof(CanMinimized), typeof(bool), typeof(WindowBar),
-            new PropertyMetadata(true, null));
+        DependencyProperty.Register(nameof(CanMinimized), typeof(bool), typeof(WindowBar), new PropertyMetadata(true, null));
 
     public WindowBar()
     {
         InitializeComponent();
-        InitCommands();
     }
 
     public string Title
@@ -72,46 +65,33 @@ public partial class WindowBar
         set => SetValue(CanMinimizedProperty, value);
     }
 
-    public ICommand? CloseCommand { get; private set; }
-    public ICommand? MaximizeCommand { get; private set; }
-    public ICommand? MinimizeCommand { get; private set; }
-
-    private void InitCommands()
+    [RelayCommand]
+    private void MinimizeWindow(Window? parameter)
     {
-        CloseCommand = new RelayCommand(CloseWindowExecuter);
-        MaximizeCommand = new RelayCommand(MaximizeWindowExecuter);
-        MinimizeCommand = new RelayCommand(MinimizeWindowExecuter);
-    }
-
-    private void MinimizeWindowExecuter(object? parameter)
-    {
-        if (parameter is not Window window)
+        if (parameter is null)
         {
             return;
         }
 
-        window.WindowState = WindowState.Minimized;
+        parameter.WindowState = WindowState.Minimized;
     }
 
-    private void MaximizeWindowExecuter(object? parameter)
+    [RelayCommand]
+    private void MaximizeWindow(Window? parameter)
     {
-        if (parameter is not Window window)
+        if (parameter is null)
         {
             return;
         }
 
-        window.WindowState = window.WindowState == WindowState.Maximized
+        parameter.WindowState = parameter.WindowState == WindowState.Maximized
             ? WindowState.Normal
             : WindowState.Maximized;
     }
 
-    private void CloseWindowExecuter(object? parameter)
+    [RelayCommand]
+    private void CloseWindow(Window? parameter)
     {
-        if (parameter is not Window window)
-        {
-            return;
-        }
-
-        window.Close();
+        parameter?.Close();
     }
 }

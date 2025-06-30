@@ -1,4 +1,4 @@
-using System.Xml;
+﻿using System.Xml;
 
 using XsltEditor.Transform.Engines;
 using XsltEditor.Transform.Enums;
@@ -6,13 +6,13 @@ using XsltEditor.Transform.Interfaces;
 
 namespace XsltEditor.Transform;
 
-public class Transformer
+public class Transformer : ITransformer
 {
-    public IEngine? Engine { get; private set; }
+    private IEngine? _engine;
 
     public void Create(EngineType engineType)
     {
-        Engine = engineType switch
+        _engine = engineType switch
         {
             //EngineType.Saxon => new SaxonEngine(),
             EngineType.XslCompiledTransform => new XslCompiledEngine(),
@@ -22,11 +22,11 @@ public class Transformer
 
     public Task<string> TransformAsync(XmlReader xml, XmlReader schema, XmlUrlResolver? resolver = null)
     {
-        if (Engine is null)
+        if (_engine is null)
         {
-            throw new NotImplementedException(nameof(Engine));
+            throw new NotImplementedException(nameof(_engine));
         }
 
-        return Engine.TransformAsync(xml, schema, resolver);
+        return _engine.TransformAsync(xml, schema, resolver);
     }
 }

@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="XsltEditor.Views.Views.BottomStatusContent"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             DataContext="{Binding ActiveDocument}">
+
+    <UserControl.Resources>
+        <TextBlock x:Key="IconPath" Text="&#xF745;" FontFamily="{StaticResource FontIcon}" />
+    </UserControl.Resources>
+
+    <Grid Background="{DynamicResource RegionBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="5">
+            <ContentControl Content="{StaticResource IconPath}" VerticalAlignment="Center" Margin="0,0,5,0" />
+            <TextBlock Style="{StaticResource StatusTextStyle}" Margin="0">
+                <Hyperlink Command="{Binding OpenExplorerCommand}" TextDecorations="None"
+                           Foreground="{DynamicResource TextBrush}">
+                    <Run Text="{Binding FilePath, Mode=OneWay, TargetNullValue='No file selected'}" />
+                </Hyperlink>
+            </TextBlock>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+            <TextBlock Text="has changes" Style="{StaticResource StatusTextStyle}"
+                       Visibility="{Binding IsDirty, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+            <Button Command="{Binding OpenCaretViewCommand}" Style="{StaticResource StatusButtonStyle}">
+                <TextBlock>
+                    <Run Text="{Binding Line, StringFormat='Ln: {0},', FallbackValue='Ln: 0'}" />
+                    <Run Text="{Binding Column, StringFormat='Col: {0}', FallbackValue='Col: 0'}" />
+                </TextBlock>
+            </Button>
+
+            <CheckBox IsChecked="{Binding IsReadOnly}" VerticalAlignment="Center" Margin="5,0">
+                <CheckBox.Template>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <Border x:Name="Bd" Padding="0,2">
+                            <TextBlock x:Name="State" Style="{StaticResource StatusTextStyle}"
+                                       HorizontalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="State" Property="TextBlock.Text" Value="Read Only" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="State" Property="TextBlock.Text" Value="Write Mode" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background"
+                                        Value="{DynamicResource ButtonHoverBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </CheckBox.Template>
+            </CheckBox>
+
+            <TextBlock Text="{Binding Encoding.EncodingName, FallbackValue='UTF-8'}"
+                       Style="{StaticResource StatusTextStyle}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,65 +1,51 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
 using System.IO;
-using System.Runtime.Versioning;
 using System.Windows;
 
-using XsltEditor.Services.Implementation;
 using XsltEditor.Services.Interfaces;
 using XsltEditor.ViewModels;
-using XsltEditor.Views.Windows;
 
 namespace XsltEditor;
 
-[SupportedOSPlatform("windows")]
 public partial class App
 {
-    public App()
+    static App()
     {
-        Services = ConfigureServices(new ServiceCollection());
+        Services = ConfigureServices();
+        AppDirectory = GetApplicationDirectory();
     }
 
-    public static IServiceProvider Services { get; private set; } = null!;
+    public static string AppDirectory { get; }
 
-    public static readonly string SpecialFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "XsltEditor");
+    public static IServiceProvider Services { get; }
 
-    private static ServiceProvider ConfigureServices(IServiceCollection services)
+    private static IServiceProvider ConfigureServices()
     {
-        services.AddSingleton<IMessenger, Messanger>();
-        services.AddSingleton<IWindowService, WindowService>();
-        services.AddSingleton<IThemeManager, ThemeManager>();
-        services.AddSingleton<ICompletionDataService, CompletionDataService>();
-        services.AddSingleton<ISettingsService, SettingsService>();
-        services.AddSingleton<IXmlTransformService, XmlTransformService>();
+        var service = new ServiceCollection();
 
-        services.AddTransient<MainViewModel>();
-        services.AddTransient<MainView>();
+        service.RegisterServices();
+        service.RegisterViews();
 
-        services.AddTransient<CompletionViewModel>();
-        services.AddTransient<CompletionView>();
+        return service.BuildServiceProvider();
+    }
 
-        services.AddTransient<CaretLineViewModel>();
-        services.AddTransient<CaretLineView>();
+    private static string GetApplicationDirectory()
+    {
+        const Environment.SpecialFolder data = Environment.SpecialFolder.ApplicationData;
+        var directory = Path.Combine(Environment.GetFolderPath(data), "Xslt Editor");
 
-        services.AddTransient<SettingsViewModel>();
-        services.AddTransient<SettingsView>();
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
 
-        return services.BuildServiceProvider();
+        return directory;
     }
 
     protected override void OnStartup(StartupEventArgs e)
     {
         var windowService = Services.GetRequiredService<IWindowService>();
-        windowService.ShowWindow<MainView>();
-    }
-
-    protected override void OnExit(ExitEventArgs e)
-    {
-        if (Services is IDisposable disposable)
-        {
-            disposable.Dispose();
-        }
-
-        base.OnExit(e);
+        windowService.ShowWindow<MainViewModel>();
     }
 }
