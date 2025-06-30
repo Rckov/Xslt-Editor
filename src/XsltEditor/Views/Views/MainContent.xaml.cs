@@ -47,8 +47,6 @@ public partial class MainContent
             /// <see cref="CoreWebView2_NavigationCompleted"/> in time. This guarantees the theme is applied correctly.
             OnThemeChanged(themeType);
         }
-
-        WebView.CoreWebView2.SaveAsUIShowing += CoreWebView2_SaveAsUIShowing;
     }
 
     private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -74,23 +72,6 @@ public partial class MainContent
         if (WebView.CanGoBack)
         {
             WebView.CoreWebView2.Reload();
-        }
-    }
-
-    private async void CoreWebView2_SaveAsUIShowing(object? sender, CoreWebView2SaveAsUIShowingEventArgs e)
-    {
-        e.Cancel = true;
-
-        if (DataContext is MainViewModel viewModel && !string.IsNullOrEmpty(viewModel.HtmlContent))
-        {
-            var path = Dialog.SaveFile("Save HTML", ".html");
-
-            if (string.IsNullOrEmpty(path))
-            {
-                return;
-            }
-
-            await File.WriteAllTextAsync(path, viewModel.HtmlContent);
         }
     }
 

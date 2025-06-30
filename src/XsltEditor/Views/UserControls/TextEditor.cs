@@ -28,10 +28,9 @@ internal class TextEditor : ICSharpCode.AvalonEdit.TextEditor
 
     private readonly KeyEventHandler _previewKeyDownHandler;
     private readonly TextCompositionEventHandler _textEnteredHandler;
-    private CompletionWindow? _completionWindow;
 
-    private FoldingManager? _foldingManager;
     private CompletionWindow? _completionWindow;
+    private FoldingManager? _foldingManager;
 
     public TextEditor()
     {
