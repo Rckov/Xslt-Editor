@@ -1,11 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 
 using System.Windows;
-using System.Windows.Controls;
 
 namespace XsltEditor.Views.UserControls;
 
-public partial class WindowBar : UserControl
+public partial class WindowBar
 {
     public static readonly DependencyProperty TitleProperty =
         DependencyProperty.Register(nameof(Title), typeof(string), typeof(WindowBar), new PropertyMetadata(null));
@@ -17,16 +16,13 @@ public partial class WindowBar : UserControl
         DependencyProperty.Register(nameof(LeftContent), typeof(object), typeof(WindowBar), new PropertyMetadata(null));
 
     public static readonly DependencyProperty RightContentProperty =
-        DependencyProperty.Register(nameof(RightContent), typeof(object), typeof(WindowBar),
-            new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(RightContent), typeof(object), typeof(WindowBar), new PropertyMetadata(null));
 
     public static readonly DependencyProperty CanMaximizedProperty =
-        DependencyProperty.Register(nameof(CanMaximized), typeof(bool), typeof(WindowBar),
-            new PropertyMetadata(true, null));
+        DependencyProperty.Register(nameof(CanMaximized), typeof(bool), typeof(WindowBar), new PropertyMetadata(true, null));
 
     public static readonly DependencyProperty CanMinimizedProperty =
-        DependencyProperty.Register(nameof(CanMinimized), typeof(bool), typeof(WindowBar),
-            new PropertyMetadata(true, null));
+        DependencyProperty.Register(nameof(CanMinimized), typeof(bool), typeof(WindowBar), new PropertyMetadata(true, null));
 
     public WindowBar()
     {
@@ -72,23 +68,23 @@ public partial class WindowBar : UserControl
     [RelayCommand]
     private void MinimizeWindow(Window? parameter)
     {
-        if (parameter is not Window window)
+        if (parameter is null)
         {
             return;
         }
 
-        window.WindowState = WindowState.Minimized;
+        parameter.WindowState = WindowState.Minimized;
     }
 
     [RelayCommand]
     private void MaximizeWindow(Window? parameter)
     {
-        if (parameter is not Window window)
+        if (parameter is null)
         {
             return;
         }
 
-        window.WindowState = window.WindowState == WindowState.Maximized
+        parameter.WindowState = parameter.WindowState == WindowState.Maximized
             ? WindowState.Normal
             : WindowState.Maximized;
     }
@@ -96,11 +92,6 @@ public partial class WindowBar : UserControl
     [RelayCommand]
     private void CloseWindow(Window? parameter)
     {
-        if (parameter is not Window window)
-        {
-            return;
-        }
-
-        window.Close();
+        parameter?.Close();
     }
 }

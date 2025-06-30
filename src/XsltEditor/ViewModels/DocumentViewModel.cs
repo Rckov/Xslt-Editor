@@ -4,10 +4,11 @@ using CommunityToolkit.Mvvm.Messaging;
 
 using ICSharpCode.AvalonEdit.Highlighting;
 
-using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 using XsltEditor.Models;
 using XsltEditor.Models.Enums;
+using XsltEditor.Models.Messages;
 using XsltEditor.Services.Interfaces;
 
 namespace XsltEditor.ViewModels;
@@ -16,12 +17,13 @@ internal partial class DocumentViewModel : ObservableObject
 {
     private readonly IFileDialogService _fileService;
     private readonly IDocumentStorageService _storageService;
-
-    [ObservableProperty] private string? _content;
-    [ObservableProperty] private string? _filePath;
+    private readonly IWindowService _windowService;
 
     [ObservableProperty] private int _line;
     [ObservableProperty] private int _column;
+
+    [ObservableProperty] private string? _content;
+    [ObservableProperty] private string? _filePath;
 
     [ObservableProperty] private bool _isDirty;
     [ObservableProperty] private bool _isReadOnly;
@@ -31,35 +33,64 @@ internal partial class DocumentViewModel : ObservableObject
     public DocumentViewModel(
         IMessenger messenger,
         IFileDialogService fileService,
-        IDocumentStorageService storageService)
+        IDocumentStorageService storageService,
+        IWindowService windowService,
+        ICompletionDataService completionData)
     {
         _fileService = fileService;
         _storageService = storageService;
+        _windowService = windowService;
+
+        completionData.LoadData(DocumentType);
+        CompletionData = completionData.Data;
+
+        messenger.Register<CaretChangedMessage>(this, (_, m) =>
+        {
+            if (m.Id == Id)
+            {
+                Line = m.Value;
+            }
+        });
+
+        messenger.Register<ThemeChangedMessage>(this, (_, m) => Highlighting = m.Highlighting);
     }
 
-    [Required]
     public Guid Id { get; init; }
-
-    [Required]
     public string? Name { get; init; }
-
-    [Required]
     public DocumentType DocumentType { get; init; }
-
     public IReadOnlyList<CompletionData> CompletionData { get; } = [];
 
     [RelayCommand]
-    private async Task OpenDocument()
+    private void OpenCaretView()
     {
-        FilePath = _fileService.OpenFileDialog("Open " + Name, $".{DocumentType}".ToLower());
+        _windowService.ShowDialog<CaretViewModel>(Id);
+    }
 
+    [RelayCommand]
+    private void OpenExplorer()
+    {
         if (string.IsNullOrWhiteSpace(FilePath))
         {
             return;
         }
 
-        IsDirty = false;
-        Content = await _storageService.ReadContentAsync(FilePath);
+        Process.Start("explorer.exe", $"/select,\"{FilePath}\"");
+    }
+
+    [RelayCommand]
+    private async Task OpenDocument()
+    {
+        var pathFile = _fileService.OpenFileDialog("Open " + Name, $".{DocumentType}".ToLower());
+
+        if (string.IsNullOrWhiteSpace(pathFile))
+        {
+            return;
+        }
+
+        Content = await _storageService.ReadContentAsync(pathFile);
+
+        IsDirty = true;
+        FilePath = pathFile;
     }
 
     [RelayCommand]
@@ -73,6 +104,7 @@ internal partial class DocumentViewModel : ObservableObject
         }
 
         await _storageService.WriteContentAsync(FilePath, Content);
+        IsDirty = false;
     }
 
     partial void OnContentChanged(string? value) => IsDirty = true;

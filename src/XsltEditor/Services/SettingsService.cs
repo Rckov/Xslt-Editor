@@ -8,36 +8,30 @@ namespace XsltEditor.Services;
 
 internal class SettingsService : ISettingsService
 {
-    private Settings _currentSettings;
-    private readonly string SettingsPath = Path.Combine(App.AppDirectory, "settings.json");
-
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
         WriteIndented = true
     };
 
+    private readonly string SettingsPath = Path.Combine(App.AppDirectory, "settings.json");
+
     public SettingsService()
     {
-        _currentSettings = LoadSettings();
+        Settings = LoadSettings();
     }
 
-    public Settings Settings => _currentSettings;
-
-    public Settings LoadSettings()
-    {
-        if (File.Exists(SettingsPath))
-        {
-            return LoadSettings(SettingsPath);
-        }
-        else
-        {
-            return CreateSettings(SettingsPath);
-        }
-    }
+    public Settings Settings { get; private set; }
 
     public void SaveSettings(Settings settings)
     {
         SaveSettings(SettingsPath, settings);
+    }
+
+    private Settings LoadSettings()
+    {
+        return File.Exists(SettingsPath)
+            ? LoadSettings(SettingsPath)
+            : CreateSettings(SettingsPath);
     }
 
     private Settings LoadSettings(string settingsPath)
@@ -57,10 +51,10 @@ internal class SettingsService : ISettingsService
 
     private Settings CreateSettings(string settingsPath)
     {
-        _currentSettings = new Settings();
-        SaveSettings(settingsPath, _currentSettings);
+        Settings = new Settings();
+        SaveSettings(settingsPath, Settings);
 
-        return _currentSettings;
+        return Settings;
     }
 
     private void SaveSettings(string settingsPath, Settings settings)

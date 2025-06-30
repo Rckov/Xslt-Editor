@@ -1,16 +1,19 @@
-﻿using ICSharpCode.AvalonEdit.CodeCompletion;
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Editing;
-
-using System.Runtime.Versioning;
+﻿using System.Runtime.Versioning;
 using System.Text.Json.Serialization;
 using System.Windows.Media;
+
+using ICSharpCode.AvalonEdit.CodeCompletion;
+using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Editing;
 
 namespace XsltEditor.Models;
 
 [SupportedOSPlatform("windows")]
 internal class CompletionData(string text) : ICompletionData
 {
+    [JsonIgnore] public string OpenTag => $"<{Text}>";
+
+    [JsonIgnore] public string CloseTag => $"</{Text}>";
     [JsonIgnore] public ImageSource? Image => null;
 
     public string Text { get; } = text;
@@ -20,10 +23,6 @@ internal class CompletionData(string text) : ICompletionData
     [JsonIgnore] public object Description => $"Insert {Text}";
 
     [JsonIgnore] public double Priority => 0;
-
-    [JsonIgnore] public string OpenTag => $"<{Text}>";
-
-    [JsonIgnore] public string CloseTag => $"</{Text}>";
 
     public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
     {

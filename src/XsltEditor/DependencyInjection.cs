@@ -4,8 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 using XsltEditor.Services;
 using XsltEditor.Services.Interfaces;
+using XsltEditor.Transform;
+using XsltEditor.Transform.Interfaces;
 using XsltEditor.ViewModels;
 using XsltEditor.Views;
+using XsltEditor.Views.Dialogs;
 
 namespace XsltEditor;
 
@@ -14,6 +17,8 @@ internal static class DependencyInjection
     public static void RegisterViews(this IServiceCollection services)
     {
         services.RegisterView<MainViewModel, MainWindow>();
+        services.RegisterView<CompletionViewModel, CompletionDialog>();
+        services.RegisterView<CaretViewModel, CaretDialog>();
     }
 
     public static void RegisterServices(this IServiceCollection services)
@@ -25,11 +30,13 @@ internal static class DependencyInjection
         services.AddSingleton<IThemeService, ThemeService>();
         services.AddSingleton<IXmlTransformService, XmlTransformService>();
         services.AddSingleton<ISettingsService, SettingsService>();
+        services.AddSingleton<ICompletionDataService, CompletionDataService>();
+        services.AddSingleton<ITransformer, Transformer>();
 
-        services.AddTransient<IMessenger>(sp => WeakReferenceMessenger.Default);
+        services.AddTransient<IMessenger>(_ => WeakReferenceMessenger.Default);
     }
 
-    public static void RegisterView<TViewModel, TView>(this IServiceCollection services)
+    private static void RegisterView<TViewModel, TView>(this IServiceCollection services)
         where TViewModel : class
         where TView : class
     {

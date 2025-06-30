@@ -22,10 +22,10 @@ internal partial class MainViewModel : ObservableObject
 {
     private const int DebounceMilliseconds = 500;
 
-    private readonly IWindowService _windowService;
-    private readonly IThemeService _themeService;
     private readonly ISettingsService _settingsService;
+    private readonly IThemeService _themeService;
     private readonly IXmlTransformService _transformService;
+    private readonly IWindowService _windowService;
 
     [ObservableProperty] private string? _htmlContent;
     [ObservableProperty] private DocumentViewModel? _activeDocument;
@@ -54,6 +54,12 @@ internal partial class MainViewModel : ObservableObject
     }
 
     public ObservableCollection<DocumentViewModel> Documents { get; }
+
+    [RelayCommand]
+    private void OpenCompletionView()
+    {
+        _windowService.ShowDialog<CompletionViewModel>();
+    }
 
     [RelayCommand]
     private async Task SaveDocument()
@@ -108,20 +114,18 @@ internal partial class MainViewModel : ObservableObject
 
     private void InitializeSettings()
     {
-        if (_settingsService.Settings is null)
-        {
-            return;
-        }
-
         _themeService.SetTheme(_settingsService.Settings.Theme);
     }
 
     private DocumentViewModel CreateDocument(string name, DocumentType documentType)
     {
+        // (#a) move to factory
         var document = new DocumentViewModel(
             App.Services.GetRequiredService<IMessenger>(),
             App.Services.GetRequiredService<IFileDialogService>(),
-            App.Services.GetRequiredService<IDocumentStorageService>())
+            App.Services.GetRequiredService<IDocumentStorageService>(),
+            App.Services.GetRequiredService<IWindowService>(),
+            App.Services.GetRequiredService<ICompletionDataService>())
         {
             Id = Guid.NewGuid(),
             Name = name,
@@ -172,11 +176,11 @@ internal partial class MainViewModel : ObservableObject
                 return;
             }
 
-            HtmlContent = await _transformService.TransformAsync(xsl.Content, xml.Content, xsl.FilePath);
+            HtmlContent = await _transformService.TransformAsync(xml.Content, xsl.Content, xsl.FilePath);
         }
         catch
         {
-            HtmlContent = "Error during transformation.";
+            HtmlContent = "Error transformation.";
         }
     }
 }

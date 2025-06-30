@@ -24,15 +24,15 @@ public partial class App
     {
         var service = new ServiceCollection();
 
-        service.RegisterViews();
         service.RegisterServices();
+        service.RegisterViews();
 
         return service.BuildServiceProvider();
     }
 
     private static string GetApplicationDirectory()
     {
-        var data = Environment.SpecialFolder.ApplicationData;
+        const Environment.SpecialFolder data = Environment.SpecialFolder.ApplicationData;
         var directory = Path.Combine(Environment.GetFolderPath(data), "Xslt Editor");
 
         if (!Directory.Exists(directory))

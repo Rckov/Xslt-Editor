@@ -10,39 +10,42 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <Image Grid.Column="0"  Source="{Binding Icon, RelativeSource={RelativeSource AncestorType=Window}}" Margin="5,0" Height="16" Width="16" Stretch="Uniform" />
+        <Image Grid.Column="0" Source="{Binding Icon, RelativeSource={RelativeSource AncestorType=Window}}"
+               Margin="5,0" Height="16" Width="16" Stretch="Uniform" />
 
         <TextBlock Grid.Column="1"
-                 VerticalAlignment="Center"
-                 Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                 Visibility="{Binding ShowTitle, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}"
-                 Margin="5,0"
-                 Foreground="{DynamicResource TextBrush}" />
+                   VerticalAlignment="Center"
+                   Text="{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                   Visibility="{Binding ShowTitle, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}"
+                   Margin="5,0"
+                   Foreground="{DynamicResource TextBrush}" />
 
-        <ContentPresenter Grid.Column="2" Content="{Binding LeftContent, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+        <ContentPresenter Grid.Column="2"
+                          Content="{Binding LeftContent, RelativeSource={RelativeSource AncestorType=UserControl}}" />
 
         <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
-            <ContentPresenter Content="{Binding RightContent, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+            <ContentPresenter
+                Content="{Binding RightContent, RelativeSource={RelativeSource AncestorType=UserControl}}" />
 
             <Button Content="&#xE949;"
-                 Style="{StaticResource CaptionButton}"
-                 Command="{Binding MinimizeWindowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                 IsEnabled="{Binding CanMinimized, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                 ToolTip="Minimize" />
+                    Style="{StaticResource CaptionButton}"
+                    Command="{Binding MinimizeWindowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                    IsEnabled="{Binding CanMinimized, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    ToolTip="Minimize" />
 
             <Button Content="&#xE739;"
-                 Style="{StaticResource CaptionButton}"
-                 Command="{Binding MaximizeWindowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                 IsEnabled="{Binding CanMaximized, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                 ToolTip="Maximize" />
+                    Style="{StaticResource CaptionButton}"
+                    Command="{Binding MaximizeWindowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                    IsEnabled="{Binding CanMaximized, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    ToolTip="Maximize" />
 
             <Button Content="&#xE106;"
-                 Style="{StaticResource CaptionButton}"
-                 Command="{Binding CloseWindowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
-                 ToolTip="Close" />
+                    Style="{StaticResource CaptionButton}"
+                    Command="{Binding CloseWindowCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                    ToolTip="Close" />
         </StackPanel>
     </Grid>
 </UserControl>

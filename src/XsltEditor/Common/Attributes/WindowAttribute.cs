@@ -5,8 +5,6 @@ namespace XsltEditor.Common.Attributes;
 [AttributeUsage(AttributeTargets.Class)]
 internal class WindowAttribute : Attribute
 {
-    public Type WindowType { get; }
-
     public WindowAttribute(Type windowType)
     {
         if (!typeof(Window).IsAssignableFrom(windowType))
@@ -16,4 +14,6 @@ internal class WindowAttribute : Attribute
 
         WindowType = windowType;
     }
+
+    public Type WindowType { get; }
 }

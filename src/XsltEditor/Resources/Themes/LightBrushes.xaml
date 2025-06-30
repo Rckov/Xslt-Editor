@@ -7,4 +7,7 @@
     <SolidColorBrush x:Key="ButtonHoverBrush" Color="#eeeeee" />
     <SolidColorBrush x:Key="ButtonPressedBrush" Color="#e0e0e0" />
     <SolidColorBrush x:Key="BorderBrush" Color="#e0e0e0" />
+    <SolidColorBrush x:Key="FoldingMarkerBrush" Color="#8E8E8E" />
+    <SolidColorBrush x:Key="FoldingMarkerSelectedBrush" Color="#333333" />
+    <SolidColorBrush x:Key="FoldingMarkerBackground" Color="#EAEAEA" />
 </ResourceDictionary>

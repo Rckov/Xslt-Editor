@@ -54,8 +54,7 @@ internal class ThemeService : IThemeService
     private void ReplaceXamlTheme(string xamlPath)
     {
         var dictionaries = Application.Current.Resources.MergedDictionaries;
-        var currentTheme =
-            dictionaries.FirstOrDefault(d => _themes.Values.Any(t => t.XamlPath == d.Source?.OriginalString));
+        var currentTheme = dictionaries.FirstOrDefault(d => _themes.Values.Any(t => t.XamlPath == d.Source?.OriginalString));
 
         if (currentTheme != null)
         {

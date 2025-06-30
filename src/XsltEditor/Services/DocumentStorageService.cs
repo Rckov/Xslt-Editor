@@ -10,7 +10,7 @@ internal class DocumentStorageService : IDocumentStorageService
     {
         if (!File.Exists(filePath))
         {
-            return default;
+            return null;
         }
 
         return await File.ReadAllTextAsync(filePath);
