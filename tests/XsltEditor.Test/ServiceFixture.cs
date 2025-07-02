@@ -1,20 +1,34 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using XsltEditor.Services;
+using XsltEditor.Services.Interfaces;
+using XsltEditor.Transform;
+using XsltEditor.Transform.Interfaces;
 
 namespace XsltEditor.Test;
-internal class ServiceFixture
+
+public class ServiceFixture : IDisposable
 {
     public ServiceFixture()
     {
-        Services = new ServiceCollection();
+        SettingsPath = Path.GetTempFileName();
 
-        // add services
+        var services = new ServiceCollection();
+
+        services.AddTransient<ITransformer, Transformer>();
+        services.AddTransient<ISettingsService>(_ => new SettingsService(SettingsPath));
+
+        Services = services.BuildServiceProvider();
     }
 
-    public IServiceCollection Services { get; set; }
+    public string SettingsPath { get; }
+    public IServiceProvider Services { get; }
+
+    public void Dispose()
+    {
+        if (File.Exists(SettingsPath))
+        {
+            File.Delete(SettingsPath);
+        }
+    }
 }

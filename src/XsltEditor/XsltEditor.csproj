@@ -27,4 +27,10 @@
         <EmbeddedResource Include="Resources\Highlighting\LightMode.xshd" />
         <EmbeddedResource Include="Resources\completions.xsl.json" />
     </ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>$(MSBuildProjectName).Test</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
 </Project>

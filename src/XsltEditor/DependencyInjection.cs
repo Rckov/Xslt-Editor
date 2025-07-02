@@ -2,6 +2,8 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
+using System.IO;
+
 using XsltEditor.Services;
 using XsltEditor.Services.Interfaces;
 using XsltEditor.Transform;
@@ -29,9 +31,11 @@ internal static class DependencyInjection
         services.AddTransient<IDocumentStorageService, DocumentStorageService>();
         services.AddSingleton<IThemeService, ThemeService>();
         services.AddSingleton<IXmlTransformService, XmlTransformService>();
-        services.AddSingleton<ISettingsService, SettingsService>();
         services.AddSingleton<ICompletionDataService, CompletionDataService>();
         services.AddSingleton<ITransformer, Transformer>();
+
+        // make a dependency on the environment
+        services.AddSingleton<ISettingsService>(_ => new SettingsService(Path.Combine(App.AppDirectory, "settings.json")));
 
         services.AddTransient<IMessenger>(_ => WeakReferenceMessenger.Default);
     }

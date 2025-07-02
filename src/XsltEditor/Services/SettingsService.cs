@@ -13,23 +13,23 @@ internal class SettingsService : ISettingsService
         WriteIndented = true
     };
 
-    private readonly string SettingsPath = Path.Combine(App.AppDirectory, "settings.json");
-
-    public SettingsService()
+    public SettingsService(string settingsPath)
     {
+        SettingsPath = settingsPath;
         Settings = LoadSettings();
     }
 
     public Settings Settings { get; private set; }
+    public string SettingsPath { get; private set; }
 
     public void SaveSettings(Settings settings)
     {
         SaveSettings(SettingsPath, settings);
     }
 
-    private Settings LoadSettings()
+    public Settings LoadSettings()
     {
-        return File.Exists(SettingsPath)
+        return Settings = File.Exists(SettingsPath) 
             ? LoadSettings(SettingsPath)
             : CreateSettings(SettingsPath);
     }
