@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/nuke/">
+    <Project Path="build/Build.csproj" />
+  </Folder>
+  <Project Path="src/Transform/XsltEditor.Transform.csproj" />
+  <Project Path="src/UI/XsltEditor.csproj" />
+</Solution>

@@ -1,0 +1,63 @@
+<Window x:Class="XsltEditor.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ct="clr-namespace:XsltEditor.Views.UserControls"
+        Title="Settings"
+        Width="400"
+        Height="300"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Style="{StaticResource WindowStyle}">
+
+    <Window.Resources>
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="Margin" Value="0,0,0,5" />
+        </Style>
+        <Style x:Key="FieldStyle" TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="Margin" Value="0,0,0,15" />
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ct:WindowBar Grid.Row="0"
+                      Title="Settings"
+                      ShowTitle="True"
+                      CanMaximized="False"
+                      CanMinimized="False"
+                      Background="{DynamicResource RegionBrush}" />
+
+        <StackPanel Grid.Row="1" Margin="10">
+            <TextBlock Text="Theme" Style="{StaticResource LabelStyle}" />
+            <ComboBox ItemsSource="{Binding Themes}"
+                      SelectedItem="{Binding SelectedTheme}"
+                      Style="{StaticResource FieldStyle}" />
+
+            <TextBlock Text="Engine" Style="{StaticResource LabelStyle}" />
+            <ComboBox ItemsSource="{Binding Engines}"
+                      SelectedItem="{Binding SelectedEngine}" />
+            <TextBlock Text="Saxon supports XSLT 3.0 but has limited extension functions"
+                       Foreground="Gray" FontSize="11" Margin="0,5,0,0" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal"
+                    HorizontalAlignment="Right" Margin="10">
+            <Button Content="Save" Padding="20,6"
+                    Background="{DynamicResource RegionBrush}"
+                    Style="{StaticResource FlatButtonStyle}"
+                    Command="{Binding SaveCommand}"
+                    Click="OnCloseClick" Margin="0,0,10,0" />
+            <Button Content="Cancel" Padding="20,6"
+                    Background="{DynamicResource RegionBrush}"
+                    Style="{StaticResource FlatButtonStyle}"
+                    Command="{Binding CancelCommand}"
+                    Click="OnCloseClick" />
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,19 @@
+﻿<Application x:Class="XsltEditor.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Styles/WindowStyle.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/ControlStyles.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/MenuStyle.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/ScrollBarStyle.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/TextEditor.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/AvalonDock.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <FontFamily x:Key="FontIcon">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

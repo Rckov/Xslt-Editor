@@ -1,0 +1,25 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <Package Name="XSLT Editor"
+           Version="1.0.0.0"
+           Manufacturer="XsltEditor"
+           UpgradeCode="B8F3A2D1-7E4C-4A9B-8D6F-1C5E9A3B7D2F"
+           InstallerVersion="500"
+           Scope="perUser">
+
+    <Icon Id="AppIcon" SourceFile="$(var.SourceDir)\UI\Resources\appicon.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon" />
+
+    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="INSTALLFOLDER" Name="XSLT Editor">
+        <Files Include="$(var.PublishDir)\**" />
+      </Directory>
+    </StandardDirectory>
+
+  </Package>
+
+</Wix>

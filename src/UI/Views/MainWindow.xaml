@@ -1,0 +1,229 @@
+﻿<Window x:Class="XsltEditor.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ad="https://github.com/Dirkster99/AvalonDock"
+        xmlns:wv="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        xmlns:ct="clr-namespace:XsltEditor.Views.UserControls"
+        xmlns:vm="clr-namespace:XsltEditor.ViewModels"
+        xmlns:enums="clr-namespace:XsltEditor.Models"
+        xmlns:conv="clr-namespace:XsltEditor.Common"
+        Height="650"
+        Width="1200"
+        Title="Xslt Editor"
+        ResizeMode="CanResize"
+        WindowStartupLocation="CenterScreen"
+        Style="{StaticResource WindowStyle}">
+
+    <Window.InputBindings>
+        <KeyBinding Key="G" Modifiers="Ctrl" Command="{Binding ActiveDocument.GoToLineCommand}" />
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding ActiveDocument.SaveDocumentCommand}" />
+    </Window.InputBindings>
+
+    <Window.Resources>
+        <conv:ActiveDocumentConverter x:Key="ActiveDocumentConverter" />
+    </Window.Resources>
+
+    <Border Style="{StaticResource WindowBorder}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ct:WindowBar Grid.Row="0" Background="{DynamicResource RegionBrush}">
+                <ct:WindowBar.LeftContent>
+                    <Menu Background="Transparent">
+                        <MenuItem Header="File">
+                            <MenuItem Header="Open XSL"
+                                      Command="{Binding OpenDocumentCommand}"
+                                      CommandParameter="{x:Static enums:DocumentType.Xsl}">
+                                <MenuItem.Icon>
+                                    <TextBlock Text="&#xE943;" FontFamily="{StaticResource FontIcon}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Open XML"
+                                      Command="{Binding OpenDocumentCommand}"
+                                      CommandParameter="{x:Static enums:DocumentType.Xml}">
+                                <MenuItem.Icon>
+                                    <TextBlock Text="&#xE943;" FontFamily="{StaticResource FontIcon}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator Style="{StaticResource SeparatorStyle}" />
+                            <MenuItem Header="Save" Command="{Binding SaveDocumentCommand}">
+                                <MenuItem.Icon>
+                                    <TextBlock Text="&#xE74E;" FontFamily="{StaticResource FontIcon}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator Style="{StaticResource SeparatorStyle}" />
+                            <MenuItem Header="Exit" Click="OnCloseClick">
+                                <MenuItem.Icon>
+                                    <TextBlock Text="&#xE7E8;" FontFamily="{StaticResource FontIcon}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuItem>
+                        <MenuItem Header="Edit">
+                            <MenuItem Header="Undo" Command="ApplicationCommands.Undo">
+                                <MenuItem.Icon>
+                                    <TextBlock Text="&#xE7A7;" FontFamily="{StaticResource FontIcon}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Redo" Command="ApplicationCommands.Redo">
+                                <MenuItem.Icon>
+                                    <TextBlock Text="&#xE7A6;" FontFamily="{StaticResource FontIcon}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator Style="{StaticResource SeparatorStyle}" />
+                            <MenuItem Header="Copy" Command="ApplicationCommands.Copy">
+                                <MenuItem.Icon>
+                                    <TextBlock Text="&#xE8C8;" FontFamily="{StaticResource FontIcon}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Cut" Command="ApplicationCommands.Cut">
+                                <MenuItem.Icon>
+                                    <TextBlock Text="&#xE8C6;" FontFamily="{StaticResource FontIcon}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Paste" Command="ApplicationCommands.Paste">
+                                <MenuItem.Icon>
+                                    <TextBlock Text="&#xE77F;" FontFamily="{StaticResource FontIcon}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Delete" Command="ApplicationCommands.Delete">
+                                <MenuItem.Icon>
+                                    <TextBlock Text="&#xE74D;" FontFamily="{StaticResource FontIcon}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuItem>
+                        <MenuItem Header="Tools">
+                            <MenuItem Header="Go to Line" Command="{Binding ActiveDocument.GoToLineCommand}" InputGestureText="Ctrl+G">
+                                <MenuItem.Icon>
+                                    <TextBlock Text="&#xE8A3;" FontFamily="{StaticResource FontIcon}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Completion" Command="{Binding OpenSnippetsCommand}">
+                                <MenuItem.Icon>
+                                    <TextBlock Text="&#xE8A4;" FontFamily="{StaticResource FontIcon}" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuItem>
+                    </Menu>
+                </ct:WindowBar.LeftContent>
+                <ct:WindowBar.RightContent>
+                    <Button Command="{Binding OpenSettingsCommand}"
+                            Style="{StaticResource FlatButtonStyle}"
+                            ToolTip="Settings">
+                        <TextBlock Text="&#xE713;" FontFamily="{StaticResource FontIcon}" />
+                    </Button>
+                </ct:WindowBar.RightContent>
+            </ct:WindowBar>
+
+            <Border Grid.Row="1" Padding="5">
+                <ad:DockingManager DocumentsSource="{Binding Documents}"
+                                   ActiveContent="{Binding ActiveDocument, Mode=TwoWay,
+                                       Converter={StaticResource ActiveDocumentConverter}}">
+                    <ad:DockingManager.Resources>
+                        <DataTemplate DataType="{x:Type vm:DocumentViewModel}">
+                            <ct:TextEditor Text="{Binding Content, Mode=TwoWay}"
+                                           Line="{Binding Line, Mode=TwoWay}"
+                                           Column="{Binding Column, Mode=TwoWay}"
+                                           IsReadOnly="{Binding IsReadOnly}"
+                                           SyntaxHighlighting="{Binding Highlighting}"
+                                           CompletionData="{Binding CompletionData}">
+                                <ct:TextEditor.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Undo" Command="ApplicationCommands.Undo">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="&#xE7A7;" FontFamily="{StaticResource FontIcon}" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Redo" Command="ApplicationCommands.Redo">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="&#xE7A6;" FontFamily="{StaticResource FontIcon}" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <Separator Style="{StaticResource SeparatorStyle}" />
+                                        <MenuItem Header="Cut" Command="ApplicationCommands.Cut">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="&#xE8C6;" FontFamily="{StaticResource FontIcon}" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Copy" Command="ApplicationCommands.Copy">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="&#xE8C8;" FontFamily="{StaticResource FontIcon}" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Paste" Command="ApplicationCommands.Paste">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="&#xE77F;" FontFamily="{StaticResource FontIcon}" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <Separator Style="{StaticResource SeparatorStyle}" />
+                                        <MenuItem Header="Expand All" Command="{x:Static ct:TextEditorCommands.ExpandAllFolds}">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="&#xF166;" FontFamily="{StaticResource FontIcon}" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Collapse All" Command="{x:Static ct:TextEditorCommands.CollapseAllFolds}">
+                                            <MenuItem.Icon>
+                                                <TextBlock Text="&#xF164;" FontFamily="{StaticResource FontIcon}" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </ct:TextEditor.ContextMenu>
+                            </ct:TextEditor>
+                        </DataTemplate>
+                    </ad:DockingManager.Resources>
+                    <ad:LayoutRoot>
+                        <ad:LayoutPanel Orientation="Horizontal">
+                            <ad:LayoutDocumentPane />
+                            <ad:LayoutAnchorablePane DockWidth="300">
+                                <ad:LayoutAnchorable Title="Result" CanHide="False" CanAutoHide="False">
+                                    <wv:WebView2 Name="WebView" DefaultBackgroundColor="Transparent" />
+                                </ad:LayoutAnchorable>
+                            </ad:LayoutAnchorablePane>
+                        </ad:LayoutPanel>
+                    </ad:LayoutRoot>
+                </ad:DockingManager>
+            </Border>
+
+            <ct:StatusBar Grid.Row="2">
+                <ct:StatusBar.LeftContent>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xF745;" FontFamily="{StaticResource FontIcon}" Margin="0,0,4,0" />
+                        <TextBlock>
+                            <Hyperlink Command="{Binding ActiveDocument.OpenExplorerCommand}" TextDecorations="None" Foreground="{DynamicResource TextBrush}">
+                                <Run Text="{Binding ActiveDocument.FilePath, Mode=OneWay, TargetNullValue='No file selected'}" />
+                            </Hyperlink>
+                        </TextBlock>
+                    </StackPanel>
+                </ct:StatusBar.LeftContent>
+                <ct:StatusBar.RightContent>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xEA3B;" FontFamily="{StaticResource FontIcon}" FontSize="8" Margin="8,0"
+                                   Visibility="{Binding ActiveDocument.IsDirty, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        <Button Command="{Binding ActiveDocument.GoToLineCommand}"
+                                Style="{StaticResource FlatButtonStyle}"
+                                Padding="8,0">
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="Ln {0}, Col {1}">
+                                        <Binding Path="ActiveDocument.Line" FallbackValue="1" />
+                                        <Binding Path="ActiveDocument.Column" FallbackValue="1" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </Button>
+                        <TextBlock Text="{Binding XsltVersion}" Margin="8,0" />
+                        <ToggleButton IsChecked="{Binding ActiveDocument.IsReadOnly}"
+                                      Style="{StaticResource FlatToggleButtonStyle}"
+                                      Padding="8,0"
+                                      Content="{Binding ActiveDocument.EditMode, FallbackValue='Write Mode'}" />
+                        <Button Style="{StaticResource FlatButtonStyle}" Padding="8,0"
+                                Content="{Binding ActiveDocument.EncodingName, FallbackValue='UTF-8'}" />
+                    </StackPanel>
+                </ct:StatusBar.RightContent>
+            </ct:StatusBar>
+        </Grid>
+    </Border>
+</Window>

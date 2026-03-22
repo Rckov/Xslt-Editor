@@ -3,11 +3,11 @@ name: Build and Release
 on:
   push:
     tags:
-      - "xslt-editor/v*"
+      - "v*"
   workflow_dispatch:
 
-env:
-  PROJECT_PATH: src/XsltEditor/XsltEditor.csproj
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -17,43 +17,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup .NET Core
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
 
-      - name: Restore dependencies
-        run: dotnet restore ${{ env.PROJECT_PATH }}
+      - name: Restore dotnet tools
+        run: dotnet tool restore
 
-      - name: Build
-        run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release --no-restore
+      - name: Install WiX UI extension
+        run: dotnet wix extension add WixToolset.UI.wixext/6.0.2
 
-      - name: Publish
-        run: |
-          dotnet publish ${{ env.PROJECT_PATH }} -c Release -r win-x64 `
-            --self-contained true `
-            -p:PublishSingleFile=true `
-            -p:EnableCompressionInSingleFile=true `
-            -p:IncludeNativeLibrariesForSelfExtract=true `
-            -p:DebugType=None `
-            -p:DebugSymbols=false `
-            -p:PublishReadyToRun=true `
-            -p:PublishTrimmed=false `
-            -p:WindowsPackageType=None `
-            -p:IncludeAllContentForSelfExtract=true `
-            -o XsltEditor/bin/Release/net8.0-windows7.0/x64
-            
-      - name: Zip Release
-        shell: pwsh
-        run: Compress-Archive -Path XsltEditor/bin/Release/net8.0-windows7.0/x64/* -DestinationPath x64_release.zip
-          
+      - name: Run Nuke build
+        run: dotnet run --project build/Build.csproj
+
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          files: |
-            x64_release.zip
+          files: out/XsltEditor-Setup.msi
           draft: false
           prerelease: false
           generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

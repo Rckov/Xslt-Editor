@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="IKVM.Maven.Sdk" Version="1.11.0" />
+    <PackageReference Include="SaxonHE12s9apiExtensions" Version="12.9.10" />
+    <MavenReference Include="net.sf.saxon:Saxon-HE" Version="12.9" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,29 @@
+<UserControl x:Class="XsltEditor.Views.UserControls.StatusBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Grid Height="29" Background="{DynamicResource RegionBrush}">
+        <Grid.Resources>
+            <Style TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="11" />
+                <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            </Style>
+        </Grid.Resources>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <ContentPresenter Grid.Column="0"
+                          Margin="5,0"
+                          Content="{Binding LeftContent, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                          VerticalAlignment="Center" />
+
+        <ContentPresenter Grid.Column="1"
+                          Margin="5,0"
+                          Content="{Binding RightContent, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                          VerticalAlignment="Stretch" />
+    </Grid>
+</UserControl>
