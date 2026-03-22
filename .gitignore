@@ -369,3 +369,6 @@ out/
 
 # WiX extension cache
 .wix/
+
+# Nuke auto-generated schema
+.nuke/build.schema.json

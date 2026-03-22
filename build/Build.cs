@@ -1,4 +1,4 @@
-using Nuke.Common;
+﻿using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
@@ -64,6 +64,7 @@ class Build : NukeBuild
 				$"-ext WixToolset.UI.wixext " +
 				$"-d PublishDir={PublishDirectory}\\ " +
 				$"-d SourceDir={SourceDirectory}\\ " +
+				$"-d BuildDir={RootDirectory / "build"}\\ " +
 				$"-out \"{OutputDirectory / "XsltEditor-Setup.msi"}\"")
 				.AssertZeroExitCode();
 		});

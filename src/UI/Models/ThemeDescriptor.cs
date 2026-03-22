@@ -1,4 +1,4 @@
-namespace XsltEditor.Models;
+﻿namespace XsltEditor.Models;
 
 public record ThemeDescriptor(
 	ThemeType Type,

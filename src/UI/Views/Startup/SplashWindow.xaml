@@ -1,4 +1,4 @@
-<Window x:Class="XsltEditor.Views.Startup.SplashWindow"
+﻿<Window x:Class="XsltEditor.Views.Startup.SplashWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         WindowStyle="None"

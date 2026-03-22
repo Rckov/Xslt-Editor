@@ -1,4 +1,4 @@
-namespace XsltEditor.Models;
+﻿namespace XsltEditor.Models;
 
 public enum DocumentType
 {

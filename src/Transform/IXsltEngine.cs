@@ -1,4 +1,4 @@
-namespace XsltEditor.Transform;
+﻿namespace XsltEditor.Transform;
 
 public interface IXsltEngine
 {

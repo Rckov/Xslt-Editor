@@ -1,4 +1,4 @@
-## XSLT Editor
+﻿## XSLT Editor
 
 [![.NET Version](https://img.shields.io/badge/.NET-10.0-blue)]()
 [![Build and Release](https://github.com/Rckov/Xslt-Editor/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/Rckov/Xslt-Editor/actions/workflows/dotnet-desktop.yml)

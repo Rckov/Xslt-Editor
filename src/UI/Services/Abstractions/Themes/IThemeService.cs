@@ -1,4 +1,4 @@
-using ICSharpCode.AvalonEdit.Highlighting;
+﻿using ICSharpCode.AvalonEdit.Highlighting;
 
 using XsltEditor.Models;
 

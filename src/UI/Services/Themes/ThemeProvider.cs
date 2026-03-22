@@ -1,4 +1,4 @@
-using System.Collections.Frozen;
+﻿using System.Collections.Frozen;
 
 using XsltEditor.Models;
 using XsltEditor.Services.Abstractions.Themes;

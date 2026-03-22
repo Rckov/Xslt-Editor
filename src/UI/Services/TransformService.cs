@@ -1,4 +1,4 @@
-using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.Messaging;
 
 using XsltEditor.Models.Messages;
 using XsltEditor.Services.Abstractions;

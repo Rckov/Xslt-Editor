@@ -1,4 +1,4 @@
-using XsltEditor.Transform.Enums;
+﻿using XsltEditor.Transform.Enums;
 
 namespace XsltEditor.Models.Messages;
 
