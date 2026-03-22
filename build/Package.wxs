@@ -8,6 +8,8 @@
            InstallerVersion="500"
            Scope="perUser">
 
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+
     <Icon Id="AppIcon" SourceFile="$(var.SourceDir)\UI\Resources\appicon.ico" />
     <Property Id="ARPPRODUCTICON" Value="AppIcon" />
 
@@ -16,7 +18,7 @@
 
     <StandardDirectory Id="LocalAppDataFolder">
       <Directory Id="INSTALLFOLDER" Name="XSLT Editor">
-        <Files Include="$(var.PublishDir)\**" />
+        <Files Include="$(var.PublishDir)**" />
       </Directory>
     </StandardDirectory>
 
