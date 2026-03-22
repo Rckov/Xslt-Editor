@@ -3,7 +3,7 @@
     <Project Path="build/Build.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/XsltEditor.Tests/XsltEditor.Tests.csproj" />
+    <Project Path="tests/XsltEditor.Tests.csproj" />
   </Folder>
   <Project Path="src/Transform/XsltEditor.Transform.csproj" />
   <Project Path="src/UI/XsltEditor.csproj" />

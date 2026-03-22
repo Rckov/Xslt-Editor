@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Transform\XsltEditor.Transform.csproj" />
+    <ProjectReference Include="..\src\Transform\XsltEditor.Transform.csproj" />
   </ItemGroup>
 
   <ItemGroup>
