@@ -7,25 +7,25 @@ using Nuke.Common.Utilities.Collections;
 
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-class Build : NukeBuild
+internal class Build : NukeBuild
 {
 	public static int Main() => Execute<Build>(x => x.Pack);
 
 	[Parameter("Configuration — default Release")]
-	readonly string Configuration = "Release";
+	private readonly string Configuration = "Release";
 
 	[Parameter("Runtime identifier")]
-	readonly string Runtime = "win-x64";
+	private readonly string Runtime = "win-x64";
 
 	[Solution]
-	readonly Solution Solution = null!;
+	private readonly Solution Solution = null!;
 
-	AbsolutePath SourceDirectory => RootDirectory / "src";
-	AbsolutePath PublishDirectory => RootDirectory / "publish";
-	AbsolutePath OutputDirectory => RootDirectory / "out";
-	AbsolutePath WxsFile => RootDirectory / "build" / "Package.wxs";
+	private AbsolutePath SourceDirectory => RootDirectory / "src";
+	private AbsolutePath PublishDirectory => RootDirectory / "publish";
+	private AbsolutePath OutputDirectory => RootDirectory / "out";
+	private AbsolutePath WxsFile => RootDirectory / "build" / "Package.wxs";
 
-	Target Clean => _ => _
+	private Target Clean => _ => _
 		.Executes(() =>
 		{
 			SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(d => d.DeleteDirectory());
@@ -33,14 +33,11 @@ class Build : NukeBuild
 			OutputDirectory.CreateOrCleanDirectory();
 		});
 
-	Target Restore => _ => _
+	private Target Restore => _ => _
 		.DependsOn(Clean)
-		.Executes(() =>
-		{
-			DotNet("tool restore");
-		});
+		.Executes(() => DotNet("tool restore"));
 
-	Target Publish => _ => _
+	private Target Publish => _ => _
 		.DependsOn(Restore)
 		.Executes(() =>
 		{
@@ -53,7 +50,7 @@ class Build : NukeBuild
 				.SetOutput(PublishDirectory));
 		});
 
-	Target Pack => _ => _
+	private Target Pack => _ => _
 		.DependsOn(Publish)
 		.Executes(() =>
 		{
