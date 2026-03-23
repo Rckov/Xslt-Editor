@@ -11,7 +11,6 @@ A lightweight XSLT editor with real-time compilation
 - XSLT 1.0 / 2.0 / 3.0 Support (Saxon-HE & XslCompiledTransform)
 - Smart Code Autocompletion  
 - Syntax Highlighting
-- Dynamic Color Adaptation
 
 ### Preview
 | Light Theme | Dark Theme |
