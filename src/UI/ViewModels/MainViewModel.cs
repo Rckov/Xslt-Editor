@@ -9,8 +9,10 @@ using System.Windows.Threading;
 
 using XsltEditor.Common.Attributes;
 using XsltEditor.Extensions;
-using XsltEditor.Models;
 using XsltEditor.Models.Messages;
+using XsltEditor.Sdk.Abstractions;
+using XsltEditor.Sdk.Enums;
+using XsltEditor.Services;
 using XsltEditor.Services.Abstractions;
 using XsltEditor.Transform.Enums;
 using XsltEditor.Views;
@@ -28,13 +30,12 @@ internal partial class MainViewModel : ObservableObject
 	[ObservableProperty] private string? _xsltVersion;
 	[ObservableProperty] private string? _htmlContent;
 
-	public ObservableCollection<DocumentViewModel> Documents { get; }
-
 	public MainViewModel(
 		IDocumentFactory factory,
 		IWindowService windowService,
 		ISettingsService settingsService,
 		ITransformService transformService,
+		IPluginService pluginService,
 		IMessenger messenger)
 	{
 		_windowService = windowService;
@@ -50,6 +51,8 @@ internal partial class MainViewModel : ObservableObject
 			factory.Create("XML", DocumentType.Xml)
 		];
 
+		Plugins = pluginService.Plugins;
+
 		foreach (DocumentViewModel document in Documents)
 		{
 			document.PropertyChanged += OnDocumentPropertyChanged;
@@ -57,6 +60,10 @@ internal partial class MainViewModel : ObservableObject
 
 		messenger.Register<EngineChangedMessage>(this, (_, m) => XsltVersion = ToXsltVersion(m.EngineType));
 	}
+
+	public ObservableCollection<DocumentViewModel> Documents { get; }
+	public IReadOnlyList<IPlugin> Plugins { get; }
+	public bool HasPlugins => Plugins.Count > 0;
 
 	[RelayCommand]
 	private void OpenSnippets()
@@ -103,6 +110,20 @@ internal partial class MainViewModel : ObservableObject
 		catch (Exception ex)
 		{
 			MessageBox.Show(ex.Message, "Error Opening the Document");
+		}
+	}
+
+	[RelayCommand]
+	private void ExecutePlugin(IPlugin plugin)
+	{
+		try
+		{
+			var context = new DocumentContext(Documents, HtmlContent);
+			plugin.Execute(context);
+		}
+		catch (Exception ex)
+		{
+			MessageBox.Show(ex.Message, "Plugin Error");
 		}
 	}
 

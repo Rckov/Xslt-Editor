@@ -10,6 +10,7 @@ using System.Text;
 
 using XsltEditor.Models;
 using XsltEditor.Models.Messages;
+using XsltEditor.Sdk.Enums;
 using XsltEditor.Services.Abstractions;
 
 namespace XsltEditor.ViewModels;

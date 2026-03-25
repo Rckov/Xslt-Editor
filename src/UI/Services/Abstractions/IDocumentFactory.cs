@@ -1,4 +1,4 @@
-﻿using XsltEditor.Models;
+﻿using XsltEditor.Sdk.Enums;
 using XsltEditor.ViewModels;
 
 namespace XsltEditor.Services.Abstractions;

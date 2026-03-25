@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-using XsltEditor.Models;
+using XsltEditor.Sdk.Enums;
 using XsltEditor.Services.Abstractions;
 using XsltEditor.Services.Abstractions.Themes;
 using XsltEditor.ViewModels;

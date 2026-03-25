@@ -35,6 +35,7 @@ internal static class ContainerExtensions
 			services.AddSingleton<ISettingsService, SettingsService>();
 			services.AddSingleton<ISnippetService, SnippetService>();
 			services.AddSingleton<ITransformService, TransformService>();
+			services.AddSingleton<IPluginService, PluginService>();
 		}
 
 		private void AddView<TViewModel, TView>()
