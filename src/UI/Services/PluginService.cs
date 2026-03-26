@@ -43,12 +43,15 @@ internal sealed class PluginService : IPluginService, IDisposable
 
 		var plugins = new List<IPlugin>();
 
-		foreach (var dllPath in Directory.EnumerateFiles(PluginsPath, "*.dll"))
+		foreach (var item in Directory.GetDirectories(PluginsPath))
 		{
-			var plugin = TryLoadPlugin(dllPath);
-			if (plugin is not null)
+			foreach (var dllPath in Directory.EnumerateFiles(item, "*.dll"))
 			{
-				plugins.Add(plugin);
+				var plugin = TryLoadPlugin(dllPath);
+				if (plugin is not null)
+				{
+					plugins.Add(plugin);
+				}
 			}
 		}
 

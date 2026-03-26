@@ -1,5 +1,5 @@
 <Solution>
-  <Folder Name="/nuke/">
+  <Folder Name="/build/">
     <Project Path="build/Build.csproj" />
   </Folder>
   <Folder Name="/tests/">
