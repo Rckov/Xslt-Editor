@@ -20,8 +20,11 @@ A lightweight XSLT editor with real-time compilation
 | ![Dark Theme](images/preview-light.png) | ![Light Theme](images/preview-dark.png) |
 
 ### Plugins (Ideas welcome)
-- [XML Formatter](https://github.com/Rckov/Xslt-Editor-Plugins/tree/master/src/Formatter)
-- [XPath Validator](https://github.com/Rckov/Xslt-Editor-Plugins/tree/master/src/XPathValidator)
+- XML Formatter
+- XPath Validator
+- ...
+
+See all: [open repository](https://github.com/Rckov/Xslt-Editor-Plugins)
 
 ### Future Plans (Possibly)
 - [x] Saxon-HE Integration  
