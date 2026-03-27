@@ -1,6 +1,6 @@
-﻿<div align="center">
+<div align="left">
 
-# XSLT Editor
+## XSLT Editor
 
 A lightweight XSLT editor with real-time compilation
 
@@ -9,7 +9,7 @@ A lightweight XSLT editor with real-time compilation
 [![Release](https://img.shields.io/github/v/release/Rckov/Xslt-Editor)](https://github.com/Rckov/Xslt-Editor/releases/latest)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-![Preview](images/preview-hero.png)
+<img src="images/preview-hero.png" alt="Preview" width="80%">
 
 </div>
 
@@ -22,25 +22,24 @@ A lightweight XSLT editor with real-time compilation
 
 ## Installation
 
-Download `XsltEditor-Setup.msi` from [Releases](https://github.com/Rckov/Xslt-Editor/releases/latest) and run the installer.
+Download the latest `XsltEditor-Setup.msi` from [Releases](https://github.com/Rckov/Xslt-Editor/releases/latest) and run the installer.
 
-**Requirements:** Windows 10/11
+>**Requirements:** Windows 10/11
 
 ## Plugins
 
-Available plugins in [separate repository](https://github.com/Rckov/Xslt-Editor-Plugins):
+Extend the editor with community plugins from the [plugins repository](https://github.com/Rckov/Xslt-Editor-Plugins):
 
-- **XML Formatter** — Format documents with indentation
-- **XPath Validator** — Test XPath expressions
+**XML Formatter** - Format documents  
+**XPath Validator** - Test XPath expressions
 
-Create your own using [SDK](https://github.com/Rckov/Xslt-Editor-Sdk).
+> Want to create your own plugin? Check out the [SDK](https://github.com/Rckov/Xslt-Editor-Sdk) with full documentation and examples. Plugins are loaded dynamically and run in isolated contexts for stability..
 
-## Future Plans (Possibly)
+## Future Plans
 
-- [x] Saxon-HE Integration  
-- [x] Light & Dark themes
-- [x] Plugins
-- [ ] ...
+- [x] Saxon-HE Integration - Full XSLT 2.0/3.0 support
+- [x] Light & Dark themes - Adaptive UI with syntax highlighting
+- [x] Plugins - Extensible architecture with SDK
 
 ## License
 [MIT License](LICENSE) | [Report an Issue](https://github.com/Rckov/Xslt-Editor/issues)
