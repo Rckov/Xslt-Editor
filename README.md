@@ -26,8 +26,8 @@ Download the latest `XsltEditor-Setup.msi` from [Releases](https://github.com/Rc
 
 Extend the editor with community plugins from the [plugins repository](https://github.com/Rckov/Xslt-Editor-Plugins):
 
-**XML Formatter** - Format documents  
-**XPath Validator** - Test XPath expressions
+- **XML Formatter** - Format documents  
+- **XPath Validator** - Test XPath expressions
 
 > Want to create your own plugin? Check out the [SDK](https://github.com/Rckov/Xslt-Editor-Sdk) with full documentation and examples. Plugins are loaded dynamically and run in isolated contexts for stability..
 
