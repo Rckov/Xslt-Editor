@@ -1,5 +1,3 @@
-<div align="left">
-
 ## XSLT Editor
 
 A lightweight XSLT editor with real-time compilation
@@ -10,8 +8,6 @@ A lightweight XSLT editor with real-time compilation
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 <img src="images/preview-hero.png" alt="Preview" width="80%">
-
-</div>
 
 ## Features
 
