@@ -12,16 +12,51 @@ Supports XSLT 1.0, 2.0, and 3.0 with real-time compilation, tag autocompletion, 
 
 **XSLT engines**
 
-- XSLT 1.0 via .NET engine  
+- XSLT 1.0 via .NET engine
 - XSLT 2.0 and 3.0 via Saxon-HE
 
 ---
 
 [![Download Latest](https://img.shields.io/badge/Download_Latest-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Rckov/Xslt-Editor/releases/latest)
-[![Plugins](https://img.shields.io/badge/Browse_Plugins-663399?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Rckov/Xslt-Editor-Plugins)
-[![SDK](https://img.shields.io/badge/Developer_SDK-0969da?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Rckov/Xslt-Editor-Sdk)
 
 ![Editor Interface Preview](https://github.com/Rckov/Xslt-Editor/raw/master/images/preview-hero.png)
+
+---
+
+## Plugins
+
+The editor ships with built-in plugins. Copy `out/plugins/{plugin-name}/` next to the editor executable.
+
+| Plugin | Description |
+| --- | --- |
+| XML Formatter | Formats XML and XSL documents with indentation |
+| XPath Validator | Validates XPath expressions against an XML document |
+
+## SDK
+
+Plugins are built against the SDK in [`src/SDK/`](src/SDK/). Reference it as a project dependency, inherit [`PluginBase`](src/SDK/PluginBase.cs), and implement `Execute`.
+
+```csharp
+using XsltEditor.Sdk;
+using XsltEditor.Sdk.Abstractions;
+using XsltEditor.Sdk.Extensions;
+
+public class MyPlugin : PluginBase
+{
+    public override string Name => "My Plugin";
+    public override string Description => "Does something useful";
+
+    public override void Execute(IDocumentContext context)
+    {
+        var xml = context.GetDocument(DocumentType.Xml);
+        var xsl = context.GetDocument(DocumentType.Xsl);
+
+        xml.Content = ProcessXml(xml.Content);
+    }
+}
+```
+
+Output goes to `plugins/{plugin-name}/` next to the editor executable.
 
 ---
 
