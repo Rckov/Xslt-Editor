@@ -1,61 +1,61 @@
 ﻿using System.Text;
 using System.Xml;
 using System.Xml.Xsl;
-
 using XsltEditor.Transform.Tools;
 
 namespace XsltEditor.Transform.Engines;
 
 internal sealed class XslCompiledEngine : IXsltEngine
 {
-	private readonly XslCompiledTransform _transform = new();
-	private readonly XsltSettings _xsltSettings = new(true, true);
-	private readonly XsltUriResolver _resolver = new();
+    private readonly XmlReaderSettings _readerSettings = new()
+    {
+        DtdProcessing = DtdProcessing.Prohibit
+    };
 
-	private readonly XmlReaderSettings _readerSettings = new()
-	{
-		DtdProcessing = DtdProcessing.Prohibit
-	};
+    private readonly XsltUriResolver _resolver = new();
+    private readonly XslCompiledTransform _transform = new();
 
-	private readonly XmlWriterSettings _writerSettings = new()
-	{
-		Indent = false,
-		OmitXmlDeclaration = true,
-		Encoding = Encoding.UTF8,
-		ConformanceLevel = ConformanceLevel.Fragment
-	};
+    private readonly XmlWriterSettings _writerSettings = new()
+    {
+        Indent = false,
+        OmitXmlDeclaration = true,
+        Encoding = Encoding.UTF8,
+        ConformanceLevel = ConformanceLevel.Fragment
+    };
 
-	public Task<string> TransformAsync(string xml, string xsl, string? baseUri = null)
-	{
-		return Task.Run(() => Transform(xml, xsl, baseUri));
-	}
+    private readonly XsltSettings _xsltSettings = new(true, true);
 
-	private string Transform(string xml, string xsl, string? baseUri)
-	{
-		_resolver.SetBaseUri(baseUri);
+    public Task<string> TransformAsync(string xml, string xsl, string? baseUri = null)
+    {
+        return Task.Run(() => Transform(xml, xsl, baseUri));
+    }
 
-		try
-		{
-			using var xslReader = XmlReader.Create(new StringReader(xsl), _readerSettings);
-			using var xmlReader = XmlReader.Create(new StringReader(xml), _readerSettings);
+    private string Transform(string xml, string xsl, string? baseUri)
+    {
+        _resolver.SetBaseUri(baseUri);
 
-			var output = new StringBuilder();
-			using var writer = XmlWriter.Create(output, _writerSettings);
+        try
+        {
+            using var xslReader = XmlReader.Create(new StringReader(xsl), _readerSettings);
+            using var xmlReader = XmlReader.Create(new StringReader(xml), _readerSettings);
 
-			_transform.Load(xslReader, _xsltSettings, _resolver);
-			_transform.Transform(xmlReader, null, writer, _resolver);
+            var output = new StringBuilder();
+            using var writer = XmlWriter.Create(output, _writerSettings);
 
-			return output.ToString();
-		}
-		catch (Exception ex)
-		{
-			var message = ex.Message;
-			if (ex.InnerException is not null)
-			{
-				message += Environment.NewLine + ex.InnerException.Message;
-			}
+            _transform.Load(xslReader, _xsltSettings, _resolver);
+            _transform.Transform(xmlReader, null, writer, _resolver);
 
-			return message;
-		}
-	}
+            return output.ToString();
+        }
+        catch (Exception ex)
+        {
+            var message = ex.Message;
+            if (ex.InnerException is not null)
+            {
+                message += Environment.NewLine + ex.InnerException.Message;
+            }
+
+            return message;
+        }
+    }
 }

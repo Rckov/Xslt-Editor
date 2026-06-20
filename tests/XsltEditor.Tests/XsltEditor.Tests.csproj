@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Transform\XsltEditor.Transform.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Resources\*.xsl" CopyToOutputDirectory="Always"/>
+        <None Update="Resources\XML\*.xml" CopyToOutputDirectory="Always"/>
+    </ItemGroup>
+
+</Project>

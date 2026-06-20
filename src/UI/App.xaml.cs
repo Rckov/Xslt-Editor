@@ -1,7 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-using System.Windows;
-
+﻿using System.Windows;
+using Microsoft.Extensions.DependencyInjection;
 using XsltEditor.Extensions;
 using XsltEditor.Services.Abstractions;
 using XsltEditor.Services.Abstractions.Themes;
@@ -10,54 +8,54 @@ using XsltEditor.Views.Startup;
 
 namespace XsltEditor;
 
-public partial class App : Application
+public partial class App
 {
-	static App()
-	{
-		Services = ConfigureServices();
-	}
+    static App()
+    {
+        Services = ConfigureServices();
+    }
 
-	public static IServiceProvider Services { get; }
+    public static IServiceProvider Services { get; }
 
-	protected override async void OnStartup(StartupEventArgs e)
-	{
-		InitializeTheme();
+    protected override async void OnStartup(StartupEventArgs e)
+    {
+        InitializeTheme();
 
-		var splash = new SplashWindow();
-		splash.Show();
+        var splash = new SplashWindow();
+        splash.Show();
 
-		try
-		{
-			await Services
-				.GetRequiredService<ITransformService>()
-				.WarmupAsync();
+        try
+        {
+            await Services
+                .GetRequiredService<ITransformService>()
+                .WarmupAsync();
 
-			Services
-				.GetRequiredService<IWindowService>()
-				.ShowWindow<MainViewModel>();
-		}
-		finally
-		{
-			splash.Close();
-		}
-	}
+            Services
+                .GetRequiredService<IWindowService>()
+                .ShowWindow<MainViewModel>();
+        }
+        finally
+        {
+            splash.Close();
+        }
+    }
 
-	private static void InitializeTheme()
-	{
-		var settings = Services.GetRequiredService<ISettingsService>();
+    private static void InitializeTheme()
+    {
+        var settings = Services.GetRequiredService<ISettingsService>();
 
-		Services
-			.GetRequiredService<IThemeService>()
-			.SetTheme(settings.Settings.ThemeType);
-	}
+        Services
+            .GetRequiredService<IThemeService>()
+            .SetTheme(settings.Settings.ThemeType);
+    }
 
-	private static IServiceProvider ConfigureServices()
-	{
-		var services = new ServiceCollection();
+    private static IServiceProvider ConfigureServices()
+    {
+        var services = new ServiceCollection();
 
-		services.AddUI();
-		services.AddServices();
+        services.AddUi();
+        services.AddServices();
 
-		return services.BuildServiceProvider();
-	}
+        return services.BuildServiceProvider();
+    }
 }

@@ -2,8 +2,8 @@
 
 namespace XsltEditor.Models;
 
-internal class Settings
+public class Settings
 {
-	public ThemeType ThemeType { get; set; }
-	public EngineType EngineType { get; set; }
+    public ThemeType ThemeType { get; set; }
+    public EngineType EngineType { get; set; }
 }

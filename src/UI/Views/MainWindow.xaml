@@ -96,7 +96,8 @@
                             </MenuItem>
                         </MenuItem>
                         <MenuItem Header="Tools">
-                            <MenuItem Header="Go to Line" Command="{Binding ActiveDocument.GoToLineCommand}" InputGestureText="Ctrl+G">
+                            <MenuItem Header="Go to Line" Command="{Binding ActiveDocument.GoToLineCommand}"
+                                      InputGestureText="Ctrl+G">
                                 <MenuItem.Icon>
                                     <TextBlock Text="&#xE8A3;" FontFamily="{StaticResource FontIcon}" />
                                 </MenuItem.Icon>
@@ -116,7 +117,8 @@
                                 <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
                                     <Setter Property="Header" Value="{Binding Name}" />
                                     <Setter Property="ToolTip" Value="{Binding Description}" />
-                                    <Setter Property="Command" Value="{Binding DataContext.ExecutePluginCommand, RelativeSource={RelativeSource AncestorType=Window}}" />
+                                    <Setter Property="Command"
+                                            Value="{Binding DataContext.ExecutePluginCommand, RelativeSource={RelativeSource AncestorType=Window}}" />
                                     <Setter Property="CommandParameter" Value="{Binding}" />
                                 </Style>
                             </MenuItem.ItemContainerStyle>
@@ -173,12 +175,14 @@
                                             </MenuItem.Icon>
                                         </MenuItem>
                                         <Separator Style="{StaticResource SeparatorStyle}" />
-                                        <MenuItem Header="Expand All" Command="{x:Static ct:TextEditorCommands.ExpandAllFolds}">
+                                        <MenuItem Header="Expand All"
+                                                  Command="{x:Static ct:TextEditorCommands.ExpandAllFolds}">
                                             <MenuItem.Icon>
                                                 <TextBlock Text="&#xF166;" FontFamily="{StaticResource FontIcon}" />
                                             </MenuItem.Icon>
                                         </MenuItem>
-                                        <MenuItem Header="Collapse All" Command="{x:Static ct:TextEditorCommands.CollapseAllFolds}">
+                                        <MenuItem Header="Collapse All"
+                                                  Command="{x:Static ct:TextEditorCommands.CollapseAllFolds}">
                                             <MenuItem.Icon>
                                                 <TextBlock Text="&#xF164;" FontFamily="{StaticResource FontIcon}" />
                                             </MenuItem.Icon>
@@ -206,8 +210,10 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#xF745;" FontFamily="{StaticResource FontIcon}" Margin="0,0,4,0" />
                         <TextBlock>
-                            <Hyperlink Command="{Binding ActiveDocument.OpenExplorerCommand}" TextDecorations="None" Foreground="{DynamicResource TextBrush}">
-                                <Run Text="{Binding ActiveDocument.FilePath, Mode=OneWay, TargetNullValue='No file selected'}" />
+                            <Hyperlink Command="{Binding ActiveDocument.OpenExplorerCommand}" TextDecorations="None"
+                                       Foreground="{DynamicResource TextBrush}">
+                                <Run
+                                    Text="{Binding ActiveDocument.FilePath, Mode=OneWay, TargetNullValue='No file selected'}" />
                             </Hyperlink>
                         </TextBlock>
                     </StackPanel>

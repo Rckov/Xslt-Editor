@@ -25,16 +25,23 @@ jobs:
       - name: Restore dotnet tools
         run: dotnet tool restore
 
-      - name: Install WiX UI extension
-        run: dotnet wix extension add WixToolset.UI.wixext/6.0.2
-
       - name: Run Nuke build
         run: dotnet run --project build/Build.csproj
+
+      - name: Archive app
+        shell: pwsh
+        run: Compress-Archive -Path out/app/* -DestinationPath xslt-editor.zip
+
+      - name: Archive plugins
+        shell: pwsh
+        run: Compress-Archive -Path out/plugins/* -DestinationPath plugins.zip
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: out/XsltEditor-Setup.msi
+          files: |
+            xslt-editor.zip
+            plugins.zip
           draft: false
           prerelease: false
           generate_release_notes: true

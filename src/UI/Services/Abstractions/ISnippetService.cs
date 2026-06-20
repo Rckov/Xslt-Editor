@@ -2,13 +2,13 @@
 
 namespace XsltEditor.Services.Abstractions;
 
-internal interface ISnippetService
+public interface ISnippetService
 {
-	IReadOnlyList<SnippetData> Data { get; }
+    IReadOnlyList<SnippetData> Data { get; }
 
-	void Save();
+    void Save();
 
-	void Add(SnippetData item);
+    void Add(SnippetData item);
 
-	void Remove(SnippetData item);
+    void Remove(SnippetData item);
 }

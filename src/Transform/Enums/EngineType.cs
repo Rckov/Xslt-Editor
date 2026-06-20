@@ -2,6 +2,6 @@
 
 public enum EngineType
 {
-	XslCompiledTransform = 0,
-	Saxon = 1
+    XslCompiledTransform = 0,
+    Saxon = 1
 }

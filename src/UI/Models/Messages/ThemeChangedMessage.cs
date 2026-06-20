@@ -2,4 +2,4 @@
 
 namespace XsltEditor.Models.Messages;
 
-internal record ThemeChangedMessage(ThemeType ThemeType, IHighlightingDefinition? Highlighting);
+public record ThemeChangedMessage(ThemeType ThemeType, IHighlightingDefinition? Highlighting);

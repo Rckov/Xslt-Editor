@@ -1,15 +1,14 @@
 ﻿using ICSharpCode.AvalonEdit.Highlighting;
-
 using XsltEditor.Models;
 
 namespace XsltEditor.Services.Abstractions.Themes;
 
-internal interface IThemeService
+public interface IThemeService
 {
-	ThemeType CurrentTheme { get; }
-	IHighlightingDefinition? Highlighting { get; }
+    ThemeType CurrentTheme { get; }
+    IHighlightingDefinition? Highlighting { get; }
 
-	void SetTheme(ThemeType theme);
+    void SetTheme(ThemeType theme);
 
-	void SwitchTheme();
+    void SwitchTheme();
 }

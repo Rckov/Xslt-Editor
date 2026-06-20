@@ -2,15 +2,15 @@
 
 namespace XsltEditor.Views;
 
-public partial class SnippetWindow : Window
+public partial class SnippetWindow
 {
-	public SnippetWindow()
-	{
-		InitializeComponent();
-	}
+    public SnippetWindow()
+    {
+        InitializeComponent();
+    }
 
-	private void OnCloseClick(object sender, RoutedEventArgs e)
-	{
-		Close();
-	}
+    private void OnCloseClick(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 }

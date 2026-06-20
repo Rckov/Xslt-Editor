@@ -2,7 +2,7 @@ using XsltEditor.Sdk.Abstractions;
 
 namespace XsltEditor.Services.Abstractions;
 
-internal interface IPluginService
+public interface IPluginService
 {
-	IReadOnlyList<IPlugin> Plugins { get; }
+    IReadOnlyList<IPlugin> Plugins { get; }
 }

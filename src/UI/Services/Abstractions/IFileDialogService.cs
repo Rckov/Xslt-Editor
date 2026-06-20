@@ -1,8 +1,8 @@
 ﻿namespace XsltEditor.Services.Abstractions;
 
-internal interface IFileDialogService
+public interface IFileDialogService
 {
-	string? OpenFileDialog(string title, params string[] extensions);
+    string? OpenFileDialog(string title, params string[] extensions);
 
-	string? OpenSaveDialog(string title, params string[] extensions);
+    string? OpenSaveDialog(string title, params string[] extensions);
 }

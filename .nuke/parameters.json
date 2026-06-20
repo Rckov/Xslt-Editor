@@ -1,1 +1,3 @@
-﻿{"Solution": "XsltEditor.slnx"}
+{
+  "$schema": "./build.schema.json"
+}

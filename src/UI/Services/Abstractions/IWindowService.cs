@@ -1,7 +1,7 @@
 ﻿namespace XsltEditor.Services.Abstractions;
 
-internal interface IWindowService
+public interface IWindowService
 {
-	T? ShowWindow<T>(T? context = null, bool dialog = false)
-		where T : class;
+    T? ShowWindow<T>(T? context = null, bool dialog = false)
+        where T : class;
 }

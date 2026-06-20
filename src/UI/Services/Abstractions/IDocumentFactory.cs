@@ -3,7 +3,7 @@ using XsltEditor.ViewModels;
 
 namespace XsltEditor.Services.Abstractions;
 
-internal interface IDocumentFactory
+public interface IDocumentFactory
 {
-	DocumentViewModel Create(string name, DocumentType type);
+    DocumentViewModel Create(string name, DocumentType type);
 }

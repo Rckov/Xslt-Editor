@@ -2,6 +2,6 @@
 
 public enum ThemeType
 {
-	Default,
-	Dark
+    Default,
+    Dark
 }

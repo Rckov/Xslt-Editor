@@ -2,10 +2,10 @@
 
 namespace XsltEditor.Views.Startup;
 
-public partial class SplashWindow : Window
+public partial class SplashWindow
 {
-	public SplashWindow()
-	{
-		InitializeComponent();
-	}
+    public SplashWindow()
+    {
+        InitializeComponent();
+    }
 }

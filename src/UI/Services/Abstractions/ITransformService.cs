@@ -2,11 +2,11 @@
 
 namespace XsltEditor.Services.Abstractions;
 
-internal interface ITransformService
+public interface ITransformService
 {
-	void SetEngine(EngineType engineType);
+    void SetEngine(EngineType engineType);
 
-	Task WarmupAsync();
+    Task WarmupAsync();
 
-	Task<string> TransformAsync(string xml, string xsl, string? baseUri = null);
+    Task<string> TransformAsync(string xml, string xsl, string? baseUri = null);
 }

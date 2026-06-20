@@ -5,30 +5,31 @@ namespace XsltEditor.Transform;
 
 public static class XsltEngineFactory
 {
-	private static readonly Dictionary<EngineType, IXsltEngine> _engines = [];
+    private static readonly Dictionary<EngineType, IXsltEngine> Engines = [];
 
-	public static IXsltEngine Get(EngineType engineType)
-	{
-		if (!_engines.TryGetValue(engineType, out IXsltEngine? engine))
-		{
-			engine = engineType switch
-			{
-				EngineType.XslCompiledTransform => new XslCompiledEngine(),
-				EngineType.Saxon => new SaxonEngine(),
-				_ => throw new ArgumentOutOfRangeException(nameof(engineType))
-			};
+    public static IXsltEngine Get(EngineType engineType)
+    {
+        if (Engines.TryGetValue(engineType, out var engine))
+        {
+            return engine;
+        }
 
-			_engines[engineType] = engine;
-		}
+        engine = engineType switch
+        {
+            EngineType.XslCompiledTransform => new XslCompiledEngine(),
+            EngineType.Saxon => new SaxonEngine(),
+            _ => throw new ArgumentOutOfRangeException(nameof(engineType))
+        };
 
-		return engine;
-	}
+        Engines[engineType] = engine;
+        return engine;
+    }
 
-	public static void WarmupAll()
-	{
-		foreach (EngineType type in Enum.GetValues<EngineType>())
-		{
-			Get(type);
-		}
-	}
+    public static void WarmupAll()
+    {
+        foreach (var type in Enum.GetValues<EngineType>())
+        {
+            Get(type);
+        }
+    }
 }

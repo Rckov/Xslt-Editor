@@ -2,4 +2,4 @@
 
 namespace XsltEditor.Models.Messages;
 
-internal record EngineChangedMessage(EngineType EngineType);
+public record EngineChangedMessage(EngineType EngineType);

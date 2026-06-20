@@ -1,68 +1,86 @@
 ﻿using Nuke.Common;
 using Nuke.Common.IO;
-using Nuke.Common.ProjectModel;
-using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
-using Nuke.Common.Utilities.Collections;
 
-using static Nuke.Common.Tools.DotNet.DotNetTasks;
+namespace Build;
 
-internal class Build : NukeBuild
+public sealed class Build : NukeBuild
 {
-	public static int Main() => Execute<Build>(x => x.Pack);
+    private AbsolutePath OutputDirectory => RootDirectory / "out";
+    private AbsolutePath AppOutputDirectory => OutputDirectory / "app";
+    private AbsolutePath PluginsOutputDirectory => OutputDirectory / "plugins";
+    private AbsolutePath SourceDirectory => RootDirectory / "src";
+    private AbsolutePath PluginsDirectory => SourceDirectory / "Plugins";
+    private AbsolutePath AppProject => SourceDirectory / "UI" / "XsltEditor.csproj";
+    private IEnumerable<AbsolutePath> PluginProjects => FindProjects(PluginsDirectory);
 
-	[Parameter("Configuration — default Release")]
-	private readonly string Configuration = "Release";
+    private Target Test
+    {
+        get
+        {
+            return d => d
+                .Executes(() =>
+                {
+                    DotNetTasks.DotNetTest(settings => settings
+                        .SetProjectFile(RootDirectory / "XsltEditor.slnx"));
+                });
+        }
+    }
 
-	[Parameter("Runtime identifier")]
-	private readonly string Runtime = "win-x64";
+    private Target PublishApp
+    {
+        get
+        {
+            return d => d
+                .Produces(AppOutputDirectory / "XSLT Editor.exe")
+                .Executes(() =>
+                {
+                    PublishProject(AppProject, AppOutputDirectory, settings => settings
+                        .SetSelfContained(true)
+                        .SetRuntime("win-x64"));
+                });
+        }
+    }
 
-	[Solution]
-	private readonly Solution Solution = null!;
+    private Target PublishPlugins
+    {
+        get
+        {
+            return d => d
+                .Executes(() =>
+                {
+                    foreach (var project in PluginProjects)
+                    {
+                        PublishProject(project, PluginsOutputDirectory / project.Parent!.Name);
+                    }
+                });
+        }
+    }
 
-	private AbsolutePath SourceDirectory => RootDirectory / "src";
-	private AbsolutePath PublishDirectory => RootDirectory / "publish";
-	private AbsolutePath OutputDirectory => RootDirectory / "out";
-	private AbsolutePath WxsFile => RootDirectory / "build" / "Package.wxs";
+    private Target Default => d => d.DependsOn(Test, PublishApp, PublishPlugins);
 
-	private Target Clean => _ => _
-		.Executes(() =>
-		{
-			SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(d => d.DeleteDirectory());
-			PublishDirectory.CreateOrCleanDirectory();
-			OutputDirectory.CreateOrCleanDirectory();
-		});
+    public static int Main()
+    {
+        return Execute<Build>(x => x.Default);
+    }
 
-	private Target Restore => _ => _
-		.DependsOn(Clean)
-		.Executes(() => DotNet("tool restore"));
+    private static IEnumerable<AbsolutePath> FindProjects(AbsolutePath directory)
+    {
+        return directory.GlobFiles("**/*.csproj");
+    }
 
-	private Target Publish => _ => _
-		.DependsOn(Restore)
-		.Executes(() =>
-		{
-			DotNetPublish(s => s
-				.SetProject(Solution.GetProject("XsltEditor"))
-				.SetConfiguration(Configuration)
-				.SetRuntime(Runtime)
-				.SetSelfContained(true)
-				.SetPublishSingleFile(false)
-				.SetOutput(PublishDirectory));
-		});
+    private static void PublishProject(
+        AbsolutePath project,
+        AbsolutePath output,
+        Func<DotNetPublishSettings, DotNetPublishSettings>? configure = null)
+    {
+        DotNetTasks.DotNetPublish(settings =>
+        {
+            var publishSettings = settings
+                .SetProject(project)
+                .SetOutput(output);
 
-	private Target Pack => _ => _
-		.DependsOn(Publish)
-		.Executes(() =>
-		{
-			ProcessTasks.StartProcess(
-				"dotnet",
-				$"wix build \"{WxsFile}\" " +
-				$"-arch x64 " +
-				$"-ext WixToolset.UI.wixext " +
-				$"-d PublishDir={PublishDirectory}\\ " +
-				$"-d SourceDir={SourceDirectory}\\ " +
-				$"-d BuildDir={RootDirectory / "build"}\\ " +
-				$"-out \"{OutputDirectory / "XsltEditor-Setup.msi"}\"")
-				.AssertZeroExitCode();
-		});
+            return configure?.Invoke(publishSettings) ?? publishSettings;
+        });
+    }
 }

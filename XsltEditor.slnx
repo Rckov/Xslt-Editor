@@ -1,10 +1,16 @@
 <Solution>
-  <Folder Name="/build/">
-    <Project Path="build/Build.csproj" />
-  </Folder>
-  <Folder Name="/tests/">
-    <Project Path="tests/XsltEditor.Tests.csproj" />
-  </Folder>
-  <Project Path="src/Transform/XsltEditor.Transform.csproj" />
-  <Project Path="src/UI/XsltEditor.csproj" />
+    <Folder Name="/build/">
+        <Project Path="build/Build.csproj" />
+    </Folder>
+    <Folder Name="/plugins/">
+        <Project Path="src/Plugins/Formatter/Formatter.csproj" />
+        <Project Path="src/Plugins/XPathValidator/XPathValidator.csproj" />
+    </Folder>
+    <Folder Name="/tests/">
+        <Project Path="tests/XsltEditor.Tests/XsltEditor.Tests.csproj" />
+        <Project Path="tests/XsltEditor.Plugins.Tests/XsltEditor.Plugins.Tests.csproj" />
+    </Folder>
+    <Project Path="src/Transform/XsltEditor.Transform.csproj" />
+    <Project Path="src/UI/XsltEditor.csproj" />
+    <Project Path="src/SDK/XsltEditor.Sdk.csproj" />
 </Solution>

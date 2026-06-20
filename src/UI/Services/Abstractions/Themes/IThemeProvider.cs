@@ -2,7 +2,7 @@
 
 namespace XsltEditor.Services.Abstractions.Themes;
 
-internal interface IThemeProvider
+public interface IThemeProvider
 {
-	ThemeDescriptor Get(ThemeType type);
+    ThemeDescriptor Get(ThemeType type);
 }

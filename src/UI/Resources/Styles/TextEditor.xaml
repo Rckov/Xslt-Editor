@@ -69,25 +69,28 @@
                                 <TextBlock Text="&#xE70D;" FontFamily="{DynamicResource FontIcon}" FontSize="11" />
                             </Button>
 
-                            <ToggleButton IsChecked="{Binding MatchCase, RelativeSource={RelativeSource TemplatedParent}}"
-                                          ToolTip="Match Case"
-                                          Style="{DynamicResource FlatToggleButtonStyle}"
-                                          Padding="6,4">
+                            <ToggleButton
+                                IsChecked="{Binding MatchCase, RelativeSource={RelativeSource TemplatedParent}}"
+                                ToolTip="Match Case"
+                                Style="{DynamicResource FlatToggleButtonStyle}"
+                                Padding="6,4">
                                 <TextBlock Text="Aa" FontSize="11" FontWeight="SemiBold" />
                             </ToggleButton>
 
-                            <ToggleButton IsChecked="{Binding WholeWords, RelativeSource={RelativeSource TemplatedParent}}"
-                                          ToolTip="Whole Words"
-                                          Style="{DynamicResource FlatToggleButtonStyle}"
-                                          Padding="6,4">
+                            <ToggleButton
+                                IsChecked="{Binding WholeWords, RelativeSource={RelativeSource TemplatedParent}}"
+                                ToolTip="Whole Words"
+                                Style="{DynamicResource FlatToggleButtonStyle}"
+                                Padding="6,4">
                                 <TextBlock Text="W" FontSize="11" FontWeight="SemiBold"
                                            TextDecorations="Underline" />
                             </ToggleButton>
 
-                            <ToggleButton IsChecked="{Binding UseRegex, RelativeSource={RelativeSource TemplatedParent}}"
-                                          ToolTip="Use Regex"
-                                          Style="{DynamicResource FlatToggleButtonStyle}"
-                                          Padding="6,4">
+                            <ToggleButton
+                                IsChecked="{Binding UseRegex, RelativeSource={RelativeSource TemplatedParent}}"
+                                ToolTip="Use Regex"
+                                Style="{DynamicResource FlatToggleButtonStyle}"
+                                Padding="6,4">
                                 <TextBlock Text=".*" FontSize="11" FontFamily="Consolas" />
                             </ToggleButton>
 
